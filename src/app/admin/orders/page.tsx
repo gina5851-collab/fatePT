@@ -1,0 +1,122 @@
+import Link from "next/link";
+import { requireAdminPassword } from "@/lib/admin-auth";
+import { createServiceClient } from "@/lib/supabase/server";
+import { Badge } from "@/components/ui/badge";
+import { formatKRW, formatDate } from "@/lib/utils";
+
+export const metadata = { title: "관리자 - 결제 내역" };
+
+type SearchParams = Promise<{ status?: string }>;
+
+const STATUS_LABEL: Record<string, string> = {
+  paid: "결제완료",
+  pending: "결제대기",
+  failed: "실패",
+};
+
+export default async function AdminOrdersPage({ searchParams }: { searchParams: SearchParams }) {
+  await requireAdminPassword("/admin/orders");
+
+  const { status } = await searchParams;
+  const service = createServiceClient();
+
+  let query = service
+    .from("orders")
+    .select("id, order_id, amount, status, created_at, user_id, guest_email, product_id, toss_payment_key")
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (status && ["pending", "paid", "failed"].includes(status)) {
+    query = query.eq("status", status as "pending" | "paid" | "failed");
+  }
+  const { data: orders } = await query;
+
+  const productIds = Array.from(new Set((orders ?? []).map((o) => o.product_id)));
+  const { data: products } = productIds.length
+    ? await service.from("products").select("id, name").in("id", productIds)
+    : { data: [] };
+  const productMap = new Map((products ?? []).map((p) => [p.id, p.name]));
+
+  const orderIds = (orders ?? []).map((o) => o.id);
+  const { data: results } = orderIds.length
+    ? await service.from("saju_results").select("id, order_id").in("order_id", orderIds)
+    : { data: [] };
+  const resultMap = new Map((results ?? []).map((r) => [r.order_id, r.id]));
+
+  const filters = [
+    { key: "", label: "전체" },
+    { key: "paid", label: "결제완료" },
+    { key: "pending", label: "결제대기" },
+    { key: "failed", label: "실패" },
+  ];
+
+  return (
+    <div className="container py-12">
+      <header className="mb-8">
+        <p className="text-xs font-mono text-mute mb-2">ADMIN / ORDERS</p>
+        <h1 className="text-2xl font-semibold tracking-tight">결제 내역</h1>
+      </header>
+
+      <div className="flex gap-2 mb-6">
+        {filters.map((f) => {
+          const active = (status ?? "") === f.key;
+          return (
+            <Link
+              key={f.key || "all"}
+              href={f.key ? `/admin/orders?status=${f.key}` : "/admin/orders"}
+              className={`px-4 h-8 inline-flex items-center rounded-full text-sm border transition-colors ${active ? "bg-ink text-canvas border-ink" : "border-hairline text-ink hover:border-ink"}`}
+            >
+              {f.label}
+            </Link>
+          );
+        })}
+      </div>
+
+      <p className="text-xs text-mute font-mono mb-3">{orders?.length ?? 0} ROWS</p>
+
+      <div className="border border-hairline rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-hairline">
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">생성일</th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">주문번호</th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">상품</th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">고객</th>
+              <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-wider text-mute">금액</th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">상태</th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">결과</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(orders ?? []).map((o) => (
+              <tr key={o.id} className="border-b border-hairline last:border-0">
+                <td className="px-4 py-3 text-xs text-body">{formatDate(o.created_at)}</td>
+                <td className="px-4 py-3 font-mono text-xs">{o.order_id}</td>
+                <td className="px-4 py-3">{productMap.get(o.product_id) ?? "-"}</td>
+                <td className="px-4 py-3 text-xs">{o.user_id ? "회원" : o.guest_email}</td>
+                <td className="px-4 py-3 text-right font-mono">{formatKRW(o.amount)}</td>
+                <td className="px-4 py-3">
+                  <Badge
+                    variant={
+                      o.status === "paid" ? "success" : o.status === "failed" ? "destructive" : "secondary"
+                    }
+                  >
+                    {STATUS_LABEL[o.status] ?? o.status}
+                  </Badge>
+                </td>
+                <td className="px-4 py-3">
+                  {resultMap.get(o.id) ? (
+                    <Link href={`/results/${resultMap.get(o.id)}`} className="text-xs underline underline-offset-2">
+                      보기
+                    </Link>
+                  ) : (
+                    <span className="text-xs text-mute">-</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ollama-inspired design system — see DESIGN.md
+   Paper-white canvas, pure black primary, no shadows, hairline borders,
+   full-rounded pill geometry on interactive elements. */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;          /* canvas #ffffff */
+    --foreground: 0 0% 0%;            /* ink #000000 */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --primary: 0 0% 0%;               /* pure black */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 98%;            /* surface-soft #fafafa */
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 98%;
+    --muted-foreground: 0 0% 45%;     /* body #737373 */
+    --accent: 0 0% 98%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;               /* hairline #e5e5e5 */
+    --input: 0 0% 90%;
+    --ring: 217 91% 60%;              /* focus-ring blue */
+    --radius: 0.75rem;                /* lg used for cards */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family:
+      "SF Pro Rounded", -apple-system, BlinkMacSystemFont, ui-sans-serif,
+      system-ui, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  code, pre, kbd, samp {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco,
+      Consolas, "Liberation Mono", monospace;
+  }
+  /* Heading: SF Pro Rounded weight 500–600. Centered hero handled inline. */
+  h1, h2, h3 {
+    @apply tracking-tight;
+    font-weight: 600;
+  }
+}
+
+/* Markdown result body — flat type scale, body neutral on white. */
+@layer components {
+  .prose-saju h2 {
+    @apply mt-10 mb-3 text-2xl font-semibold text-foreground;
+  }
+  .prose-saju h3 {
+    @apply mt-6 mb-2 text-lg font-semibold text-foreground;
+  }
+  .prose-saju p {
+    @apply my-3 leading-7 text-[#525252];
+  }
+  .prose-saju ul {
+    @apply my-3 list-disc space-y-1 pl-6 text-[#525252];
+  }
+  .prose-saju strong {
+    @apply font-semibold text-foreground;
+  }
+  .prose-saju code {
+    @apply rounded-md bg-[#fafafa] px-1.5 py-0.5 text-sm;
+  }
+}
