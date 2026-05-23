@@ -73,7 +73,70 @@ TOSS_SECRET_KEY=
 LLM_PROVIDER=anthropic                # openai | anthropic | gemini
 LLM_MODEL=claude-sonnet-4-6
 ANTHROPIC_API_KEY=                    # 선택한 provider 키만 채우면 됨
+SAJU_API_URL=https://luckyloveme.com/api/saju-full-analysis
+SAJU_API_KEY=                         # 운세위키 API 발급키 (https://luckyloveme.com/api-service)
+ADMIN_PASSWORD=                       # /admin 진입 비밀번호
 ```
+
+## 사주 명식표 API (luckyloveme)
+
+운세위키 사주 풀 분석 API를 그대로 붙여놓았습니다. 키 발급 → `.env.local` 에 넣으면 즉시 동작합니다.
+
+- 발급: https://luckyloveme.com/api-service
+- 어댑터: [`src/lib/saju/saju-api.ts`](./src/lib/saju/saju-api.ts)
+- 라우트: [`src/app/api/generate-manseryeok/route.ts`](./src/app/api/generate-manseryeok/route.ts)
+
+**호출 예시**
+
+```bash
+curl -X POST http://localhost:3000/api/generate-manseryeok \
+  -H "Content-Type: application/json" \
+  -d '{
+    "birthInfo": {
+      "birthYear": "1990",
+      "birthMonth": "5",
+      "birthDay": "15",
+      "birthHour": "14",
+      "birthMinute": "30",
+      "calendarType": "양력",
+      "gender": "male"
+    }
+  }'
+```
+
+**응답**
+
+```json
+{ "status": "success", "manseryeok": "[명식 기본 정보]\n생년월일: ..." }
+```
+
+**TS 에서 직접 호출**
+
+```ts
+import { generateManseryeok } from "@/lib/saju/saju-api";
+
+const text = await generateManseryeok({
+  birthYear: "1990",
+  birthMonth: "5",
+  birthDay: "15",
+  birthHour: "14",
+  birthMinute: "30",
+  calendarType: "양력",
+  gender: "male",
+});
+// → LLM 프롬프트에 그대로 꽂으면 됩니다 (src/lib/saju/prompt.ts 참고)
+```
+
+**특징**
+- 30초 타임아웃 + 5xx/네트워크 오류 시 최대 3회 재시도 (500ms → 1.5s → 3.5s 백오프)
+- 4xx 는 즉시 실패 (입력 검증 오류)
+- `fields: []` = 전체 분석 자동 요청. 일부만 필요하면 배열로 지정 (예: `["ganji", "sipseong"]`)
+- 응답을 `formatSajuToManseryeok()` 가 LLM 프롬프트용 한국어 텍스트로 변환
+
+**가능한 fields**
+`ganji`, `sipseong`, `sinStrength`, `gyeokguk`, `twelveFortune`, `daeun`, `seun`, `weolun`, `guiin`, `hongyeom`, `dohwa`, `hwagae`, `sibisinsals`, `bigyeonGeobjae`, `hapchung`
+
+**키가 없는 상태로 호출하면** `/api/generate-manseryeok` 는 503 을 반환합니다 — 데모 모드에서는 호출하지 마세요.
 
 ## 커스터마이징
 
@@ -84,6 +147,7 @@ ANTHROPIC_API_KEY=                    # 선택한 provider 키만 채우면 됨
 | 상품 라인업 (이름/가격/설명) | `src/config/products.seed.ts` 수정 → `pnpm seed:products` |
 | 사주 해석 톤·분량 | `src/lib/saju/prompt.ts` |
 | 만세력 API 연동 | `src/lib/saju/manseryeok.ts` `callExternalManseryeok` |
+| 사주 풀 분석 API (luckyloveme) | `src/lib/saju/saju-api.ts` + `.env` 의 `SAJU_API_KEY` |
 | 컬러 테마 | `src/app/globals.css` (HSL 변수) + `tailwind.config.ts` 팔레트 |
 | 랜딩 카피 | `src/components/landing/Hero.tsx` |
 | 디자인 시스템 가이드 | `DESIGN.md` (현재 Ollama 스타일 — 페이퍼 화이트 + pill geometry + flat). 다른 스타일로 갈아끼우려면 `npx getdesign@latest add <brand>` |
