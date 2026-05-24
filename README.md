@@ -47,11 +47,22 @@ pnpm dev
 ### 4. 토스페이먼츠
 
 1. https://developers.tosspayments.com 에서 가입
-2. **테스트 키**는 `.env.example` 의 기본값 그대로 동작합니다 (즉시 결제 테스트 가능)
+2. **테스트 키**는 `.env.example` 의 기본값(`test_gck_docs_*` / `test_gsk_docs_*`) 그대로 두면 즉시 결제 테스트 가능 — **회원가입·사업자번호 없이도** 작동
+   - 가이드: [회원가입/사업자번호 없이 결제 테스트하기](https://docs.tosspayments.com/blog/how-to-test-toss-payments#회원가입-사업자번호-없이-결제-테스트하기)
 3. 실 결제용 라이브 키는 PG 심사 통과 후 발급 — **[PG_심사_가이드.md](./PG_심사_가이드.md)** 참고
 4. 토스 콘솔에서 콜백 URL 등록:
    - 성공: `https://<your-domain>/checkout/success`
    - 실패: `https://<your-domain>/checkout/fail`
+
+**구현 위치**
+- 위젯(클라): [`src/components/checkout/TossWidget.tsx`](./src/components/checkout/TossWidget.tsx) — Toss 위젯 v2 SDK
+- 주문 생성: [`src/app/api/orders/create/route.ts`](./src/app/api/orders/create/route.ts)
+- 서버 confirm + 금액 위변조 검증: [`src/app/api/orders/confirm/route.ts`](./src/app/api/orders/confirm/route.ts) + [`src/lib/toss/confirm.ts`](./src/lib/toss/confirm.ts)
+
+**테스트 결제 카드** (실제 청구 안 됨)
+- 토스 공식 테스트 카드: 4330-1234-1234-1234 / CVC 임의 / 유효기간 미래 / 비밀번호 앞 2자리 00
+
+**연동 공식 가이드**: [결제위젯 v2 통합 가이드](https://docs.tosspayments.com/guides/v2/payment-widget/integration)
 
 ### 5. Vercel 배포
 
@@ -151,6 +162,37 @@ const text = await generateManseryeok({
 
 자세한 에러 코드는 [`./운세위키_API_가이드.md`](./운세위키_API_가이드.md) §6 참고.
 
+## AI 해석 (LLM)
+
+결과지의 마크다운 해석을 만드는 LLM. **3개 provider 지원** — `.env.local` 의 `LLM_PROVIDER` 한 줄로 스위치.
+
+| Provider | `LLM_PROVIDER` 값 | 필요한 키 | 예시 모델 (`LLM_MODEL`) |
+|---|---|---|---|
+| **Anthropic Claude** | `anthropic` (기본) | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6` |
+| **OpenAI** | `openai` | `OPENAI_API_KEY` | `gpt-4o`, `gpt-4o-mini` |
+| **Google Gemini** | `gemini` | `GOOGLE_GENERATIVE_AI_API_KEY` | `gemini-1.5-pro`, `gemini-1.5-flash` |
+
+선택한 provider 의 키만 채우면 됩니다. 안 쓰는 SDK 는 lazy import 라 init 비용 0.
+
+**바꾸는 법** — `.env.local` 두 줄만:
+```bash
+LLM_PROVIDER=openai          # anthropic | openai | gemini
+LLM_MODEL=gpt-4o             # 위 표의 모델명 중 하나
+OPENAI_API_KEY=sk-...        # 해당 provider 키
+```
+
+**구현 위치**: [`src/lib/saju/llm.ts`](./src/lib/saju/llm.ts) — `generateInterpretation({system, user})` 한 함수가 provider 분기.
+
+**프롬프트 위치**: [`src/lib/saju/prompt.ts`](./src/lib/saju/prompt.ts)
+- `system`: 톤·원칙 공통 (단정적 운명론 금지 / 행동 조언으로 마무리 / 한국어 존댓말 / 마크다운)
+- `user`: 상품 slug 별로 분량·포커스 다르게
+  - `today-fortune` → 2-3문장
+  - `basic-saju` → 600-900자
+  - `love-saju` → 900-1200자
+  - `premium-saju` → 1500-2000자
+
+`saju-api.ts` 가 만든 16종 풀 명식 텍스트가 자동으로 `user` 프롬프트에 들어갑니다. provider 를 바꿔도 결과지 톤은 동일.
+
 ## 커스터마이징
 
 | 바꾸고 싶은 것 | 파일 |
@@ -159,6 +201,7 @@ const text = await generateManseryeok({
 | 사업자 정보 (법적 페이지에 노출) | `src/config/site.ts` `businessInfo` |
 | 상품 라인업 (이름/가격/설명) | `src/config/products.seed.ts` 수정 → `pnpm seed:products` |
 | 사주 해석 톤·분량 | `src/lib/saju/prompt.ts` |
+| LLM provider 전환 | `.env` 의 `LLM_PROVIDER` (anthropic/openai/gemini) + 해당 키 |
 | 만세력 API 연동 | `src/lib/saju/manseryeok.ts` `callExternalManseryeok` |
 | 사주 풀 분석 API (luckyloveme) | `src/lib/saju/saju-api.ts` + `.env` 의 `SAJU_API_KEY` |
 | 컬러 테마 | `src/app/globals.css` (HSL 변수) + `tailwind.config.ts` 팔레트 |
