@@ -83,8 +83,11 @@ ADMIN_PASSWORD=                       # /admin 진입 비밀번호
 운세위키 사주 풀 분석 API를 그대로 붙여놓았습니다. 키 발급 → `.env.local` 에 넣으면 즉시 동작합니다.
 
 - 발급: https://luckyloveme.com/api-service
+- 가이드 (필수): [`./운세위키_API_가이드.md`](./운세위키_API_가이드.md)
 - 어댑터: [`src/lib/saju/saju-api.ts`](./src/lib/saju/saju-api.ts)
 - 라우트: [`src/app/api/generate-manseryeok/route.ts`](./src/app/api/generate-manseryeok/route.ts)
+- 헤더: `X-SAJU-BOOK-API-KEY` + `User-Agent: SajuBookClient/1.0` (어댑터가 자동 처리)
+- Rate Limit: 분당 500회
 
 **호출 예시**
 
@@ -133,10 +136,20 @@ const text = await generateManseryeok({
 - `fields: []` = 전체 분석 자동 요청. 일부만 필요하면 배열로 지정 (예: `["ganji", "sipseong"]`)
 - 응답을 `formatSajuToManseryeok()` 가 LLM 프롬프트용 한국어 텍스트로 변환
 
-**가능한 fields**
-`ganji`, `sipseong`, `sinStrength`, `gyeokguk`, `twelveFortune`, `daeun`, `seun`, `weolun`, `guiin`, `hongyeom`, `dohwa`, `hwagae`, `sibisinsals`, `bigyeonGeobjae`, `hapchung`
+**가능한 fields (16종)**
+`ganji`, `sipseong`, `sinStrength`, `gyeokguk`, `gyeokgukYongsin`★, `twelveFortune`, `daeun`, `seun`, `weolun`, `guiin`, `hongyeom`, `dohwa`, `hwagae`, `sibisinsals`, `bigyeonGeobjae`, `hapchung`
+
+★ `gyeokgukYongsin` (격국용신, 자평진전 체계) 은 `fields` 에 명시적으로 포함해야 반환됩니다. 전체 요청(`[]`) 시에는 15종만 반환.
 
 **키가 없는 상태로 호출하면** `/api/generate-manseryeok` 는 503 을 반환합니다 — 데모 모드에서는 호출하지 마세요.
+
+**401 에러가 떨어질 때**
+- `Invalid B2B API key` → 키 오타/만료
+- `Client account is deactivated` → 계정 비활성화 (관리자 문의)
+- `Test API key expired on ...` → 테스트 키 만료
+- `Daily test limit exceeded` → 일일 한도 초과 (다음 날 재시도)
+
+자세한 에러 코드는 [`./운세위키_API_가이드.md`](./운세위키_API_가이드.md) §6 참고.
 
 ## 커스터마이징
 

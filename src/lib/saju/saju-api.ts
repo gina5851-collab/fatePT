@@ -10,21 +10,22 @@
 import { serverEnv } from "@/lib/env";
 
 export type AnalysisField =
-  | "ganji"          // 천간지지 (사주 원국)
-  | "guiin"          // 귀인
-  | "hongyeom"       // 홍염살
-  | "dohwa"          // 도화살
-  | "hwagae"         // 화개살
-  | "bigyeonGeobjae" // 비견 · 겁재
-  | "sibisinsals"    // 12신살
-  | "sipseong"       // 십성
-  | "sinStrength"    // 신강 / 신약
-  | "daeun"          // 대운
-  | "seun"           // 세운
-  | "hapchung"       // 합 · 충 · 형 · 해 · 파
-  | "gyeokguk"       // 격국
-  | "twelveFortune"  // 12운성
-  | "weolun";        // 월운
+  | "ganji"            // 천간지지 (사주 원국)
+  | "guiin"            // 귀인 (16종)
+  | "hongyeom"         // 홍염살
+  | "dohwa"            // 도화살
+  | "hwagae"           // 화개살
+  | "bigyeonGeobjae"   // 비견 · 겁재
+  | "sibisinsals"      // 12신살
+  | "sipseong"         // 십성
+  | "sinStrength"      // 신강 / 신약 (7단계)
+  | "daeun"            // 대운 (10년 주기)
+  | "seun"             // 세운 (연간)
+  | "hapchung"         // 합 · 충 · 형 · 해 · 파
+  | "gyeokguk"         // 격국 (억부용신)
+  | "gyeokgukYongsin"  // 격국용신 (자평진전 체계) — fields 에 명시해야 반환됨
+  | "twelveFortune"    // 12운성
+  | "weolun";          // 월운 (최근 3개월 + 현재 + 향후 11개월)
 
 export type BirthInfo = {
   birthYear: string;        // "1990"
@@ -85,7 +86,8 @@ export async function fetchSajuAnalysis(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": apiKey,
+          "User-Agent": "SajuBookClient/1.0",
+          "X-SAJU-BOOK-API-KEY": apiKey,
         },
         body,
         signal: controller.signal,
@@ -131,10 +133,11 @@ export function formatSajuToManseryeok(
   // 출력 순서를 보기 좋게 고정
   const order: { key: AnalysisField; label: string }[] = [
     { key: "ganji",          label: "천간지지 (사주 원국)" },
-    { key: "sipseong",       label: "십성" },
-    { key: "sinStrength",    label: "신강/신약" },
-    { key: "gyeokguk",       label: "격국" },
-    { key: "twelveFortune",  label: "12운성" },
+    { key: "sipseong",        label: "십성" },
+    { key: "sinStrength",     label: "신강/신약" },
+    { key: "gyeokguk",        label: "격국 (억부용신)" },
+    { key: "gyeokgukYongsin", label: "격국용신 (자평진전)" },
+    { key: "twelveFortune",   label: "12운성" },
     { key: "daeun",          label: "대운" },
     { key: "seun",           label: "세운" },
     { key: "weolun",         label: "월운" },
