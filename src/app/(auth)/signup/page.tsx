@@ -1,44 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState } from "react";
 import Link from "next/link";
-import { toast } from "sonner";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { publicEnv } from "@/lib/env";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { signupAction } from "./actions";
 
 export default function SignupPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { display_name: name },
-        emailRedirectTo: `${publicEnv.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-      },
-    });
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    toast.success("가입 완료! 마이페이지로 이동합니다.");
-    router.push("/mypage");
-    router.refresh();
-  }
+  const [state, formAction, isPending] = useActionState(signupAction, null);
 
   return (
     <div className="container py-16 max-w-md">
@@ -48,25 +25,39 @@ export default function SignupPage() {
           <CardDescription>이메일 인증 없이 즉시 가입됩니다.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form action={formAction} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">이름</Label>
-              <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} />
+              <Input id="name" name="name" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">이메일</Label>
-              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input id="email" name="email" type="email" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">비밀번호 (8자 이상)</Label>
-              <Input id="password" type="password" minLength={8} required value={password} onChange={(e) => setPassword(e.target.value)} />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                minLength={8}
+                required
+              />
             </div>
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "가입 중..." : "가입하기"}
+
+            {/* 오류 메시지 */}
+            {state?.error && (
+              <p className="text-sm text-red-500">{state.error}</p>
+            )}
+
+            <Button type="submit" disabled={isPending} className="w-full">
+              {isPending ? "가입 중..." : "가입하기"}
             </Button>
             <p className="text-sm text-center">
               이미 계정이 있으신가요?{" "}
-              <Link href="/login" className="text-primary hover:underline">로그인</Link>
+              <Link href="/login" className="text-primary hover:underline">
+                로그인
+              </Link>
             </p>
           </form>
         </CardContent>
