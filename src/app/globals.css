@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 모바일 뷰포트 높이 보정 (주소창 포함 환경) */
+:root { --vh: 1vh; }
+
 /* Ollama-inspired design system — see DESIGN.md
    Paper-white canvas, pure black primary, no shadows, hairline borders,
    full-rounded pill geometry on interactive elements. */
@@ -88,5 +91,19 @@
   /* 구분선 */
   .prose-saju hr {
     @apply my-8 border-t border-[#e5e5e5];
+  }
+}
+
+/* 모바일 최소 터치 타깃 44px */
+@layer utilities {
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
+
+/* 컨테이너 모바일 패딩 보정 */
+@layer base {
+  .container {
+    @apply px-4 md:px-6;
   }
 }

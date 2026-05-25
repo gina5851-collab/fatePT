@@ -85,7 +85,7 @@ export default async function ProductDetailPage({
       {copy && (
         <section className="mb-10 rounded-lg border border-hairline bg-[#fafafa] p-5">
           <p className="text-xs font-semibold text-ink mb-3">📄 리포트에 포함되는 내용</p>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
             {copy.resultSections.map((s, i) => (
               <li key={i} className="flex items-center gap-1.5 text-xs text-body">
                 <span className="text-mute font-mono">{String(i + 1).padStart(2, "0")}</span>
