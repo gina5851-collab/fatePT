@@ -12,7 +12,7 @@ export function HowItWorks() {
       <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-center mb-12">
         작동 방식
       </h2>
-      <ol className="grid gap-10 md:grid-cols-4">
+      <ol className="grid grid-cols-2 gap-8 md:grid-cols-4">
         {steps.map((s) => (
           <li key={s.n}>
             <p className="text-xs font-mono text-mute mb-2">{s.n}</p>

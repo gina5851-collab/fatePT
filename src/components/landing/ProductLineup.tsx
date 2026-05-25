@@ -37,18 +37,18 @@ export async function ProductLineup() {
       <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-center mb-10">
         상품 라인업
       </h2>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-4">
         {products.map((p) => (
           <Link
             key={p.slug}
             href={`/products/${p.slug}`}
-            className="group block rounded-lg border border-hairline bg-canvas p-6 transition-colors hover:border-ink"
+            className="group block rounded-lg border border-hairline bg-canvas p-4 md:p-6 transition-colors hover:border-ink"
           >
-            <p className="text-base font-semibold text-ink">{p.name}</p>
-            <p className="mt-1.5 text-sm text-body leading-relaxed line-clamp-2">
+            <p className="text-sm md:text-base font-semibold text-ink">{p.name}</p>
+            <p className="mt-1.5 text-xs md:text-sm text-body leading-relaxed line-clamp-2">
               {p.description}
             </p>
-            <p className="mt-5 text-lg font-mono font-medium text-ink">
+            <p className="mt-3 md:mt-5 text-base md:text-lg font-mono font-medium text-ink">
               {formatKRW(p.price)}
             </p>
           </Link>

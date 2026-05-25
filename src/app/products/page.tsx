@@ -34,7 +34,7 @@ export default async function ProductsPage() {
       {!products || products.length === 0 ? (
         <p className="text-sm text-body">상품이 없습니다.</p>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {products.map((p) => (
             <Link
               key={p.slug}

@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import { siteConfig, businessInfo } from "@/config/site";
 import { isSupabaseConfigured } from "@/lib/env";
 import { getCurrentUser } from "@/lib/auth";
+import { MobileMenu } from "@/components/layout/MobileMenu";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -37,12 +38,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 // Ollama: 56px utility nav, primary nav on canvas, no shadow.
 function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
-    <header className="border-b border-hairline bg-canvas">
+    <header className="border-b border-hairline bg-canvas sticky top-0 z-30">
       <div className="container flex h-14 items-center justify-between">
         <Link href="/" className="font-semibold text-[15px] text-ink">
           {siteConfig.name}
         </Link>
-        <nav className="flex items-center gap-6 text-[13px] font-medium">
+
+        {/* 데스크톱 네비 */}
+        <nav className="hidden md:flex items-center gap-6 text-[13px] font-medium">
           <Link href="/contents" className="text-ink hover:text-body">콘텐츠</Link>
           <Link href="/products" className="text-ink hover:text-body">리포트</Link>
           {isLoggedIn ? (
@@ -56,6 +59,9 @@ function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
             <Link href="/login" className="text-ink hover:text-body">로그인</Link>
           )}
         </nav>
+
+        {/* 모바일 햄버거 (클라이언트 컴포넌트) */}
+        <MobileMenu isLoggedIn={isLoggedIn} />
       </div>
     </header>
   );

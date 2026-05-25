@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export function CTA() {
   return (
     <section className="container py-16">
-      <div className="rounded-lg bg-surface-dark px-8 py-12 text-center text-canvas">
+      <div className="rounded-lg bg-surface-dark px-5 py-10 md:px-8 md:py-12 text-center text-canvas">
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
           막연한 불안을 리포트로 정리해 보세요
         </h2>
