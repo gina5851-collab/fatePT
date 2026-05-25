@@ -5,6 +5,7 @@ import { siteConfig, businessInfo } from "@/config/site";
 import { isSupabaseConfigured } from "@/lib/env";
 import { getCurrentUser } from "@/lib/auth";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { Analytics } from "@/components/analytics/Analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="ko">
       <body suppressHydrationWarning>
+        <Analytics />
         <SiteHeader isLoggedIn={isLoggedIn} />
         <main className="min-h-[calc(100vh-7rem)]">{children}</main>
         <SiteFooter />
@@ -73,10 +75,10 @@ function SiteFooter() {
   const businessLine = [
     businessInfo.companyName,
     `사업자등록번호: ${businessInfo.businessNumber}`,
-    `통신판매업 신고번호: ${businessInfo.mailOrderNumber}`,
+    businessInfo.mailOrderNumber ? `통신판매업 신고번호: ${businessInfo.mailOrderNumber}` : null,
     `대표: ${businessInfo.representative}`,
     `주소: ${businessInfo.address}`,
-  ].join(" | ");
+  ].filter(Boolean).join(" | ");
 
   const contactLine = [
     `고객센터: ${businessInfo.email}`,
