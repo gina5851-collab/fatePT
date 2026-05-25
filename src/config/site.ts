@@ -5,8 +5,8 @@
 
 export const siteConfig = {
   name: "오늘의 사주",
-  tagline: "AI가 풀어주는 나의 사주",
-  description: "정통 만세력과 AI 해석이 만나, 가볍게 보는 오늘의 운세부터 깊이 있는 종합 풀이까지.",
+  tagline: "왜 나는 같은 선택을 반복할까?",
+  description: "생년월일 기반 AI 리포트로 내 관계·돈·선택의 패턴을 정리합니다. 단정적인 운세가 아닌, 오늘을 더 선명하게 살아가기 위한 자기이해 리포트입니다.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   email: "support@example.com",
 };

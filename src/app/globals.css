@@ -74,4 +74,19 @@
   .prose-saju code {
     @apply rounded-md bg-[#fafafa] px-1.5 py-0.5 text-sm;
   }
+  /* > 인용구 — 핵심 한 줄 메시지 */
+  .prose-saju blockquote {
+    @apply my-5 border-l-2 border-foreground pl-4 text-[15px] font-medium text-foreground leading-7;
+  }
+  .prose-saju blockquote p {
+    @apply my-0 text-foreground;
+  }
+  /* - [ ] 체크리스트 */
+  .prose-saju ul li input[type="checkbox"] {
+    @apply mr-2 align-middle accent-foreground;
+  }
+  /* 구분선 */
+  .prose-saju hr {
+    @apply my-8 border-t border-[#e5e5e5];
+  }
 }
