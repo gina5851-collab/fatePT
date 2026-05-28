@@ -27,7 +27,7 @@ export function BankTransferInfo({
 
   async function copyAccount() {
     try {
-      await navigator.clipboard.writeText(accountNumber.replace(/\s/g, ""));
+      await navigator.clipboard.writeText(accountNumber.replace(/[\s-]/g, ""));
       setCopied(true);
       toast.success("계좌번호를 복사했어요");
       setTimeout(() => setCopied(false), 2000);
