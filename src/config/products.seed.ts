@@ -25,11 +25,27 @@ export const productsSeed: ProductSeed[] = [
     is_active: true,
   },
   {
+    slug: "crush-kit",
+    name: "짝사랑 키트",
+    description: "짝사랑 상대의 마음과 다가갈 타이밍을 진단하는 감정 키트",
+    price: 14900,
+    display_order: 15,
+    is_active: true,
+  },
+  {
     slug: "love-session",
     name: "연애 집중 세션",
     description: "그 사람 속마음·궁합·타이밍을 집중 트레이닝하는 관계 세션",
     price: 19900,
     display_order: 20,
+    is_active: true,
+  },
+  {
+    slug: "reunion-check",
+    name: "재회 가능성 리포트",
+    description: "헤어진 그 사람과 다시 이어질 가능성·타이밍을 집중 진단",
+    price: 39000,
+    display_order: 25,
     is_active: true,
   },
   {
