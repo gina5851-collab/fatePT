@@ -34,8 +34,8 @@ export function Hero() {
       </p>
 
       <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 px-4">
-        <Link href="/products" className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto")}>
-          내 운명 진단받기
+        <Link href="/start" className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto")}>
+          1분 무료로 진단받기
         </Link>
         <Link
           href="/contents"

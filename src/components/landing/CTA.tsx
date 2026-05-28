@@ -11,14 +11,14 @@ export function CTA() {
           막연한 불안을, 단련 가능한 루틴으로
         </h2>
         <p className="mt-3 text-sm text-white/70">
-          로그인 후 결제 · 진단 결과는 마이페이지에서 바로 확인
+          1분 무료 진단으로 시작 · 결과는 마이페이지에서 바로 확인
         </p>
         <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
-            href="/products"
+            href="/start"
             className={cn(buttonVariants({ size: "lg", variant: "onDark" }))}
           >
-            내 운명 진단받기
+            1분 무료로 진단받기
           </Link>
           <Link
             href="/contents"
