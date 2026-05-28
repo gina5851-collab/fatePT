@@ -17,6 +17,7 @@ export const bankTransfer = {
   bankName: "신한은행",
   accountNumber: "110-387-832895",
   accountHolder: "장진아",
+  processingTime: "24시간", // 입금 확인 후 결과 발송까지 안내 시간. 손님 화면에 노출됩니다.
 };
 
 export function isBankTransferEnabled(): boolean {

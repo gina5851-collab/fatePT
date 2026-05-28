@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { isBankTransferEnabled } from "@/config/site";
+import { isBankTransferEnabled, bankTransfer } from "@/config/site";
 
 type Props = {
   productId: string;
@@ -179,7 +179,7 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
                 placeholder="실제 입금하실 분 성함"
               />
               <p className="text-xs text-body">
-                다음 화면의 계좌로 입금해 주시면, 입금 확인 후 결과지를 생성해 드립니다.
+                다음 화면의 계좌로 입금해 주시면, 입금 확인 후 보통 {bankTransfer.processingTime} 이내에 결과지를 보내드립니다.
               </p>
             </div>
           )}

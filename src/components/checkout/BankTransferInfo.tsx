@@ -13,6 +13,7 @@ type Props = {
   amount: number;
   orderId: string;
   depositorName: string | null;
+  processingTime: string;
 };
 
 export function BankTransferInfo({
@@ -22,6 +23,7 @@ export function BankTransferInfo({
   amount,
   orderId,
   depositorName,
+  processingTime,
 }: Props) {
   const [copied, setCopied] = useState(false);
 
@@ -68,7 +70,7 @@ export function BankTransferInfo({
       <div className="rounded-lg bg-surface-soft p-4 text-xs leading-relaxed text-body space-y-1">
         <p>· 위 계좌로 <span className="font-semibold text-ink">{formatKRW(amount)}</span>을 입금해 주세요.</p>
         <p>· 입금자명이 다르면 확인이 늦어질 수 있어요{depositorName ? ` (입력하신 입금자명: ${depositorName})` : ""}.</p>
-        <p>· 입금 확인 후 결과지를 생성해 드리며, <span className="font-semibold text-ink">마이페이지</span>에서 확인하실 수 있어요.</p>
+        <p>· 입금 확인 후 보통 <span className="font-semibold text-ink">{processingTime} 이내</span>에 결과지를 발송해 드리며, <span className="font-semibold text-ink">마이페이지</span>에서 확인하실 수 있어요.</p>
         <p className="font-mono text-[11px] text-mute pt-1">주문번호: {orderId}</p>
       </div>
 

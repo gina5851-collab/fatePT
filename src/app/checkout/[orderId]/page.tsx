@@ -60,6 +60,7 @@ export default async function CheckoutPage({
               amount={order.amount}
               orderId={order.order_id}
               depositorName={order.depositor_name}
+              processingTime={bankTransfer.processingTime}
             />
           ) : (
             <TossWidget
