@@ -13,13 +13,14 @@ export const siteConfig = {
 // 무통장입금(계좌이체) 설정 — 토스 PG 심사 통과 전 임시 결제 수단.
 // accountNumber 를 채우면 활성화됩니다. 비워두면 체크아웃에 무통장입금 옵션이 숨겨집니다.
 export const bankTransfer = {
+  enabled: true, // 무통장입금 켜기/끄기 스위치. false 로 바꾸면 결제창에서 숨겨집니다.
   bankName: "신한은행",
   accountNumber: "110-387-832895",
   accountHolder: "장진아",
 };
 
 export function isBankTransferEnabled(): boolean {
-  return bankTransfer.accountNumber.trim().length > 0;
+  return bankTransfer.enabled && bankTransfer.accountNumber.trim().length > 0;
 }
 
 // 통신판매업 / 사업자 정보 — 법적 페이지 및 푸터에 노출됩니다.
