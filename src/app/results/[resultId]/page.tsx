@@ -19,6 +19,34 @@ const RECO_BY_CONCERN: Record<string, string> = {
   "인생 전체": "life-master",
 };
 
+// PAS 업셀 카피: 무료 결과의 신호(problem) → 이대로 두면(risk) → 프로그램으로 해결
+const PAS_BY_CONCERN: Record<string, { signal: string; risk: string }> = {
+  "짝사랑": {
+    signal: "다가갈 타이밍에서 자꾸 망설이는 신호",
+    risk: "이대로 두면 마음만 키우다 기회를 놓칠 수 있어요",
+  },
+  "연애·관계": {
+    signal: "관계에서 같은 자세를 반복하는 신호",
+    risk: "이대로 두면 비슷한 갈등이 또 반복될 수 있어요",
+  },
+  "재회": {
+    signal: "지금이 다가갈 때인지 기다릴 때인지 헷갈리는 신호",
+    risk: "타이밍을 잘못 잡으면 회복이 더 어려워질 수 있어요",
+  },
+  "돈·일": {
+    signal: "버는데도 잘 안 모이는 패턴 신호",
+    risk: "패턴을 모르면 같은 누수가 계속될 수 있어요",
+  },
+  "인생 전체": {
+    signal: "방향이 흐릿해 제자리처럼 느껴지는 신호",
+    risk: "큰 흐름을 모르면 중요한 시기를 놓칠 수 있어요",
+  },
+};
+const PAS_DEFAULT = {
+  signal: "지금 흐름에서 반복되는 패턴 신호",
+  risk: "이대로 두면 같은 패턴이 또 반복될 수 있어요",
+};
+
 export default async function ResultPage({
   params,
 }: {
@@ -49,7 +77,9 @@ export default async function ResultPage({
   const copy = PRODUCT_COPY[productSlug];
 
   // 무료 맛보기 결과면 — 고른 고민에 맞는 1개 프로그램을 맥락 추천
-  let reco: { slug: string; name: string; price: number; headline: string; positioning: string } | null = null;
+  let reco:
+    | { slug: string; name: string; price: number; positioning: string; signal: string; risk: string }
+    | null = null;
   if (productSlug === "free-taste") {
     const { data: input } = await service
       .from("saju_inputs")
@@ -66,12 +96,14 @@ export default async function ResultPage({
       .maybeSingle();
     const recoCopy = PRODUCT_COPY[recoSlug];
     if (recoProduct && recoCopy) {
+      const pas = PAS_BY_CONCERN[concern] ?? PAS_DEFAULT;
       reco = {
         slug: recoProduct.slug,
         name: recoProduct.name,
         price: recoProduct.price,
-        headline: recoCopy.headline,
         positioning: recoCopy.positioning,
+        signal: pas.signal,
+        risk: pas.risk,
       };
     }
   }
@@ -95,19 +127,24 @@ export default async function ResultPage({
         <ResultBody markdown={result.interpretation_md} />
       </article>
 
-      {/* ── 맥락 추천 (무료 맛보기 → 고민 맞춤 1개, 가격 첫 노출) ── */}
+      {/* ── 맥락 추천 (무료 맛보기 → PAS 업셀, 가격 첫 노출) ── */}
       {reco && (
         <section className="mt-16 pt-10 border-t border-hairline">
           <p className="text-xs font-mono text-mute mb-3">NEXT STEP</p>
           <div className="rounded-lg border border-ink p-6">
-            <p className="text-xs text-body mb-1">당신 같은 분께 딱 맞는 다음 단계</p>
-            <p className="text-lg font-semibold text-ink">{reco.name}</p>
+            <p className="text-sm text-ink leading-relaxed">
+              무료 진단에서 <span className="font-semibold">{reco.signal}</span>가 보여요.
+            </p>
+            <p className="mt-1 text-sm text-body leading-relaxed">{reco.risk}.</p>
+            <p className="mt-3 text-sm text-ink leading-relaxed">
+              <span className="font-semibold text-ink">{reco.name}</span>로 그 신호를 제대로 진단하고 바로잡아 보실래요?
+            </p>
             <p className="mt-1 text-xs text-mute">{reco.positioning}</p>
-            <p className="mt-3 text-sm text-body leading-relaxed">{reco.headline}</p>
             <p className="mt-4 text-xl font-mono font-medium text-ink">{formatKRW(reco.price)}</p>
             <Link href={`/products/${reco.slug}`} className={cn(buttonVariants({ size: "lg" }), "mt-4 w-full")}>
-              {reco.name} 시작하기
+              네, 해볼게요 →
             </Link>
+            <p className="mt-2 text-center text-[11px] text-mute">단정적 예언이 아니라, 패턴을 바로잡는 트레이닝이에요</p>
           </div>
         </section>
       )}
