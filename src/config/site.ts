@@ -4,8 +4,8 @@
 
 export const siteConfig = {
   name: "운명PT",
-  tagline: "왜 나는 같은 선택을 반복할까?",
-  description: "생년월일 기반 AI 리포트로 내 관계·돈·선택의 패턴을 정리합니다. 단정적인 운세가 아닌, 오늘을 더 선명하게 살아가기 위한 자기이해 리포트입니다.",
+  tagline: "운명도, 단련됩니다.",
+  description: "운명PT는 인생을 트레이닝하는 곳입니다. 생년월일로 내 '운명 체성분(명식)'을 진단하고, 관계·돈·선택의 반복되는 패턴을 바로잡을 맞춤 루틴을 처방합니다. 단정적인 운세가 아니라, 오늘부터 더 나은 선택을 단련하는 자기이해 트레이닝입니다.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   email: "gina5851@gmail.com",
 };

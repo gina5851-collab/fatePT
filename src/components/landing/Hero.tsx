@@ -35,7 +35,7 @@ export function Hero() {
 
       <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 px-4">
         <Link href="/products" className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto")}>
-          리포트 보기
+          내 운명 진단받기
         </Link>
         <Link
           href="/contents"
@@ -46,7 +46,7 @@ export function Hero() {
       </div>
 
       <p className="mt-5 text-xs text-mute px-4">
-        단정적인 운세가 아닌, 오늘의 선택을 정리하는 자기이해 리포트입니다
+        단정적인 운세가 아니라, 오늘부터 단련하는 자기이해 트레이닝입니다
       </p>
     </section>
   );

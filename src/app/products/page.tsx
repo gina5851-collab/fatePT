@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatKRW } from "@/lib/utils";
 import { isSupabaseConfigured } from "@/lib/env";
 import { productsSeed } from "@/config/products.seed";
+import { PRODUCT_COPY } from "@/config/product-copy";
 
 export const metadata = { title: "상품" };
 
@@ -35,19 +36,32 @@ export default async function ProductsPage() {
         <p className="text-sm text-body">상품이 없습니다.</p>
       ) : (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => (
+          {products.map((p) => {
+            const copy = PRODUCT_COPY[p.slug];
+            return (
             <Link
               key={p.slug}
               href={`/products/${p.slug}`}
-              className="group block rounded-lg border border-hairline bg-canvas p-6 transition-colors hover:border-ink"
+              className={`group block rounded-lg border bg-canvas p-6 transition-colors hover:border-ink ${copy?.badge ? "border-ink" : "border-hairline"}`}
             >
-              <p className="text-base font-semibold text-ink">{p.name}</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-base font-semibold text-ink">{p.name}</p>
+                {copy?.badge ? (
+                  <span className="text-[10px] font-semibold rounded-full bg-ink text-canvas px-1.5 py-0.5">{copy.badge}</span>
+                ) : null}
+              </div>
               <p className="mt-1.5 text-sm text-body leading-relaxed line-clamp-2">
                 {p.description}
               </p>
-              <p className="mt-5 text-lg font-mono font-medium text-ink">{formatKRW(p.price)}</p>
+              <div className="mt-5 flex items-baseline gap-1.5">
+                {copy?.originalPrice ? (
+                  <span className="text-xs font-mono text-mute line-through">{formatKRW(copy.originalPrice)}</span>
+                ) : null}
+                <span className="text-lg font-mono font-medium text-ink">{formatKRW(p.price)}</span>
+              </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

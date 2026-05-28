@@ -55,7 +55,12 @@ export default async function ProductDetailPage({
     <div className="container py-12 max-w-2xl">
       {/* ── 헤더 ── */}
       <header className="mb-10">
-        <p className="text-xs font-mono text-mute mb-2">REPORT / {product.slug}</p>
+        <div className="flex items-center gap-2 mb-2">
+          <p className="text-xs font-mono text-mute">PROGRAM / {product.slug}</p>
+          {copy?.badge ? (
+            <span className="text-[11px] font-semibold rounded-full bg-ink text-canvas px-2 py-0.5">{copy.badge}</span>
+          ) : null}
+        </div>
 
         {copy ? (
           <>
@@ -74,7 +79,17 @@ export default async function ProductDetailPage({
           </>
         )}
 
-        <p className="mt-5 text-2xl font-mono font-medium text-ink">{formatKRW(product.price)}</p>
+        <div className="mt-5 flex items-baseline gap-2">
+          {copy?.originalPrice ? (
+            <span className="text-base font-mono text-mute line-through">{formatKRW(copy.originalPrice)}</span>
+          ) : null}
+          <span className="text-2xl font-mono font-medium text-ink">{formatKRW(product.price)}</span>
+          {copy?.originalPrice ? (
+            <span className="text-xs font-semibold text-ink">
+              {Math.round((1 - product.price / copy.originalPrice) * 100)}% OFF
+            </span>
+          ) : null}
+        </div>
 
         {copy && (
           <p className="mt-1 text-xs text-mute">{copy.disclaimer}</p>
