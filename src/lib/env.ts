@@ -22,12 +22,25 @@ const publicSchema = z.object({
   NEXT_PUBLIC_TOSS_CLIENT_KEY: z.string().min(1),
 });
 
-export const publicEnv = publicSchema.parse({
+// NEXT_PUBLIC_* 가 없는 환경(예: 환경변수 미설정 프리뷰 배포)에서도 빌드가
+// 깨지지 않도록 safeParse 후 .env.example 과 동일한 placeholder 로 폴백한다.
+// 폴백 시 NEXT_PUBLIC_SUPABASE_URL 이 'YOUR_PROJECT' 라 isSupabaseConfigured()
+// 가 false → 데모 모드로 동작. 운영에는 실제 값이 있으므로 동작은 동일하다.
+const _publicParsed = publicSchema.safeParse({
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   NEXT_PUBLIC_TOSS_CLIENT_KEY: process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY,
 });
+
+export const publicEnv: z.infer<typeof publicSchema> = _publicParsed.success
+  ? _publicParsed.data
+  : {
+      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+      NEXT_PUBLIC_SUPABASE_URL: "https://YOUR_PROJECT.supabase.co",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "placeholder-anon-key",
+      NEXT_PUBLIC_TOSS_CLIENT_KEY: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
+    };
 
 // .env.example 그대로(placeholder)면 false — DB 호출을 우회해 데모 모드로 동작
 export function isSupabaseConfigured(): boolean {

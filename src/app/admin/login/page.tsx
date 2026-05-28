@@ -3,6 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { setAdminCookie, isAdminAuthenticated, isAdminConfigured } from "@/lib/admin-auth";
 
+// 쿠키 기반 인증 + serverEnv 사용 → 정적 프리렌더 금지(런타임 렌더).
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "관리자 로그인" };
 
 type SearchParams = Promise<{ from?: string; error?: string; unconfigured?: string }>;
