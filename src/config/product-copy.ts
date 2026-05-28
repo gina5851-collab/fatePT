@@ -34,6 +34,39 @@ export type ProductCopy = {
 };
 
 export const PRODUCT_COPY: Record<string, ProductCopy> = {
+  "free-taste": {
+    headline: "1분이면, 내 운명 체성분 미리보기",
+    positioning: "무료 운명 맛보기 — 진짜 단련 전, 가볍게 한 번",
+    badge: "무료",
+    body: `헬스장 무료 체험처럼, 운명PT도 일단 가볍게 한 번 재보세요.\n오늘의 흐름과 내 기질의 큰 그림을 1분 만에 무료로 확인할 수 있어요.\n\n맛보기로 감을 잡고, 더 깊은 진단은 유료 프로그램에서 이어가세요. (하루 1회 무료)`,
+    deliverables: [
+      "내 기질 한 줄 진단",
+      "오늘의 흐름 한두 가지",
+      "더 깊이 볼 다음 단계 추천",
+    ],
+    resultSections: [
+      "한 줄 진단",
+      "오늘의 흐름",
+      "다음 단계",
+    ],
+    priceJustification: `완전 무료입니다. 부담 없이 한 번 받아보고, 마음에 들면 더 깊은 진단으로 이어가세요.\n무료 진단은 하루 1회 받을 수 있어요.`,
+    disclaimer: "맛보기용 짧은 진단입니다. 더 정밀한 분석은 유료 프로그램에서 제공됩니다.",
+    upsell: [
+      {
+        trigger: "맛보기로는 부족했다면",
+        suggestion: "타고난 기질·강점·약점을 한 장으로 제대로 진단하는 운명 인바디가 있어요.",
+        slug: "inbody",
+        label: "운명 인바디 보기",
+      },
+      {
+        trigger: "관계 고민이 떠올랐다면",
+        suggestion: "짝사랑·연애·재회까지, 지금 마음에 걸리는 관계를 집중 진단할 수 있어요.",
+        slug: "crush-kit",
+        label: "짝사랑 키트 보기",
+      },
+    ],
+  },
+
   "inbody": {
     headline: "내 운명, 지금 체성분부터 재봅니다",
     positioning: "운명PT 입문 — 타고난 기질을 측정하는 운명 인바디",

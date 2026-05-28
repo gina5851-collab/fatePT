@@ -17,6 +17,14 @@ export type ProductSeed = {
 
 export const productsSeed: ProductSeed[] = [
   {
+    slug: "free-taste",
+    name: "무료 운명 맛보기",
+    description: "1분 무료 진단 — 오늘의 흐름과 내 기질을 가볍게 확인 (하루 1회)",
+    price: 0,
+    display_order: 5,
+    is_active: true,
+  },
+  {
     slug: "inbody",
     name: "운명 인바디",
     description: "내 운명 체성분 측정 — 타고난 기질·강점·약점을 한 장으로 진단",

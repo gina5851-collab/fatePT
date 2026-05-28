@@ -57,7 +57,7 @@ export default async function ProductsPage() {
                 {copy?.originalPrice ? (
                   <span className="text-xs font-mono text-mute line-through">{formatKRW(copy.originalPrice)}</span>
                 ) : null}
-                <span className="text-lg font-mono font-medium text-ink">{formatKRW(p.price)}</span>
+                <span className="text-lg font-mono font-medium text-ink">{p.price === 0 ? "무료" : formatKRW(p.price)}</span>
               </div>
             </Link>
             );

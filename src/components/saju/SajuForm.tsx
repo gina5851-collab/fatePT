@@ -14,11 +14,12 @@ type Props = {
   productId: string;
   productSlug: string;
   isLoggedIn: boolean;
+  isFree?: boolean;
 };
 
 const CONCERN_OPTIONS = ["연애", "결혼", "직장", "재물", "건강", "학업", "이직", "사업"];
 
-export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
+export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }: Props) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -43,24 +44,41 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
       toast.error("생년월일을 입력해 주세요");
       return;
     }
-    if (paymentMethod === "bank_transfer" && !depositorName.trim()) {
+    if (!isFree && paymentMethod === "bank_transfer" && !depositorName.trim()) {
       toast.error("입금자명을 입력해 주세요");
       return;
     }
     setSubmitting(true);
     try {
+      const payload = {
+        name,
+        birthDate,
+        birthTime: timeUnknown ? null : birthTime || null,
+        timeUnknown,
+        gender,
+        calendar,
+        concerns,
+      };
+
+      // 무료 키트 — 결제 없이 바로 생성 후 결과지로
+      if (isFree) {
+        const res = await fetch("/api/free", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error ?? "무료 진단 생성 실패");
+        router.push(`/results/${json.resultId}`);
+        return;
+      }
+
       const res = await fetch("/api/orders/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId,
-          name,
-          birthDate,
-          birthTime: timeUnknown ? null : birthTime || null,
-          timeUnknown,
-          gender,
-          calendar,
-          concerns,
+          ...payload,
           paymentMethod,
           depositorName: paymentMethod === "bank_transfer" ? depositorName.trim() : undefined,
         }),
@@ -151,7 +169,7 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
         </div>
       </div>
 
-      {bankEnabled && (
+      {!isFree && bankEnabled && (
         <div className="space-y-2">
           <Label>결제 방법</Label>
           <div className="flex gap-2">
@@ -188,7 +206,9 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
 
       {isLoggedIn ? (
         <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-          {submitting ? "주문 생성 중..." : paymentMethod === "bank_transfer" ? "입금 안내 받기" : "결제하러 가기"}
+          {submitting
+            ? isFree ? "진단 중..." : "주문 생성 중..."
+            : isFree ? "무료로 진단받기" : paymentMethod === "bank_transfer" ? "입금 안내 받기" : "결제하러 가기"}
         </Button>
       ) : (
         <div className="space-y-2">
@@ -196,7 +216,7 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
             href={`/login?redirect=${encodeURIComponent(`/products/${productSlug}`)}`}
             className={cn(buttonVariants({ size: "lg" }), "w-full")}
           >
-            로그인하고 결제하기
+            {isFree ? "로그인하고 무료로 받기" : "로그인하고 결제하기"}
           </Link>
           <p className="text-xs text-body text-center">
             결과는 로그인 후 <span className="text-ink">마이페이지</span> 에서 확인할 수 있어요.

@@ -22,6 +22,7 @@ const STATUS_LABEL: Record<string, string> = {
 const METHOD_LABEL: Record<string, string> = {
   toss: "카드",
   bank_transfer: "무통장",
+  free: "무료",
 };
 
 type OrderRow = {

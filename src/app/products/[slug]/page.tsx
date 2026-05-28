@@ -83,7 +83,7 @@ export default async function ProductDetailPage({
           {copy?.originalPrice ? (
             <span className="text-base font-mono text-mute line-through">{formatKRW(copy.originalPrice)}</span>
           ) : null}
-          <span className="text-2xl font-mono font-medium text-ink">{formatKRW(product.price)}</span>
+          <span className="text-2xl font-mono font-medium text-ink">{product.price === 0 ? "무료" : formatKRW(product.price)}</span>
           {copy?.originalPrice ? (
             <span className="text-xs font-semibold text-ink">
               {Math.round((1 - product.price / copy.originalPrice) * 100)}% OFF
@@ -134,11 +134,11 @@ export default async function ProductDetailPage({
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-ink">생년월일 입력</h2>
           <span className="text-xs text-mute bg-[#fafafa] border border-hairline rounded-full px-2.5 py-0.5">
-            결제 후 바로 확인 가능
+            {product.price === 0 ? "무료 · 바로 확인" : "결제 후 바로 확인 가능"}
           </span>
         </div>
         <p className="text-xs text-body mb-4">정확할수록 더 정밀한 결과가 나옵니다.</p>
-        <SajuForm productId={product.id} productSlug={product.slug} isLoggedIn={!!user} />
+        <SajuForm productId={product.id} productSlug={product.slug} isLoggedIn={!!user} isFree={product.price === 0} />
       </section>
 
       {/* ── 후기 ── */}

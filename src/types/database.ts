@@ -12,7 +12,7 @@ export type Json =
 export type OrderStatus = "pending" | "paid" | "failed";
 export type CalendarKind = "solar" | "lunar";
 export type GenderKind = "male" | "female";
-export type PaymentMethod = "toss" | "bank_transfer";
+export type PaymentMethod = "toss" | "bank_transfer" | "free";
 
 type ProfileRow = {
   id: string;
