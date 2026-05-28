@@ -1,8 +1,10 @@
 import { notFound, redirect } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase/server";
 import { TossWidget } from "@/components/checkout/TossWidget";
+import { BankTransferInfo } from "@/components/checkout/BankTransferInfo";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatKRW } from "@/lib/utils";
+import { bankTransfer } from "@/config/site";
 
 export const metadata = { title: "결제" };
 
@@ -16,7 +18,7 @@ export default async function CheckoutPage({
 
   const { data: order } = await service
     .from("orders")
-    .select("id, order_id, amount, status, user_id, guest_email, product_id")
+    .select("id, order_id, amount, status, user_id, guest_email, product_id, payment_method, depositor_name")
     .eq("order_id", orderId)
     .maybeSingle();
 
@@ -38,24 +40,36 @@ export default async function CheckoutPage({
 
   const customerKey = order.user_id ?? `guest_${order.id}`;
   const email = order.guest_email;
+  const isBankTransfer = order.payment_method === "bank_transfer";
 
   return (
     <div className="container py-12 max-w-2xl">
       <Card>
         <CardHeader>
-          <CardTitle>결제</CardTitle>
+          <CardTitle>{isBankTransfer ? "무통장입금" : "결제"}</CardTitle>
           <CardDescription>
             {product?.name ?? "사주 상품"} · <span className="font-semibold text-foreground">{formatKRW(order.amount)}</span>
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <TossWidget
-            orderId={order.order_id}
-            amount={order.amount}
-            customerKey={customerKey}
-            productName={product?.name ?? "사주 상품"}
-            customerEmail={email}
-          />
+          {isBankTransfer ? (
+            <BankTransferInfo
+              bankName={bankTransfer.bankName}
+              accountNumber={bankTransfer.accountNumber}
+              accountHolder={bankTransfer.accountHolder}
+              amount={order.amount}
+              orderId={order.order_id}
+              depositorName={order.depositor_name}
+            />
+          ) : (
+            <TossWidget
+              orderId={order.order_id}
+              amount={order.amount}
+              customerKey={customerKey}
+              productName={product?.name ?? "사주 상품"}
+              customerEmail={email}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

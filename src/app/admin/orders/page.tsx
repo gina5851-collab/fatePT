@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
 import { Badge } from "@/components/ui/badge";
 import { formatKRW, formatDate } from "@/lib/utils";
+import { confirmBankTransferAction } from "./actions";
 
 export const metadata = { title: "관리자 - 결제 내역" };
 
@@ -15,6 +16,11 @@ const STATUS_LABEL: Record<string, string> = {
   failed: "실패",
 };
 
+const METHOD_LABEL: Record<string, string> = {
+  toss: "카드",
+  bank_transfer: "무통장",
+};
+
 type OrderRow = {
   id: string;
   order_id: string;
@@ -24,6 +30,8 @@ type OrderRow = {
   user_id: string | null;
   guest_email: string | null;
   product_id: string;
+  payment_method: string;
+  depositor_name: string | null;
   toss_payment_key: string | null;
 };
 
@@ -42,7 +50,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
 
     let query = service
       .from("orders")
-      .select("id, order_id, amount, status, created_at, user_id, guest_email, product_id, toss_payment_key")
+      .select("id, order_id, amount, status, created_at, user_id, guest_email, product_id, payment_method, depositor_name, toss_payment_key")
       .order("created_at", { ascending: false })
       .limit(200);
     if (status && ["pending", "paid", "failed"].includes(status)) {
@@ -117,18 +125,30 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
               <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">상품</th>
               <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">고객</th>
               <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-wider text-mute">금액</th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">수단</th>
               <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">상태</th>
               <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">결과</th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-wider text-mute">관리</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((o) => (
+            {orders.map((o) => {
+              const hasResult = !!resultMap.get(o.id);
+              const needsDepositConfirm = o.status === "pending" && o.payment_method === "bank_transfer";
+              const needsResultGen = o.status === "paid" && !hasResult;
+              return (
               <tr key={o.id} className="border-b border-hairline last:border-0">
                 <td className="px-4 py-3 text-xs text-body">{formatDate(o.created_at)}</td>
                 <td className="px-4 py-3 font-mono text-xs">{o.order_id}</td>
                 <td className="px-4 py-3">{productMap.get(o.product_id) ?? "-"}</td>
-                <td className="px-4 py-3 text-xs">{o.user_id ? "회원" : o.guest_email}</td>
+                <td className="px-4 py-3 text-xs">
+                  {o.user_id ? "회원" : o.guest_email}
+                  {o.payment_method === "bank_transfer" && o.depositor_name ? (
+                    <span className="block text-mute">입금자: {o.depositor_name}</span>
+                  ) : null}
+                </td>
                 <td className="px-4 py-3 text-right font-mono">{formatKRW(o.amount)}</td>
+                <td className="px-4 py-3 text-xs text-body">{METHOD_LABEL[o.payment_method] ?? o.payment_method}</td>
                 <td className="px-4 py-3">
                   <Badge
                     variant={
@@ -139,7 +159,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
                   </Badge>
                 </td>
                 <td className="px-4 py-3">
-                  {resultMap.get(o.id) ? (
+                  {hasResult ? (
                     <Link href={`/results/${resultMap.get(o.id)}`} className="text-xs underline underline-offset-2">
                       보기
                     </Link>
@@ -147,8 +167,24 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
                     <span className="text-xs text-mute">-</span>
                   )}
                 </td>
+                <td className="px-4 py-3">
+                  {needsDepositConfirm || needsResultGen ? (
+                    <form action={confirmBankTransferAction}>
+                      <input type="hidden" name="orderId" value={o.id} />
+                      <button
+                        type="submit"
+                        className="px-3 h-7 inline-flex items-center rounded-full text-xs border border-ink bg-ink text-canvas hover:opacity-90 transition-opacity"
+                      >
+                        {needsDepositConfirm ? "입금확인" : "결과 생성"}
+                      </button>
+                    </form>
+                  ) : (
+                    <span className="text-xs text-mute">-</span>
+                  )}
+                </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
         )}

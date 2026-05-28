@@ -8,6 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { isBankTransferEnabled } from "@/config/site";
 
 type Props = {
   productId: string;
@@ -26,7 +27,11 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
   const [gender, setGender] = useState<"male" | "female">("male");
   const [calendar, setCalendar] = useState<"solar" | "lunar">("solar");
   const [concerns, setConcerns] = useState<string[]>([]);
+  const [paymentMethod, setPaymentMethod] = useState<"toss" | "bank_transfer">("toss");
+  const [depositorName, setDepositorName] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const bankEnabled = isBankTransferEnabled();
 
   function toggleConcern(c: string) {
     setConcerns((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]));
@@ -36,6 +41,10 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
     e.preventDefault();
     if (!birthDate) {
       toast.error("생년월일을 입력해 주세요");
+      return;
+    }
+    if (paymentMethod === "bank_transfer" && !depositorName.trim()) {
+      toast.error("입금자명을 입력해 주세요");
       return;
     }
     setSubmitting(true);
@@ -52,6 +61,8 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
           gender,
           calendar,
           concerns,
+          paymentMethod,
+          depositorName: paymentMethod === "bank_transfer" ? depositorName.trim() : undefined,
         }),
       });
       const json = await res.json();
@@ -140,9 +151,44 @@ export function SajuForm({ productId, productSlug, isLoggedIn }: Props) {
         </div>
       </div>
 
+      {bankEnabled && (
+        <div className="space-y-2">
+          <Label>결제 방법</Label>
+          <div className="flex gap-2">
+            {([
+              { key: "toss", label: "카드 결제" },
+              { key: "bank_transfer", label: "무통장입금" },
+            ] as const).map((m) => (
+              <button
+                type="button"
+                key={m.key}
+                onClick={() => setPaymentMethod(m.key)}
+                className={`flex-1 h-10 rounded-full border text-sm transition-colors ${paymentMethod === m.key ? "border-ink bg-ink text-canvas" : "border-hairline text-ink hover:border-ink"}`}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+          {paymentMethod === "bank_transfer" && (
+            <div className="space-y-2 pt-2">
+              <Label htmlFor="depositorName">입금자명</Label>
+              <Input
+                id="depositorName"
+                value={depositorName}
+                onChange={(e) => setDepositorName(e.target.value)}
+                placeholder="실제 입금하실 분 성함"
+              />
+              <p className="text-xs text-body">
+                다음 화면의 계좌로 입금해 주시면, 입금 확인 후 결과지를 생성해 드립니다.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
       {isLoggedIn ? (
         <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-          {submitting ? "주문 생성 중..." : "결제하러 가기"}
+          {submitting ? "주문 생성 중..." : paymentMethod === "bank_transfer" ? "입금 안내 받기" : "결제하러 가기"}
         </Button>
       ) : (
         <div className="space-y-2">

@@ -12,6 +12,8 @@ const bodySchema = z.object({
   gender: z.enum(["male", "female"]),
   calendar: z.enum(["solar", "lunar"]),
   concerns: z.array(z.string().max(20)).max(20),
+  paymentMethod: z.enum(["toss", "bank_transfer"]).default("toss"),
+  depositorName: z.string().max(50).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -52,6 +54,8 @@ export async function POST(request: NextRequest) {
       product_id: product.id,
       amount: product.price,
       status: "pending",
+      payment_method: body.paymentMethod,
+      depositor_name: body.paymentMethod === "bank_transfer" ? body.depositorName ?? null : null,
     })
     .select("id")
     .single();
@@ -76,5 +80,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "사주 정보 저장 실패", detail: inputErr.message }, { status: 500 });
   }
 
-  return NextResponse.json({ orderId, amount: product.price });
+  return NextResponse.json({ orderId, amount: product.price, paymentMethod: body.paymentMethod });
 }

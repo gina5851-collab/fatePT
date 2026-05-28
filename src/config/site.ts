@@ -10,6 +10,18 @@ export const siteConfig = {
   email: "gina5851@gmail.com",
 };
 
+// 무통장입금(계좌이체) 설정 — 토스 PG 심사 통과 전 임시 결제 수단.
+// accountNumber 를 채우면 활성화됩니다. 비워두면 체크아웃에 무통장입금 옵션이 숨겨집니다.
+export const bankTransfer = {
+  bankName: "", // 예: "국민은행"
+  accountNumber: "", // 예: "123456-01-789012"
+  accountHolder: "", // 예금주명 (예: "장진아(브랜드지)")
+};
+
+export function isBankTransferEnabled(): boolean {
+  return bankTransfer.accountNumber.trim().length > 0;
+}
+
 // 통신판매업 / 사업자 정보 — 법적 페이지 및 푸터에 노출됩니다.
 export const businessInfo = {
   companyName: "브랜드지",

@@ -12,6 +12,7 @@ export type Json =
 export type OrderStatus = "pending" | "paid" | "failed";
 export type CalendarKind = "solar" | "lunar";
 export type GenderKind = "male" | "female";
+export type PaymentMethod = "toss" | "bank_transfer";
 
 type ProfileRow = {
   id: string;
@@ -41,6 +42,8 @@ type OrderRow = {
   product_id: string;
   amount: number;
   status: OrderStatus;
+  payment_method: PaymentMethod;
+  depositor_name: string | null;
   toss_payment_key: string | null;
   paid_at: string | null;
   created_at: string;
@@ -121,6 +124,8 @@ export type Database = {
           product_id: string;
           amount: number;
           status?: OrderStatus;
+          payment_method?: PaymentMethod;
+          depositor_name?: string | null;
           toss_payment_key?: string | null;
           paid_at?: string | null;
           created_at?: string;
