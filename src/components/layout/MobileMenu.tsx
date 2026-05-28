@@ -43,11 +43,14 @@ export function MobileMenu({ isLoggedIn }: Props) {
           />
           {/* 메뉴 패널 */}
           <nav className="md:hidden fixed top-14 left-0 right-0 bg-canvas border-b border-hairline z-50 px-5 py-4 space-y-0">
+            <MobileLink href="/start" onClick={() => setOpen(false)}>
+              ✨ 무료 진단
+            </MobileLink>
             <MobileLink href="/contents" onClick={() => setOpen(false)}>
               콘텐츠
             </MobileLink>
             <MobileLink href="/products" onClick={() => setOpen(false)}>
-              리포트
+              프로그램
             </MobileLink>
             {isLoggedIn ? (
               <>

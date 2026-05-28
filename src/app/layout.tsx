@@ -49,7 +49,7 @@ function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
         {/* 데스크톱 네비 */}
         <nav className="hidden md:flex items-center gap-6 text-[13px] font-medium">
           <Link href="/contents" className="text-ink hover:text-body">콘텐츠</Link>
-          <Link href="/products" className="text-ink hover:text-body">리포트</Link>
+          <Link href="/products" className="text-ink hover:text-body">프로그램</Link>
           {isLoggedIn ? (
             <>
               <Link href="/mypage" className="text-ink hover:text-body">마이페이지</Link>
@@ -60,6 +60,7 @@ function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           ) : (
             <Link href="/login" className="text-ink hover:text-body">로그인</Link>
           )}
+          <Link href="/start" className="rounded-full bg-ink text-canvas px-3.5 py-1.5 hover:opacity-90 transition-opacity">무료 진단</Link>
         </nav>
 
         {/* 모바일 햄버거 (클라이언트 컴포넌트) */}
