@@ -11,22 +11,22 @@
 
 @layer base {
   :root {
-    --background: 222 47% 9%;         /* deep navy */
-    --foreground: 210 25% 96%;        /* cool white */
-    --card: 222 40% 13%;
-    --card-foreground: 210 25% 96%;
+    --background: 218 52% 14%;        /* navy (더 밝고 파랗게) */
+    --foreground: 210 30% 96%;        /* cool white */
+    --card: 218 42% 18%;
+    --card-foreground: 210 30% 96%;
     --primary: 0 0% 97%;              /* light pill on navy */
-    --primary-foreground: 222 47% 10%;
-    --secondary: 222 33% 17%;         /* surface-soft navy */
-    --secondary-foreground: 210 25% 96%;
-    --muted: 222 33% 17%;
-    --muted-foreground: 215 16% 66%;  /* body */
-    --accent: 222 33% 17%;
-    --accent-foreground: 210 25% 96%;
-    --destructive: 0 72% 51%;
+    --primary-foreground: 218 52% 12%;
+    --secondary: 218 33% 23%;         /* surface-soft navy */
+    --secondary-foreground: 210 30% 96%;
+    --muted: 218 33% 23%;
+    --muted-foreground: 215 18% 70%;  /* body */
+    --accent: 218 33% 23%;
+    --accent-foreground: 210 30% 96%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 25% 22%;            /* hairline navy */
-    --input: 222 25% 22%;
+    --border: 218 28% 28%;            /* hairline navy */
+    --input: 218 28% 28%;
     --ring: 217 91% 60%;              /* focus-ring blue */
     --radius: 0.75rem;                /* lg used for cards */
   }

@@ -40,16 +40,16 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // 다크(네이비) 테마 팔레트
-        ink: "#eef1f8",          // 글자: 쿨 화이트
-        canvas: "#0c1322",       // 배경: 깊은 네이비
-        "surface-soft": "#171f35", // 살짝 밝은 네이비 표면
-        "surface-dark": "#070b16",
-        charcoal: "#ccd3e2",
-        body: "#99a2b8",         // 보조 글자 (쿨 그레이)
-        mute: "#6b7489",
-        hairline: "#262f47",     // 테두리: 네이비
-        "hairline-strong": "#3a4561",
+        // 다크(네이비) 테마 팔레트 — 검정처럼 안 보이게 더 밝고 파랗게
+        ink: "#eef2fb",          // 글자: 쿨 화이트
+        canvas: "#11203c",       // 배경: 또렷한 네이비
+        "surface-soft": "#1c2c4c", // 살짝 밝은 네이비 표면
+        "surface-dark": "#0c1730",
+        charcoal: "#cdd5e6",
+        body: "#9aa6bf",         // 보조 글자 (쿨 그레이)
+        mute: "#6f7c97",
+        hairline: "#2c3c5b",     // 테두리: 네이비
+        "hairline-strong": "#42547a",
       },
       borderRadius: {
         lg: "var(--radius)",
