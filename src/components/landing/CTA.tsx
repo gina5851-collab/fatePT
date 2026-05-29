@@ -13,10 +13,10 @@ export function CTA() {
         <p className="mt-3 text-sm text-body">
           1분 무료 진단으로 시작 · 결과는 마이페이지에서 바로 확인
         </p>
-        <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-7 flex flex-col items-center gap-3 max-w-[300px] mx-auto">
           <Link
             href="/start"
-            className={cn(buttonVariants({ size: "lg" }))}
+            className={cn(buttonVariants({ size: "lg" }), "w-full")}
           >
             1분 무료로 진단받기
           </Link>
