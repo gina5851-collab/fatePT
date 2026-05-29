@@ -11,22 +11,22 @@
 
 @layer base {
   :root {
-    --background: 240 6% 7%;          /* canvas dark */
-    --foreground: 0 0% 96%;           /* ink light */
-    --card: 240 5% 10%;
-    --card-foreground: 0 0% 96%;
-    --primary: 0 0% 96%;              /* light pill on dark */
-    --primary-foreground: 240 6% 8%;
-    --secondary: 240 5% 14%;          /* surface-soft dark */
-    --secondary-foreground: 0 0% 96%;
-    --muted: 240 5% 14%;
-    --muted-foreground: 0 0% 64%;     /* body */
-    --accent: 240 5% 14%;
-    --accent-foreground: 0 0% 96%;
+    --background: 222 47% 9%;         /* deep navy */
+    --foreground: 210 25% 96%;        /* cool white */
+    --card: 222 40% 13%;
+    --card-foreground: 210 25% 96%;
+    --primary: 0 0% 97%;              /* light pill on navy */
+    --primary-foreground: 222 47% 10%;
+    --secondary: 222 33% 17%;         /* surface-soft navy */
+    --secondary-foreground: 210 25% 96%;
+    --muted: 222 33% 17%;
+    --muted-foreground: 215 16% 66%;  /* body */
+    --accent: 222 33% 17%;
+    --accent-foreground: 210 25% 96%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 5% 18%;             /* hairline dark */
-    --input: 240 5% 18%;
+    --border: 222 25% 22%;            /* hairline navy */
+    --input: 222 25% 22%;
     --ring: 217 91% 60%;              /* focus-ring blue */
     --radius: 0.75rem;                /* lg used for cards */
   }
