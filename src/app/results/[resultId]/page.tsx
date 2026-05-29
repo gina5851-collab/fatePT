@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import type { Myeongsik } from "@/lib/saju/manseryeok";
 import { formatDate, formatKRW, cn } from "@/lib/utils";
 import { PRODUCT_COPY } from "@/config/product-copy";
+import { getDisplayName, resolveName } from "@/lib/saju/report/name";
 
 export const metadata = { title: "결과지" };
 
@@ -65,12 +66,29 @@ export default async function ResultPage({
 
   const { data: order } = await service
     .from("orders")
-    .select("product_id, paid_at")
+    .select("product_id, paid_at, user_id")
     .eq("id", result.order_id)
     .single();
   const { data: product } = order
     ? await service.from("products").select("name, slug").eq("id", order.product_id).single()
     : { data: null };
+
+  // 개인화 이름 — 우선순위: 사주 입력폼 name → 회원 프로필 display_name → "고객"
+  const { data: nameInput } = await service
+    .from("saju_inputs")
+    .select("name")
+    .eq("order_id", result.order_id)
+    .maybeSingle();
+  let profileName: string | null = null;
+  if (order?.user_id) {
+    const { data: profile } = await service
+      .from("profiles")
+      .select("display_name")
+      .eq("id", order.user_id)
+      .maybeSingle();
+    profileName = profile?.display_name ?? null;
+  }
+  const displayName = getDisplayName(resolveName(nameInput?.name, profileName));
 
   const myeongsik = result.myeongsik as unknown as Myeongsik;
   const productSlug = (product as { name: string; slug: string } | null)?.slug ?? "";
@@ -111,7 +129,7 @@ export default async function ResultPage({
   return (
     <div className="container py-12 max-w-2xl">
       <header className="mb-10">
-        <p className="text-xs font-mono text-mute mb-2">RESULT</p>
+        <p className="text-xs font-mono text-mute mb-2">{displayName}님의 리포트</p>
         <h1 className="text-3xl font-semibold tracking-tight">{product?.name ?? "사주 풀이"}</h1>
         <p className="mt-2 text-xs font-mono text-mute">
           {result.llm_provider} · {result.llm_model} · {formatDate(result.created_at)}
