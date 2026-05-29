@@ -69,8 +69,18 @@ export function LockedItems({ displayName, items }: { displayName: string; items
               </div>
               {/* 블러 처리된 본문 미리보기 */}
               <p className="mt-1.5 text-[12px] leading-relaxed text-body blur-[5px] select-none" aria-hidden>
-                {it.teaser} 이 부분은 당신의 명식에서 확인된 패턴으로, 구체적인 시기와 행동까지 분석돼 있어요.
+                {it.teaser} 이 부분은 {displayName}님의 명식에서 확인된 패턴으로, 구체적인 시기와 행동까지 분석돼 있어요.
               </p>
+              {it.relatedSignals && it.relatedSignals.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {it.relatedSignals.map((sig) => (
+                    <span key={sig} className="rounded bg-hairline/60 px-1.5 py-0.5 text-[10px] text-mute">
+                      {sig}
+                    </span>
+                  ))}
+                  <span className="text-[10px] text-mute self-center">· 전체 리포트에서 확인 가능</span>
+                </div>
+              )}
             </div>
           ))}
         </div>

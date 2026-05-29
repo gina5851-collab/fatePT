@@ -33,8 +33,9 @@ export const demoUser = {
   birthYear: "1990",
   birthMonth: "5",
   birthDay: "15",
+  mbti: "INTJ" as const,
 };
 
 export function demoReport(): DunmyeongReport {
-  return buildDunmyeongReport(DEMO_ANALYSIS);
+  return buildDunmyeongReport(DEMO_ANALYSIS, "INTJ");
 }

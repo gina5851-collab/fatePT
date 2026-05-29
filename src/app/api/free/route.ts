@@ -15,6 +15,8 @@ const bodySchema = z.object({
   gender: z.enum(["male", "female"]),
   calendar: z.enum(["solar", "lunar"]),
   concerns: z.array(z.string().max(20)).max(20),
+  // MBTI: 현재 saju_inputs에 컬럼 없음 → DB 연결 단계에서 영속화. 지금은 수신만(무시 OK).
+  mbti: z.string().max(8).optional(),
 });
 
 export async function POST(request: NextRequest) {

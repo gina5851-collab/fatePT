@@ -127,6 +127,7 @@ export type ReportItem = {
   // 미리보기용 한 줄 티저 (잠금 항목도 제목+티저는 노출, 본문만 잠금)
   teaser: string;
   free: boolean;
+  relatedSignals?: string[]; // 잠금 항목의 관련 사주/MBTI 신호 (유료 느낌)
 };
 
 export type CtaCopy = {
@@ -142,4 +143,7 @@ export type DunmyeongReport = {
   freeCount: number;
   lockedCount: number;
   cta: CtaCopy;
+  persona: import("./persona").PersonaProfile;
+  mbti: import("./mbti").MbtiType;
+  mbtiReading: import("./mbti").MbtiReading;
 };

@@ -1,77 +1,56 @@
-import { MyeongsikTable } from "@/components/saju/MyeongsikTable";
+import { PersonaHero } from "./PersonaHero";
+import { FortuneSourceCard } from "./FortuneSourceCard";
+import { MbtiSajuMirrorCard } from "./MbtiSajuMirrorCard";
 import { MetricCards } from "./MetricCards";
 import { LockedItems, ProgressBar } from "./LockedItems";
 import { Paywall } from "./Paywall";
 import { ReviewCards } from "./ReviewCards";
 import { FlowTimeline } from "./FlowTimeline";
 import type { DunmyeongReport } from "@/lib/saju/report/types";
-import type { Myeongsik } from "@/lib/saju/manseryeok";
 import { getDisplayName } from "@/lib/saju/report/name";
 
-// 무료 결과 페이지 — 전환 중심 구성.
-// name: 상위(결과 라우트/데모)에서 우선순위로 해석된 원본 이름. 빈 값이면 "고객".
+// 무료 결과 페이지 — 천기문式 개인화 퍼널 구성.
 export function ReportView({ name, report }: { name?: string | null; report: DunmyeongReport }) {
-  const displayName = getDisplayName(name); // "민지" / "고객"
-  const s = report.saju;
-  const endurance = report.metrics.find((m) => m.key === "endurance");
+  const displayName = getDisplayName(name);
   const partCount = new Set(report.items.map((i) => i.category)).size;
-
-  // 명식표용 변환 (NormalizedPillar → Myeongsik)
-  const get = (pos: string) => s.pillars.find((p) => p.position === pos);
-  const toPillar = (pos: string) => {
-    const p = get(pos);
-    return p ? { cheongan: p.gan, jiji: p.ji } : null;
-  };
-  const myeongsik: Myeongsik = {
-    year: toPillar("year") ?? { cheongan: "—", jiji: "—" },
-    month: toPillar("month") ?? { cheongan: "—", jiji: "—" },
-    day: toPillar("day") ?? { cheongan: "—", jiji: "—" },
-    hour: toPillar("hour"),
-  };
 
   return (
     <div className="mx-auto max-w-[440px] px-4 py-10 space-y-12">
-      {/* 1. 개인화 히어로 — 불안 후킹 먼저 → 포근한 재해석 */}
-      <header className="text-center">
-        <p className="text-[14px] text-body mb-3">왜 나는 늘 같은 문제에서 막힐까요?</p>
-        <h1 className="text-[26px] font-bold leading-snug text-ink">
-          {displayName}님은
-          <br />
-          <span className="text-amber-300">오래 버틴 사람</span>입니다.
-        </h1>
-        <p className="mt-4 text-[14px] leading-relaxed text-body">
-          {displayName}님이 부족해서 반복한 게 아니에요.
-          <br />
-          오래 버틴 방식이 어느 순간 패턴이 되었을 뿐이에요.
-        </p>
-        {endurance && (
-          <p className="mt-3 text-[12px] text-mute">{endurance.oneLiner}</p>
-        )}
-      </header>
+      {/* 1. 개인 타입명 히어로 */}
+      <PersonaHero displayName={displayName} persona={report.persona} />
 
-      {/* 명식표 */}
-      <MyeongsikTable myeongsik={myeongsik} />
+      {/* 2. 사주 원본 구조 카드 */}
+      <FortuneSourceCard displayName={displayName} s={report.saju} />
 
-      {/* 2. 8지표 */}
+      {/* 3. MBTI(가면) vs 사주(본성) 거울 */}
+      <MbtiSajuMirrorCard
+        displayName={displayName}
+        mbti={report.mbti}
+        reading={report.mbtiReading}
+        sajuNature={report.persona.oneLiner}
+      />
+
+      {/* 4. 8지표 */}
       <MetricCards metrics={report.metrics} displayName={displayName} />
 
       {/* 5. 진행률 */}
       <ProgressBar displayName={displayName} free={report.freeCount} total={report.items.length} parts={partCount} />
 
-      {/* 3·4. 무료 2 + 잠금 21 */}
+      {/* 6·7. 무료 2 + 잠금 21 */}
       <LockedItems displayName={displayName} items={report.items} />
 
-      {/* 9. 흐름 타임라인 */}
+      {/* 8. 흐름 타임라인 */}
       <FlowTimeline displayName={displayName} />
 
-      {/* 8. 후기 — 결제 저항 깨기, 페이월 바로 위 */}
+      {/* 9. 후기 (페이월 바로 위) */}
       <ReviewCards />
 
-      {/* 6·7. 페이월 + CTA */}
+      {/* 10. 페이월 */}
       <Paywall displayName={displayName} cta={report.cta} />
 
-      <p className="text-center text-[11px] text-mute pt-4">
-        운명PT는 단정적 예언이 아니라, 반복 패턴을 읽어 오늘의 선택을 돕는 자기이해 리포트입니다.
+      <p className="text-center text-[11px] leading-relaxed text-mute pt-4">
+        운명PT 리포트는 자기이해와 의사결정 보조를 위한 콘텐츠입니다.
+        의학·법률·투자·취업 결과를 보장하지 않습니다.
       </p>
     </div>
   );
