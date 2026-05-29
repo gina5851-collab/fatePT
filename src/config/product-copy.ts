@@ -31,6 +31,8 @@ export type ProductCopy = {
     slug: string;
     label: string;
   }[];
+  /** 시네마틱 카드 배경 이미지 (없으면 테마 그라데이션). public 경로나 URL */
+  image?: string;
 };
 
 export const PRODUCT_COPY: Record<string, ProductCopy> = {
