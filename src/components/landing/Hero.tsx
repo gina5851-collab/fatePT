@@ -33,13 +33,13 @@ export function Hero() {
         {siteConfig.description}
       </p>
 
-      <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 px-4">
-        <Link href="/start" className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto")}>
+      <div className="mt-7 flex flex-col items-center gap-3 px-4 max-w-[320px] mx-auto">
+        <Link href="/start" className={cn(buttonVariants({ size: "lg" }), "w-full")}>
           1분 무료로 진단받기
         </Link>
         <Link
           href="/contents"
-          className={cn(buttonVariants({ size: "lg", variant: "outline" }), "w-full sm:w-auto")}
+          className={cn(buttonVariants({ size: "lg", variant: "outline" }), "w-full")}
         >
           고민별 콘텐츠
         </Link>
