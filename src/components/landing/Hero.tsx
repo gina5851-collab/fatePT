@@ -1,51 +1,37 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
 
-// Ollama-style hero: paper-white canvas, 36px centered headline,
-// single black pill CTA, monospace inline tag as "command pill".
+// 천기문式 히어로: 희소성/등급 후크 + 큰 단일 CTA.
 export function Hero() {
-  const questions = [
-    "왜 나는 같은 연애를 반복할까?",
-    "돈을 버는데도 안 모이는 이유",
-    "중요한 선택 앞에서 늘 흔들리는 이유",
-  ];
-
   return (
-    <section className="container py-16 md:py-32 text-center">
-      {/* 질문형 서브 태그 */}
-      <div className="flex flex-wrap justify-center gap-2 mb-6 px-2">
-        {questions.map((q) => (
-          <span
-            key={q}
-            className="inline-block rounded-full border border-hairline px-3 py-1 text-xs text-body"
-          >
-            {q}
-          </span>
-        ))}
-      </div>
-
-      <h1 className="text-[28px] md:text-[44px] font-semibold tracking-tight leading-[1.15] text-ink px-2">
-        {siteConfig.tagline}
+    <section className="container py-16 md:py-28 text-center">
+      {/* 후크 — 희소성/등급 */}
+      <p className="text-sm text-body mb-2">당신의 운명은</p>
+      <h1 className="text-[30px] md:text-[44px] font-bold tracking-tight leading-[1.2] text-ink px-2">
+        얼마나 <span className="text-amber-400">희소</span>할까요?
       </h1>
-      <p className="mt-4 text-[14px] md:text-[15px] text-body max-w-lg mx-auto leading-relaxed px-4">
-        {siteConfig.description}
+      <p className="mt-4 text-[14px] md:text-[15px] text-body max-w-md mx-auto leading-relaxed px-4">
+        같은 생년월일이라도 사주 조합의 희소성은 전혀 다릅니다.
+        <br className="hidden sm:block" />
+        내 운명 등급과 타고난 패턴을 1분 만에 진단받으세요.
       </p>
 
-      <div className="mt-7 flex flex-col items-center gap-3 px-4 max-w-[320px] mx-auto">
-        <Link href="/start" className={cn(buttonVariants({ size: "lg" }), "w-full")}>
-          1분 무료로 진단받기
+      {/* 천기문式 큰 단일 CTA */}
+      <div className="mt-8 px-4 max-w-[420px] mx-auto">
+        <Link
+          href="/start"
+          className="block w-full rounded-xl bg-surface-dark border border-hairline-strong py-4 text-[15px] font-semibold text-amber-300 hover:opacity-90 transition-opacity"
+        >
+          내 운명 등급 확인하기 →
         </Link>
         <Link
           href="/contents"
-          className={cn(buttonVariants({ size: "lg", variant: "outline" }), "w-full")}
+          className="mt-3 inline-block text-xs text-mute hover:text-ink underline underline-offset-4"
         >
-          고민별 콘텐츠
+          고민별 콘텐츠 먼저 보기
         </Link>
       </div>
 
-      <p className="mt-5 text-xs text-mute px-4">
+      <p className="mt-6 text-xs text-mute px-4">
         단정적인 운세가 아니라, 오늘부터 단련하는 자기이해 트레이닝입니다
       </p>
     </section>
