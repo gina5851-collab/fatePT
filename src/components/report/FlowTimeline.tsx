@@ -1,50 +1,37 @@
-// 2026 반복 패턴 흐름 — 월별 주의/회복/확장 구간 1차 버전 (간단 막대 타임라인)
-type Phase = "회복" | "확장" | "주의";
-
-const MONTHS: { m: number; phase: Phase }[] = [
-  { m: 1, phase: "회복" }, { m: 2, phase: "회복" }, { m: 3, phase: "확장" },
-  { m: 4, phase: "확장" }, { m: 5, phase: "확장" }, { m: 6, phase: "확장" },
-  { m: 7, phase: "주의" }, { m: 8, phase: "주의" }, { m: 9, phase: "주의" },
-  { m: 10, phase: "회복" }, { m: 11, phase: "확장" }, { m: 12, phase: "주의" },
+// 2026 반복 패턴 흐름 — 4구간 1차 버전
+const QUARTERS = [
+  { range: "1~3월", title: "반복 감지 구간", desc: "익숙한 패턴이 다시 고개를 드는 시기", color: "bg-amber-400/70", dot: "bg-amber-400" },
+  { range: "4~6월", title: "관계·감정 정리 구간", desc: "사람과 마음을 다시 줄 세우는 시기", color: "bg-blue-400/70", dot: "bg-blue-400" },
+  { range: "7~9월", title: "일·돈 회복 구간", desc: "새던 자리를 막고 흐름을 되돌리는 시기", color: "bg-emerald-400/70", dot: "bg-emerald-400" },
+  { range: "10~12월", title: "전환 시도 구간", desc: "버틴 시간을 결과로 바꿔보는 시기", color: "bg-violet-400/70", dot: "bg-violet-400" },
 ];
-
-const PHASE_STYLE: Record<Phase, string> = {
-  회복: "bg-blue-400/70",
-  확장: "bg-emerald-400/70",
-  주의: "bg-amber-400/70",
-};
 
 export function FlowTimeline({ displayName }: { displayName: string }) {
   return (
     <section className="rounded-2xl border border-hairline bg-surface-soft p-5">
       <p className="text-center text-[11px] font-mono tracking-[0.3em] text-mute mb-1">2026 FLOW</p>
-      <h3 className="text-center text-[15px] font-semibold text-ink mb-1">{displayName}님의 2026년 반복 패턴 흐름</h3>
-      <p className="text-center text-[11px] text-mute mb-4">월별 주의 · 회복 · 확장 구간 (개요)</p>
+      <h3 className="text-center text-[15px] font-semibold text-ink mb-4">{displayName}님의 2026년 흐름 4구간</h3>
 
-      <div className="flex items-end gap-1 h-20">
-        {MONTHS.map(({ m, phase }) => (
-          <div key={m} className="flex-1 flex flex-col items-center justify-end gap-1">
-            <div
-              className={`w-full rounded-sm ${PHASE_STYLE[phase]}`}
-              style={{ height: phase === "확장" ? "100%" : phase === "회복" ? "60%" : "75%" }}
-            />
-            <span className="text-[9px] text-mute">{m}</span>
+      <div className="space-y-2.5">
+        {QUARTERS.map((q) => (
+          <div key={q.range} className="flex items-center gap-3 rounded-xl border border-hairline bg-canvas/30 p-3">
+            <span className={`shrink-0 w-1.5 h-9 rounded-full ${q.color}`} />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-baseline gap-2">
+                <span className="text-[11px] font-mono text-mute">{q.range}</span>
+                <span className="text-[13px] font-semibold text-ink">{q.title}</span>
+              </div>
+              <p className="text-[11px] text-body">{q.desc}</p>
+            </div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-3 flex justify-center gap-3 text-[11px]">
-        <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full bg-blue-400 inline-block" />회복</span>
-        <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />확장</span>
-        <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full bg-amber-400 inline-block" />주의</span>
       </div>
 
       <div className="mt-4 space-y-1.5 text-[12px] text-body blur-[4px] select-none" aria-hidden>
         <p>· 대운 전환 타이밍: 2026년 X월 — 큰 흐름이 바뀌는 길목</p>
         <p>· 운의 누수 지점: X월·X월 — 돈과 에너지가 빠지기 쉬운 구간</p>
-        <p>· 확장 추천 구간: X월 — 결정·시작이 잘 풀리는 창</p>
       </div>
-      <p className="mt-2 text-center text-[11px] text-mute">정확한 시기·누수 지점은 전체 리포트에서 공개돼요.</p>
+      <p className="mt-2 text-center text-[11px] text-mute">정확한 월·누수 지점은 전체 리포트에서 공개돼요.</p>
     </section>
   );
 }

@@ -31,9 +31,9 @@ export function ReportView({ name, report }: { name?: string | null; report: Dun
 
   return (
     <div className="mx-auto max-w-[440px] px-4 py-10 space-y-12">
-      {/* 1. 개인화 히어로 */}
+      {/* 1. 개인화 히어로 — 불안 후킹 먼저 → 포근한 재해석 */}
       <header className="text-center">
-        <p className="text-[11px] font-mono tracking-[0.3em] text-mute mb-3">{displayName}님의 반복 패턴 리포트</p>
+        <p className="text-[14px] text-body mb-3">왜 나는 늘 같은 문제에서 막힐까요?</p>
         <h1 className="text-[26px] font-bold leading-snug text-ink">
           {displayName}님은
           <br />
@@ -53,7 +53,7 @@ export function ReportView({ name, report }: { name?: string | null; report: Dun
       <MyeongsikTable myeongsik={myeongsik} />
 
       {/* 2. 8지표 */}
-      <MetricCards metrics={report.metrics} />
+      <MetricCards metrics={report.metrics} displayName={displayName} />
 
       {/* 5. 진행률 */}
       <ProgressBar displayName={displayName} free={report.freeCount} total={report.items.length} parts={partCount} />
@@ -64,11 +64,11 @@ export function ReportView({ name, report }: { name?: string | null; report: Dun
       {/* 9. 흐름 타임라인 */}
       <FlowTimeline displayName={displayName} />
 
+      {/* 8. 후기 — 결제 저항 깨기, 페이월 바로 위 */}
+      <ReviewCards />
+
       {/* 6·7. 페이월 + CTA */}
       <Paywall displayName={displayName} cta={report.cta} />
-
-      {/* 8. 후기 */}
-      <ReviewCards />
 
       <p className="text-center text-[11px] text-mute pt-4">
         운명PT는 단정적 예언이 아니라, 반복 패턴을 읽어 오늘의 선택을 돕는 자기이해 리포트입니다.
