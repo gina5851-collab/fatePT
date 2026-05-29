@@ -29,7 +29,7 @@ export const businessInfo = {
   companyName: "브랜드지",
   representative: "장진아",
   businessNumber: "309-47-01110",
-  mailOrderNumber: "", // 통신판매업 신고 후 입력
+  mailOrderNumber: "2026-경기김포-0764", // 통신판매업 신고번호
   address: "경기도 김포시 김포한강9로75번길22, 804-C038",
   phone: "", // 표기 안 함
   phoneNote: "",
