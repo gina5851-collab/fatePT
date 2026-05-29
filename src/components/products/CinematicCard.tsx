@@ -40,7 +40,7 @@ export function CinematicCard({ slug, name, price }: { slug: string; name: strin
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/5" />
 
       {copy?.badge && (
-        <span className="absolute top-3 left-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-ink">
+        <span className="absolute top-3 left-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-neutral-900">
           {copy.badge}
         </span>
       )}

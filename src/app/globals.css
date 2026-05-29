@@ -11,22 +11,22 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;          /* canvas #ffffff */
-    --foreground: 0 0% 0%;            /* ink #000000 */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
-    --primary: 0 0% 0%;               /* pure black */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 98%;            /* surface-soft #fafafa */
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 98%;
-    --muted-foreground: 0 0% 45%;     /* body #737373 */
-    --accent: 0 0% 98%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 75% 50%;
+    --background: 240 6% 7%;          /* canvas dark */
+    --foreground: 0 0% 96%;           /* ink light */
+    --card: 240 5% 10%;
+    --card-foreground: 0 0% 96%;
+    --primary: 0 0% 96%;              /* light pill on dark */
+    --primary-foreground: 240 6% 8%;
+    --secondary: 240 5% 14%;          /* surface-soft dark */
+    --secondary-foreground: 0 0% 96%;
+    --muted: 240 5% 14%;
+    --muted-foreground: 0 0% 64%;     /* body */
+    --accent: 240 5% 14%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 90%;               /* hairline #e5e5e5 */
-    --input: 0 0% 90%;
+    --border: 240 5% 18%;             /* hairline dark */
+    --input: 240 5% 18%;
     --ring: 217 91% 60%;              /* focus-ring blue */
     --radius: 0.75rem;                /* lg used for cards */
   }
@@ -66,16 +66,16 @@
     @apply mt-6 mb-2 text-lg font-semibold text-foreground;
   }
   .prose-saju p {
-    @apply my-3 leading-7 text-[#525252];
+    @apply my-3 leading-7 text-[#d4d4d8];
   }
   .prose-saju ul {
-    @apply my-3 list-disc space-y-1 pl-6 text-[#525252];
+    @apply my-3 list-disc space-y-1 pl-6 text-[#d4d4d8];
   }
   .prose-saju strong {
     @apply font-semibold text-foreground;
   }
   .prose-saju code {
-    @apply rounded-md bg-[#fafafa] px-1.5 py-0.5 text-sm;
+    @apply rounded-md bg-[#27272a] px-1.5 py-0.5 text-sm;
   }
   /* > 인용구 — 핵심 한 줄 메시지 */
   .prose-saju blockquote {
@@ -90,7 +90,7 @@
   }
   /* 구분선 */
   .prose-saju hr {
-    @apply my-8 border-t border-[#e5e5e5];
+    @apply my-8 border-t border-[#27272a];
   }
 }
 
