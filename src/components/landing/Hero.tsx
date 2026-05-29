@@ -1,39 +1,72 @@
 import Link from "next/link";
 
-// 천기문式 히어로: 희소성/등급 후크 + 큰 단일 CTA.
+// 운명PT 대문(랜딩) 히어로 — 천기문式 구조(메인문장+CTA+열람느낌), 다크 네이비.
+// 주의: 실시간 숫자/명단은 가짜 금지(과장광고). "유형 예시"로 표현.
+const VIEWER_TYPES = [
+  { name: "서연", type: "관계에서 늘 지치는 사람" },
+  { name: "하윤", type: "돈이 들어와도 남지 않는 사람" },
+  { name: "민서", type: "오래 버틴 시간이 풀리기 시작한 사람" },
+  { name: "지우", type: "같은 선택을 반복하는 사람" },
+];
+
 export function Hero() {
   return (
-    <section className="container py-16 md:py-28 text-center">
-      {/* 후크 — 희소성/등급 */}
-      <p className="text-sm text-body mb-2">당신의 운명은</p>
-      <h1 className="text-[30px] md:text-[44px] font-bold tracking-tight leading-[1.2] text-ink px-2">
-        얼마나 <span className="text-amber-400">희소</span>할까요?
+    <section className="container pt-16 pb-12 md:pt-24 text-center">
+      {/* 후킹 메인 */}
+      <h1 className="text-[28px] md:text-[40px] font-bold leading-[1.25] tracking-tight text-ink px-2">
+        왜 나는 늘
+        <br />
+        <span className="text-amber-300">같은 문제</span>에서 막힐까요?
       </h1>
-      <p className="mt-4 text-[14px] md:text-[15px] text-body max-w-md mx-auto leading-relaxed px-4">
-        같은 생년월일이라도 사주 조합의 희소성은 전혀 다릅니다.
+
+      {/* 서브 */}
+      <p className="mt-6 text-[14px] md:text-[15px] leading-relaxed text-body max-w-md mx-auto px-2">
+        당신이 부족해서가 아닙니다.
+        <br />
+        오래 버틴 사람에게는, 자신을 지키기 위해 만든
         <br className="hidden sm:block" />
-        내 운명 등급과 타고난 패턴을 1분 만에 진단받으세요.
+        <span className="text-ink"> 반복 패턴</span>이 남습니다.
       </p>
 
-      {/* 천기문式 큰 단일 CTA */}
-      <div className="mt-8 px-4 max-w-[420px] mx-auto">
+      {/* 보조 */}
+      <p className="mt-4 text-[13px] text-mute max-w-sm mx-auto px-2">
+        생년월일만 입력하면, 관계·돈·일·감정에서
+        <br />
+        어디서 같은 흐름이 반복되는지 읽어드려요.
+      </p>
+
+      {/* CTA */}
+      <div className="mt-8 flex flex-col items-center gap-2.5 max-w-[320px] mx-auto px-4">
         <Link
           href="/start"
-          className="block w-full rounded-xl bg-surface-dark border border-hairline-strong py-4 text-[15px] font-semibold text-amber-300 hover:opacity-90 transition-opacity"
+          className="block w-full rounded-xl bg-amber-400 py-4 text-[15px] font-bold text-[#0c1322] hover:opacity-90 transition-opacity"
         >
-          내 운명 등급 확인하기 →
+          내 반복 패턴 확인하기 →
         </Link>
-        <Link
-          href="/contents"
-          className="mt-3 inline-block text-xs text-mute hover:text-ink underline underline-offset-4"
-        >
-          고민별 콘텐츠 먼저 보기
+        <Link href="/start" className="text-[13px] text-mute hover:text-ink underline underline-offset-4">
+          무료로 먼저 보기
         </Link>
       </div>
 
-      <p className="mt-6 text-xs text-mute px-4">
-        단정적인 운세가 아니라, 오늘부터 단련하는 자기이해 트레이닝입니다
-      </p>
+      {/* 열람 느낌 — 가짜 수치 대신 "이런 분들이 봐요" 유형 예시 */}
+      <div className="mt-12 max-w-[400px] mx-auto px-2">
+        <p className="text-[12px] text-mute mb-3">이런 분들이 자기 패턴을 확인하고 있어요</p>
+        <ul className="space-y-2 text-left">
+          {VIEWER_TYPES.map((v) => (
+            <li key={v.name} className="flex items-center gap-2.5 rounded-lg border border-hairline bg-surface-soft px-3.5 py-2.5">
+              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-hairline text-[11px] text-body">
+                {v.name[0]}
+              </span>
+              <span className="text-[12px] text-body">
+                <span className="text-ink">{v.name}님</span> · {v.type}
+              </span>
+              <span className="ml-auto inline-flex items-center gap-1 text-[11px] text-emerald-300">
+                <i className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />분석 중
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
