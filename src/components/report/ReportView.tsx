@@ -6,9 +6,12 @@ import { ReviewCards } from "./ReviewCards";
 import { FlowTimeline } from "./FlowTimeline";
 import type { DunmyeongReport } from "@/lib/saju/report/types";
 import type { Myeongsik } from "@/lib/saju/manseryeok";
+import { getDisplayName } from "@/lib/saju/report/name";
 
 // 무료 결과 페이지 — 전환 중심 구성.
-export function ReportView({ name, report }: { name: string; report: DunmyeongReport }) {
+// name: 상위(결과 라우트/데모)에서 우선순위로 해석된 원본 이름. 빈 값이면 "고객".
+export function ReportView({ name, report }: { name?: string | null; report: DunmyeongReport }) {
+  const displayName = getDisplayName(name); // "민지" / "고객"
   const s = report.saju;
   const endurance = report.metrics.find((m) => m.key === "endurance");
   const partCount = new Set(report.items.map((i) => i.category)).size;
@@ -30,14 +33,14 @@ export function ReportView({ name, report }: { name: string; report: DunmyeongRe
     <div className="mx-auto max-w-[440px] px-4 py-10 space-y-12">
       {/* 1. 개인화 히어로 */}
       <header className="text-center">
-        <p className="text-[11px] font-mono tracking-[0.3em] text-mute mb-3">RESULT · 무료 진단</p>
+        <p className="text-[11px] font-mono tracking-[0.3em] text-mute mb-3">{displayName}님의 반복 패턴 리포트</p>
         <h1 className="text-[26px] font-bold leading-snug text-ink">
-          {name}님은
+          {displayName}님은
           <br />
           <span className="text-amber-300">오래 버틴 사람</span>입니다.
         </h1>
         <p className="mt-4 text-[14px] leading-relaxed text-body">
-          당신이 부족해서 반복한 게 아니에요.
+          {displayName}님이 부족해서 반복한 게 아니에요.
           <br />
           오래 버틴 방식이 어느 순간 패턴이 되었을 뿐이에요.
         </p>
@@ -53,16 +56,16 @@ export function ReportView({ name, report }: { name: string; report: DunmyeongRe
       <MetricCards metrics={report.metrics} />
 
       {/* 5. 진행률 */}
-      <ProgressBar free={report.freeCount} total={report.items.length} parts={partCount} />
+      <ProgressBar displayName={displayName} free={report.freeCount} total={report.items.length} parts={partCount} />
 
       {/* 3·4. 무료 2 + 잠금 21 */}
-      <LockedItems items={report.items} />
+      <LockedItems displayName={displayName} items={report.items} />
 
       {/* 9. 흐름 타임라인 */}
-      <FlowTimeline />
+      <FlowTimeline displayName={displayName} />
 
       {/* 6·7. 페이월 + CTA */}
-      <Paywall cta={report.cta} />
+      <Paywall displayName={displayName} cta={report.cta} />
 
       {/* 8. 후기 */}
       <ReviewCards />

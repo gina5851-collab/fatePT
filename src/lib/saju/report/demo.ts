@@ -26,6 +26,15 @@ const DEMO_ANALYSIS: SajuAnalysisResponse = {
   bigyeonGeobjae: { bigyeonCount: 1, geobjaeCount: 2 },
 } as unknown as SajuAnalysisResponse;
 
+// 데모 사용자 — 결과 페이지 프리뷰용 샘플. 실제 서비스에는 사용되지 않음.
+export const demoUser = {
+  name: "서연",
+  gender: "female" as const,
+  birthYear: "1990",
+  birthMonth: "5",
+  birthDay: "15",
+};
+
 export function demoReport(): DunmyeongReport {
   return buildDunmyeongReport(DEMO_ANALYSIS);
 }

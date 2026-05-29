@@ -7,7 +7,7 @@ const FREE_BODY: Record<string, string> = {
     "지금 당신의 흐름에는 '비슷한 선택을 또 하게 되는' 신호가 보여요. 끝났다고 생각한 자리에서 다시 같은 감정이 올라오는 건, 의지가 약해서가 아니라 패턴의 출발점을 아직 못 봤기 때문이에요. 그 지점만 알아도 반은 끊어집니다.",
 };
 
-export function LockedItems({ items }: { items: ReportItem[] }) {
+export function LockedItems({ displayName, items }: { displayName: string; items: ReportItem[] }) {
   const free = items.filter((i) => i.free);
   const locked = items.filter((i) => !i.free);
 
@@ -32,7 +32,7 @@ export function LockedItems({ items }: { items: ReportItem[] }) {
       {/* 잠금 21 — 이미 만들어졌지만 아직 못 보는 느낌 */}
       <div>
         <p className="text-[12px] text-mute mb-3">
-          🔒 아래 <span className="text-ink font-semibold">{locked.length}개 패턴</span>은 이미 분석이 끝났어요. 아직 열어보지 않았을 뿐이에요.
+          🔒 {displayName}님의 <span className="text-ink font-semibold">{locked.length}개 패턴</span>은 이미 분석이 끝났어요. 아직 열어보지 않았을 뿐이에요.
         </p>
         <div className="grid grid-cols-1 gap-2.5">
           {locked.map((it) => (
@@ -59,7 +59,9 @@ export function LockedItems({ items }: { items: ReportItem[] }) {
   );
 }
 
-export function ProgressBar({ free, total, parts }: { free: number; total: number; parts: number }) {
+export function ProgressBar({
+  displayName, free, total, parts,
+}: { displayName: string; free: number; total: number; parts: number }) {
   const pct = Math.round((free / total) * 100);
   return (
     <div className="rounded-xl border border-hairline bg-surface-soft p-4">
@@ -70,7 +72,9 @@ export function ProgressBar({ free, total, parts }: { free: number; total: numbe
       <div className="h-2 rounded-full bg-hairline overflow-hidden">
         <div className="h-full rounded-full bg-amber-400" style={{ width: `${pct}%` }} />
       </div>
-      <p className="mt-2 text-[11px] text-mute">전체 해금 시 {total - free}개 패턴을 모두 확인할 수 있어요.</p>
+      <p className="mt-2 text-[11px] text-mute">
+        지금은 {displayName}님의 리포트 중 {free}/{total}개 항목만 공개되었어요. 전체 해금 시 {total - free}개 패턴을 모두 확인할 수 있어요.
+      </p>
     </div>
   );
 }

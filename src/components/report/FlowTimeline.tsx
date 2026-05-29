@@ -14,11 +14,11 @@ const PHASE_STYLE: Record<Phase, string> = {
   주의: "bg-amber-400/70",
 };
 
-export function FlowTimeline() {
+export function FlowTimeline({ displayName }: { displayName: string }) {
   return (
     <section className="rounded-2xl border border-hairline bg-surface-soft p-5">
       <p className="text-center text-[11px] font-mono tracking-[0.3em] text-mute mb-1">2026 FLOW</p>
-      <h3 className="text-center text-[15px] font-semibold text-ink mb-1">2026년 반복 패턴 흐름</h3>
+      <h3 className="text-center text-[15px] font-semibold text-ink mb-1">{displayName}님의 2026년 반복 패턴 흐름</h3>
       <p className="text-center text-[11px] text-mute mb-4">월별 주의 · 회복 · 확장 구간 (개요)</p>
 
       <div className="flex items-end gap-1 h-20">

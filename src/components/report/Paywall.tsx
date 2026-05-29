@@ -3,14 +3,14 @@ import { activeTiers } from "@/config/report-pricing";
 import { formatKRW } from "@/lib/utils";
 import type { CtaCopy } from "@/lib/saju/report/types";
 
-export function Paywall({ cta }: { cta: CtaCopy }) {
+export function Paywall({ displayName, cta }: { displayName: string; cta: CtaCopy }) {
   const tiers = activeTiers();
   return (
     <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6">
       <h3 className="text-center text-lg font-bold text-ink leading-snug">
         지금은 일부만 보셨습니다.
         <br />
-        오래 버틴 당신의 흐름 전체를 확인해보세요.
+        오래 버틴 {displayName}님의 흐름 전체를 확인해보세요.
       </h3>
       <p className="mt-2 text-center text-[13px] text-body">
         하지만 이 패턴을 모르면, 올해도 같은 문제를 반복할 수 있어요.
