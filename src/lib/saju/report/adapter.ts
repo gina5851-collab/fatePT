@@ -105,22 +105,53 @@ export function normalizeSaju(analysis: SajuAnalysisResponse): NormalizedSaju {
 
   // ── 대운/세운/월운 (현재 요약) ───────────────
   const daeunRaw = analysis.daeun as
-    | { direction?: string; current_daeun?: { ganji?: string; sipseong?: { ganCategory?: string } } }
+    | {
+        direction?: string;
+        current_age?: number;
+        current_daeun?: {
+          gan?: string; ganji?: string; age_start?: number; age_end?: number;
+          sipseong?: { ganCategory?: string };
+          wongukInteraction?: { hapChungRelations?: Array<{ type?: string }> };
+        };
+      }
     | undefined;
+  const curDaeun = daeunRaw?.current_daeun;
   const daeun = {
-    currentLabel: daeunRaw?.current_daeun?.ganji ?? null,
-    currentSipseong: daeunRaw?.current_daeun?.sipseong?.ganCategory ?? null,
+    currentLabel: curDaeun?.ganji ?? null,
+    currentSipseong: curDaeun?.sipseong?.ganCategory ?? null,
     direction: daeunRaw?.direction ?? null,
   };
+  // 대운 교체기: 현재 나이가 대운 시작/끝 ±1년 이내, 또는 대운↔원국 충/합 존재
+  const curAge = daeunRaw?.current_age;
+  const nearEdge =
+    typeof curAge === "number" &&
+    (typeof curDaeun?.age_start === "number" || typeof curDaeun?.age_end === "number")
+      ? (curDaeun?.age_start != null && Math.abs(curAge - curDaeun.age_start) <= 1) ||
+        (curDaeun?.age_end != null && Math.abs(curAge - curDaeun.age_end) <= 1)
+      : false;
+  const daeunInteractsWonguk = (curDaeun?.wongukInteraction?.hapChungRelations ?? []).some((r) =>
+    /충|합|형|파|해/.test(r.type ?? ""),
+  );
+  const daeunTransition = nearEdge || daeunInteractsWonguk;
 
   const seunRaw = analysis.seun as
-    | { currentSeun?: { year?: number; ganji?: string; sipseongRelation?: { gan?: string } } }
+    | {
+        currentSeun?: {
+          year?: number; gan?: string; ganji?: string;
+          sipseongRelation?: { gan?: string };
+          hapChungRelations?: Array<{ type?: string }>;
+        };
+      }
     | undefined;
+  const curSeun = seunRaw?.currentSeun;
   const seun = {
-    currentYear: seunRaw?.currentSeun?.year ?? null,
-    currentLabel: seunRaw?.currentSeun?.ganji ?? null,
-    currentSipseong: seunRaw?.currentSeun?.sipseongRelation?.gan ?? null,
+    currentYear: curSeun?.year ?? null,
+    currentLabel: curSeun?.ganji ?? null,
+    currentSipseong: curSeun?.sipseongRelation?.gan ?? null,
   };
+  const seunChangePressure = (curSeun?.hapChungRelations ?? []).some((r) =>
+    /충|형|파/.test(r.type ?? ""),
+  );
 
   const weolunRaw = analysis.weolun as { currentWeolun?: { monthLabel?: string } } | undefined;
   const weolun = { currentLabel: weolunRaw?.currentWeolun?.monthLabel ?? null };
@@ -150,6 +181,10 @@ export function normalizeSaju(analysis: SajuAnalysisResponse): NormalizedSaju {
   for (const h of hongyeomArr) if (h.name) sinsals.push({ name: h.name, ji: h.ji });
   for (const h of hwagaeArr) if (h.name) sinsals.push({ name: h.name, ji: h.ji });
 
+  const sinsalNames = sinsals.map((s) => s.name).join(" ");
+  const hasYeokma = /역마/.test(sinsalNames);
+  const hasGwimun = /귀문/.test(sinsalNames);
+
   // ── 귀인 ────────────────────────────────────
   const guiin = (analysis.guiin ?? {}) as Record<string, Array<unknown> | undefined>;
   const guiinCount = Object.values(guiin).reduce((acc, arr) => acc + (Array.isArray(arr) ? arr.length : 0), 0);
@@ -166,6 +201,29 @@ export function normalizeSaju(analysis: SajuAnalysisResponse): NormalizedSaju {
   const bg = analysis.bigyeonGeobjae as { bigyeonCount?: number; geobjaeCount?: number } | undefined;
   const bigyeonCount = bg?.bigyeonCount ?? 0;
   const geobjaeCount = bg?.geobjaeCount ?? 0;
+
+  // ── GPT 검증 반영: 파생 신호 계산 ──
+  const sipTotal = SIPSEONG_LIST.reduce((a, s) => a + sipseongCount[s], 0);
+  const sipseongConcentrated = sipTotal > 0 && sipMax / sipTotal >= 0.5; // 한 분류가 절반 이상
+
+  // 재성이 충을 받음: 재성 위치(글자)가 합충 source/target에 등장 + 충 계열
+  // 간단 판정: 재성 우세 아님 + 충이 있고 재성 글자가 적으면 보조 신호. 정확 판정 어려우면 false.
+  const jaeChung = hapchung.some((h) => isChung(h.type)) && sipseongCount.재성 <= 1 && chungCount >= 2;
+
+  // 대운/세운 천간이 비겁(나와 같은 오행) → 겁재 흐름. dayGan 오행과 비교.
+  const dayOhaeng = dayGan ? CHEON_OHAENG[dayGan] : null;
+  const daeunGan = (daeunRaw?.current_daeun as { gan?: string } | undefined)?.gan;
+  const seunGan = curSeun?.gan;
+  const daeunSeunGeobjae =
+    !!dayOhaeng &&
+    ((daeunGan ? CHEON_OHAENG[daeunGan] === dayOhaeng : false) ||
+      (seunGan ? CHEON_OHAENG[seunGan] === dayOhaeng : false));
+
+  // 현재 대운이 용신/희신 오행 흐름인지 (회복 흐름)
+  const inYongsinFlow =
+    !!yongsinOhaeng &&
+    !!daeunGan &&
+    CHEON_OHAENG[daeunGan] === yongsinOhaeng;
 
   return {
     pillars,
@@ -188,12 +246,20 @@ export function normalizeSaju(analysis: SajuAnalysisResponse): NormalizedSaju {
     hasDohwa: dohwaArr.length > 0,
     hasHwagae: hwagaeArr.length > 0,
     hasHongyeom: hongyeomArr.length > 0,
+    hasYeokma,
+    hasGwimun,
     guiinCount,
     gyeokgukName,
     yongsinOhaeng,
     gisinOhaeng,
     bigyeonCount,
     geobjaeCount,
+    sipseongConcentrated,
+    daeunTransition,
+    seunChangePressure,
+    jaeChung,
+    daeunSeunGeobjae,
+    inYongsinFlow,
     hasTimePillar: pillars.some((p) => p.position === "hour"),
   };
 }

@@ -68,6 +68,8 @@ export type NormalizedSaju = {
   hasDohwa: boolean;
   hasHwagae: boolean;
   hasHongyeom: boolean;
+  hasYeokma: boolean; // 역마 (이동성/전환)
+  hasGwimun: boolean; // 귀문관살 (감정·직관 민감)
 
   // 귀인 (조력 신호)
   guiinCount: number;
@@ -80,6 +82,14 @@ export type NormalizedSaju = {
   // 비겁(비견/겁재) 디테일 — 버팀력·관계 피로 계산용
   bigyeonCount: number;
   geobjaeCount: number;
+
+  // ── GPT 검증 반영: 파생 신호 ──
+  sipseongConcentrated: boolean;   // 십성 편중 (한 분류가 전체의 절반 이상)
+  daeunTransition: boolean;        // 대운 교체기 (현재 대운 진입/마감 ±1년 또는 충/합)
+  seunChangePressure: boolean;     // 세운이 원국과 충돌(충/형/파)
+  jaeChung: boolean;               // 재성이 충을 받음 (돈 누수 신호)
+  daeunSeunGeobjae: boolean;       // 대운/세운 천간이 비겁(겁재 흐름)
+  inYongsinFlow: boolean;          // 현재 대운이 용신/희신 오행 (회복 흐름)
 
   // 원본 보존 (LLM 프롬프트 풀명식 텍스트 등에 활용)
   hasTimePillar: boolean;
@@ -98,7 +108,8 @@ export type MetricKey =
 
 export type Metric = {
   key: MetricKey;
-  label: string;
+  label: string;      // 내부/기존 라벨
+  display: string;    // 결과 카드 노출용 부드러운 이름 (GPT 검증 반영)
   score: number; // 0-100
   band: "낮음" | "보통" | "높음" | "매우 높음";
   // 고객 언어 한 줄 (불안 자극 X, 해석 톤). 무료 미리보기에도 노출 가능.
