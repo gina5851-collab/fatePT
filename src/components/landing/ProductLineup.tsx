@@ -33,7 +33,7 @@ export async function ProductLineup() {
 
   return (
     <section className="container py-16 border-t border-hairline">
-      <div className="grid grid-cols-2 gap-3 md:gap-4">
+      <div className="grid grid-cols-1 gap-5 max-w-[400px] mx-auto">
         {products.map((p) => (
           <CinematicCard key={p.slug} slug={p.slug} name={p.name} price={p.price} />
         ))}
