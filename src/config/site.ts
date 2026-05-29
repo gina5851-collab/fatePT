@@ -31,7 +31,7 @@ export const businessInfo = {
   businessNumber: "309-47-01110",
   mailOrderNumber: "2026-경기김포-0764", // 통신판매업 신고번호
   address: "경기도 김포시 김포한강9로75번길22, 804-C038",
-  phone: "", // 표기 안 함
+  phone: "010-4868-8244",
   phoneNote: "",
   email: "gina5851@gmail.com",
   privacyOfficer: "장진아",
