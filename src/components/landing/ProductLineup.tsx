@@ -33,9 +33,6 @@ export async function ProductLineup() {
 
   return (
     <section className="container py-16 border-t border-hairline">
-      <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-center mb-10">
-        상품 라인업
-      </h2>
       <div className="grid grid-cols-2 gap-3 md:gap-4">
         {products.map((p) => (
           <CinematicCard key={p.slug} slug={p.slug} name={p.name} price={p.price} />
