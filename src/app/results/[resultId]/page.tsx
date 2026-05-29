@@ -8,6 +8,9 @@ import type { Myeongsik } from "@/lib/saju/manseryeok";
 import { formatDate, formatKRW, cn } from "@/lib/utils";
 import { PRODUCT_COPY } from "@/config/product-copy";
 import { getDisplayName, resolveName } from "@/lib/saju/report/name";
+import { isMbti, type MbtiType } from "@/lib/saju/report/mbti";
+import { buildDunmyeongReport } from "@/lib/saju/report";
+import { ReportView } from "@/components/report/ReportView";
 
 export const metadata = { title: "결과지" };
 
@@ -58,7 +61,7 @@ export default async function ResultPage({
 
   const { data: result } = await service
     .from("saju_results")
-    .select("id, myeongsik, interpretation_md, llm_provider, llm_model, created_at, order_id")
+    .select("id, myeongsik, interpretation_md, llm_provider, llm_model, created_at, order_id, analysis")
     .eq("id", resultId)
     .maybeSingle();
 
@@ -73,10 +76,10 @@ export default async function ResultPage({
     ? await service.from("products").select("name, slug").eq("id", order.product_id).single()
     : { data: null };
 
-  // 개인화 이름 — 우선순위: 사주 입력폼 name → 회원 프로필 display_name → "고객"
+  // 개인화 이름 + MBTI — 우선순위: 사주 입력폼 → 회원 프로필 → "고객"
   const { data: nameInput } = await service
     .from("saju_inputs")
-    .select("name")
+    .select("name, mbti")
     .eq("order_id", result.order_id)
     .maybeSingle();
   let profileName: string | null = null;
@@ -88,7 +91,16 @@ export default async function ResultPage({
       .maybeSingle();
     profileName = profile?.display_name ?? null;
   }
-  const displayName = getDisplayName(resolveName(nameInput?.name, profileName));
+  const rawName = resolveName(nameInput?.name, profileName);
+  const displayName = getDisplayName(rawName);
+  const mbti: MbtiType = isMbti(nameInput?.mbti) ? nameInput.mbti : "UNKNOWN";
+
+  // 무료 맛보기(free-taste) + 분석 원본 존재 → 천기문式 전환 ReportView 렌더
+  const slugForView = (product as { name: string; slug: string } | null)?.slug ?? "";
+  if (slugForView === "free-taste" && result.analysis) {
+    const report = buildDunmyeongReport(result.analysis as never, mbti);
+    return <ReportView name={rawName} report={report} />;
+  }
 
   const myeongsik = result.myeongsik as unknown as Myeongsik;
   const productSlug = (product as { name: string; slug: string } | null)?.slug ?? "";

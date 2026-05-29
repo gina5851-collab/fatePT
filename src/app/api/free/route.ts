@@ -89,6 +89,7 @@ export async function POST(request: NextRequest) {
     gender: body.gender,
     calendar: body.calendar,
     concerns: body.concerns,
+    mbti: body.mbti ?? null,
   });
   if (inputErr) {
     await service.from("orders").delete().eq("id", order.id);
