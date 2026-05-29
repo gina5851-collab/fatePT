@@ -42,6 +42,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* 상단 중앙 은은한 네이비 글로우 (천기문式 그라데이션) */
+    background-image: radial-gradient(100% 60% at 50% 0%, hsl(225 48% 23%) 0%, transparent 55%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     font-family:
       "SF Pro Rounded", -apple-system, BlinkMacSystemFont, ui-sans-serif,
       system-ui, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
