@@ -204,7 +204,7 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }:
         </div>
       )}
 
-      {isLoggedIn ? (
+      {(isLoggedIn || isFree) ? (
         <Button type="submit" size="lg" className="w-full" disabled={submitting}>
           {submitting
             ? isFree ? "진단 중..." : "주문 생성 중..."
@@ -216,7 +216,7 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }:
             href={`/login?redirect=${encodeURIComponent(`/products/${productSlug}`)}`}
             className={cn(buttonVariants({ size: "lg" }), "w-full")}
           >
-            {isFree ? "로그인하고 무료로 받기" : "로그인하고 결제하기"}
+            로그인하고 결제하기
           </Link>
           <p className="text-xs text-body text-center">
             결과는 로그인 후 <span className="text-ink">마이페이지</span> 에서 확인할 수 있어요.
