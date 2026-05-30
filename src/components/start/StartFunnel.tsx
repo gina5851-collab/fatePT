@@ -51,7 +51,10 @@ export function StartFunnel(_props: { isLoggedIn?: boolean }) {
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "무료 진단 생성 실패");
+      if (!res.ok) {
+        const msg = json.detail ? `${json.error ?? "실패"}: ${json.detail}` : (json.error ?? "무료 진단 생성 실패");
+        throw new Error(msg);
+      }
       // 분석중 화면 최소 노출 후 이동
       setTimeout(() => router.push(`/results/${json.resultId}`), 2600);
     } catch (err) {

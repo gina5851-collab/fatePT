@@ -22,7 +22,8 @@ const bodySchema = z.object({
 export async function POST(request: NextRequest) {
   const parsed = bodySchema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "잘못된 요청입니다" }, { status: 400 });
+    const fieldErrors = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join(" | ");
+    return NextResponse.json({ error: "잘못된 요청입니다", detail: fieldErrors }, { status: 400 });
   }
   const body = parsed.data;
 
