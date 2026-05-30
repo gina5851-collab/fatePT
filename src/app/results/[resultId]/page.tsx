@@ -95,11 +95,15 @@ export default async function ResultPage({
   const displayName = getDisplayName(rawName);
   const mbti: MbtiType = isMbti(nameInput?.mbti) ? nameInput.mbti : "UNKNOWN";
 
-  // 무료 맛보기(free-taste) + 분석 원본 존재 → 천기문式 전환 ReportView 렌더
+  // ReportView 렌더 분기:
+  // - free-taste + analysis → 무료 모드 (잠금 21개 블러)
+  // - 유료 + paid_at + analysis → 유료 모드 (잠금 전부 해제)
   const slugForView = (product as { name: string; slug: string } | null)?.slug ?? "";
-  if (slugForView === "free-taste" && result.analysis) {
+  const isFreeTaste = slugForView === "free-taste";
+  const isPaid = !!order?.paid_at && !isFreeTaste;
+  if (result.analysis && (isFreeTaste || isPaid)) {
     const report = buildDunmyeongReport(result.analysis as never, mbti);
-    return <ReportView name={rawName} report={report} />;
+    return <ReportView name={rawName} report={report} unlocked={isPaid} />;
   }
 
   const myeongsik = result.myeongsik as unknown as Myeongsik;

@@ -42,7 +42,16 @@ export function FortuneSourceCard({ displayName, s }: { displayName: string; s: 
 
   return (
     <section className="space-y-4">
-      <h2 className="text-center text-[15px] font-semibold text-ink">{displayName}님의 사주 원본 구조</h2>
+      <div className="text-center">
+        <p className="text-[11px] font-mono tracking-[0.3em] text-mute mb-1.5">SAJU SOURCE</p>
+        <h2 className="text-[17px] font-bold text-ink leading-snug">
+          {displayName}님께 새겨진 여덟 글자의 운명
+        </h2>
+        <p className="mt-2 text-[12px] leading-relaxed text-body max-w-[360px] mx-auto">
+          {displayName}님에게 타고난 형(形), 기질, 흐름이 어떻게 새겨져 있는지 확인해보세요.
+          무료 결과에서는 핵심 구조 일부만 보여드립니다.
+        </p>
+      </div>
 
       <MyeongsikTable myeongsik={myeongsik} />
 
