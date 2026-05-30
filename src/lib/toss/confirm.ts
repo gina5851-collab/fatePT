@@ -27,6 +27,9 @@ export async function confirmTossPayment(
   body: TossConfirmRequest,
 ): Promise<{ ok: true; data: TossConfirmResponse } | { ok: false; error: TossErrorResponse }> {
   const secretKey = serverEnv().TOSS_SECRET_KEY;
+  if (!secretKey) {
+    return { ok: false, error: { code: "CONFIG_MISSING", message: "TOSS_SECRET_KEY 가 설정되지 않았습니다" } };
+  }
   const auth = Buffer.from(`${secretKey}:`).toString("base64");
 
   const res = await fetch(TOSS_CONFIRM_URL, {
