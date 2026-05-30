@@ -19,6 +19,14 @@ type Props = {
 
 const CONCERN_OPTIONS = ["연애", "결혼", "직장", "재물", "건강", "학업", "이직", "사업"];
 
+/** /api/free Zod는 HH:mm 만 허용 — type="time" 이 HH:mm:ss 를 줄 수 있음 */
+function normalizeBirthTimeForApi(raw: string, timeUnknown: boolean): string | null {
+  if (timeUnknown || !raw.trim()) return null;
+  const m = raw.trim().match(/^(\d{1,2}):(\d{2})/);
+  if (!m) return null;
+  return `${m[1].padStart(2, "0")}:${m[2]}`;
+}
+
 export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }: Props) {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -51,9 +59,9 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }:
     setSubmitting(true);
     try {
       const payload = {
-        name,
+        name: name.trim() || undefined,
         birthDate,
-        birthTime: timeUnknown ? null : birthTime || null,
+        birthTime: normalizeBirthTimeForApi(birthTime, timeUnknown),
         timeUnknown,
         gender,
         calendar,
@@ -68,7 +76,12 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }:
           body: JSON.stringify(payload),
         });
         const json = await res.json();
-        if (!res.ok) throw new Error(json.error ?? "무료 진단 생성 실패");
+        if (!res.ok) {
+          const msg = json.detail
+            ? `${json.error ?? "실패"}: ${json.detail}`
+            : (json.error ?? "무료 진단 생성 실패");
+          throw new Error(msg);
+        }
         router.push(`/results/${json.resultId}`);
         return;
       }
@@ -204,12 +217,25 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }:
         </div>
       )}
 
-      {(isLoggedIn || isFree) ? (
-        <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-          {submitting
-            ? isFree ? "진단 중..." : "주문 생성 중..."
-            : isFree ? "무료로 진단받기" : paymentMethod === "bank_transfer" ? "입금 안내 받기" : "결제하러 가기"}
-        </Button>
+      {isLoggedIn || isFree ? (
+        <div className="space-y-2">
+          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+            {submitting
+              ? isFree ? "진단 중..." : "주문 생성 중..."
+              : isFree
+                ? isLoggedIn
+                  ? "무료 결과 보기"
+                  : "로그인 없이 무료 결과 보기"
+                : paymentMethod === "bank_transfer"
+                  ? "입금 안내 받기"
+                  : "결제하러 가기"}
+          </Button>
+          {isFree && !isLoggedIn && (
+            <p className="text-xs text-body text-center">
+              결과 페이지에서 바로 확인할 수 있어요.
+            </p>
+          )}
+        </div>
       ) : (
         <div className="space-y-2">
           <Link

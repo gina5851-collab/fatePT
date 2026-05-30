@@ -154,7 +154,7 @@ export function StartFunnel(_props: { isLoggedIn?: boolean }) {
           </label>
           <button onClick={submit} disabled={!mbti && !mbtiUnknown}
             className="mt-6 w-full rounded-xl bg-amber-400 py-4 text-[15px] font-bold text-[#0c1322] disabled:opacity-40 hover:opacity-90 transition-opacity">
-            사주 풀이 받기 →
+            무료 결과 보기
           </button>
         </Step>
       )}
