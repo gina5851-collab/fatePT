@@ -26,12 +26,10 @@ export async function POST(request: NextRequest) {
   }
   const body = parsed.data;
 
-  // 로그인 필수
+  // 게스트 허용 — 무료 진단은 마찰 없이 결과부터. 로그인했으면 user_id 연결로 마이페이지 회수.
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "로그인이 필요합니다" }, { status: 401 });
-  }
+  const userId = user?.id ?? null;
 
   const service = createServiceClient();
 
@@ -45,28 +43,30 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "무료 진단을 사용할 수 없습니다" }, { status: 404 });
   }
 
-  // 하루 1회 제한 — 최근 24시간 내 무료 주문이 있으면 차단
-  const since = new Date(Date.now() - DAY_MS).toISOString();
-  const { count } = await service
-    .from("orders")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id)
-    .eq("payment_method", "free")
-    .gte("created_at", since);
-  if ((count ?? 0) >= 1) {
-    return NextResponse.json(
-      { error: "오늘 무료 진단은 이미 받으셨어요. 내일 다시 받아볼 수 있어요." },
-      { status: 429 },
-    );
+  // 하루 1회 제한 — 로그인 사용자만 적용. 게스트는 비활성(어뷰징 시 IP 기반 추가 예정).
+  if (userId) {
+    const since = new Date(Date.now() - DAY_MS).toISOString();
+    const { count } = await service
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("payment_method", "free")
+      .gte("created_at", since);
+    if ((count ?? 0) >= 1) {
+      return NextResponse.json(
+        { error: "오늘 무료 진단은 이미 받으셨어요. 내일 다시 받아볼 수 있어요." },
+        { status: 429 },
+      );
+    }
   }
 
-  // 무료 주문 생성 (0원, 즉시 paid)
+  // 무료 주문 생성 (0원, 즉시 paid) — 게스트는 user_id=null
   const orderId = `free_${nanoid(20)}`;
   const { data: order, error: orderErr } = await service
     .from("orders")
     .insert({
       order_id: orderId,
-      user_id: user.id,
+      user_id: userId,
       guest_email: null,
       product_id: product.id,
       amount: 0,
