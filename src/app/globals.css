@@ -11,22 +11,22 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;          /* canvas #ffffff */
-    --foreground: 0 0% 0%;            /* ink #000000 */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
-    --primary: 0 0% 0%;               /* pure black */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 98%;            /* surface-soft #fafafa */
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 98%;
-    --muted-foreground: 0 0% 45%;     /* body #737373 */
-    --accent: 0 0% 98%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 75% 50%;
+    --background: 218 52% 14%;        /* navy (더 밝고 파랗게) */
+    --foreground: 210 30% 96%;        /* cool white */
+    --card: 218 42% 18%;
+    --card-foreground: 210 30% 96%;
+    --primary: 0 0% 97%;              /* light pill on navy */
+    --primary-foreground: 218 52% 12%;
+    --secondary: 218 33% 23%;         /* surface-soft navy */
+    --secondary-foreground: 210 30% 96%;
+    --muted: 218 33% 23%;
+    --muted-foreground: 215 18% 70%;  /* body */
+    --accent: 218 33% 23%;
+    --accent-foreground: 210 30% 96%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 90%;               /* hairline #e5e5e5 */
-    --input: 0 0% 90%;
+    --border: 218 28% 28%;            /* hairline navy */
+    --input: 218 28% 28%;
     --ring: 217 91% 60%;              /* focus-ring blue */
     --radius: 0.75rem;                /* lg used for cards */
   }
@@ -42,6 +42,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* 상단 중앙 은은한 네이비 글로우 (천기문式 그라데이션) */
+    background-image: radial-gradient(100% 60% at 50% 0%, hsl(225 48% 23%) 0%, transparent 55%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     font-family:
       "SF Pro Rounded", -apple-system, BlinkMacSystemFont, ui-sans-serif,
       system-ui, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
@@ -66,16 +70,16 @@
     @apply mt-6 mb-2 text-lg font-semibold text-foreground;
   }
   .prose-saju p {
-    @apply my-3 leading-7 text-[#525252];
+    @apply my-3 leading-7 text-[#d4d4d8];
   }
   .prose-saju ul {
-    @apply my-3 list-disc space-y-1 pl-6 text-[#525252];
+    @apply my-3 list-disc space-y-1 pl-6 text-[#d4d4d8];
   }
   .prose-saju strong {
     @apply font-semibold text-foreground;
   }
   .prose-saju code {
-    @apply rounded-md bg-[#fafafa] px-1.5 py-0.5 text-sm;
+    @apply rounded-md bg-[#27272a] px-1.5 py-0.5 text-sm;
   }
   /* > 인용구 — 핵심 한 줄 메시지 */
   .prose-saju blockquote {
@@ -90,7 +94,7 @@
   }
   /* 구분선 */
   .prose-saju hr {
-    @apply my-8 border-t border-[#e5e5e5];
+    @apply my-8 border-t border-[#27272a];
   }
 }
 

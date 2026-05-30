@@ -14,11 +14,11 @@ const JI_OHAENG: Record<string, string> = {
   인: "목", 묘: "목", 사: "화", 오: "화", 진: "토", 술: "토", 축: "토", 미: "토", 신: "금", 유: "금", 자: "수", 해: "수",
 };
 const OHAENG_STYLE: Record<string, { box: string; text: string }> = {
-  목: { box: "bg-green-50 border-green-300", text: "text-green-700" },
-  화: { box: "bg-red-50 border-red-300", text: "text-red-600" },
-  토: { box: "bg-amber-50 border-amber-300", text: "text-amber-700" },
-  금: { box: "bg-neutral-100 border-neutral-300", text: "text-neutral-700" },
-  수: { box: "bg-blue-50 border-blue-300", text: "text-blue-700" },
+  목: { box: "bg-green-950/40 border-green-800", text: "text-green-300" },
+  화: { box: "bg-red-950/40 border-red-800", text: "text-red-300" },
+  토: { box: "bg-amber-950/40 border-amber-800", text: "text-amber-300" },
+  금: { box: "bg-zinc-800/60 border-zinc-600", text: "text-zinc-200" },
+  수: { box: "bg-blue-950/40 border-blue-800", text: "text-blue-300" },
 };
 
 function Glyph({ ko, kind, dayMaster }: { ko: string; kind: "cheon" | "ji"; dayMaster?: boolean }) {
@@ -45,7 +45,7 @@ export function MyeongsikTable({ myeongsik }: { myeongsik: Myeongsik }) {
   ].filter((c): c is { label: string; p: Pillar; day?: boolean } => c !== null);
 
   return (
-    <div className="rounded-2xl border border-hairline bg-[#fafafa] p-4">
+    <div className="rounded-2xl border border-hairline bg-surface-soft p-4">
       <p className="text-center text-[11px] font-mono tracking-[0.3em] text-mute mb-3">命 式 · 사주팔자</p>
       <div
         className="grid gap-2"

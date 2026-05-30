@@ -98,7 +98,7 @@ export default async function ProductDetailPage({
 
       {/* ── 결과지 구성 미리보기 ── */}
       {copy && (
-        <section className="mb-10 rounded-lg border border-hairline bg-[#fafafa] p-5">
+        <section className="mb-10 rounded-lg border border-hairline bg-surface-soft p-5">
           <p className="text-xs font-semibold text-ink mb-3">📄 리포트에 포함되는 내용</p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
             {copy.resultSections.map((s, i) => (
@@ -133,7 +133,7 @@ export default async function ProductDetailPage({
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-ink">생년월일 입력</h2>
-          <span className="text-xs text-mute bg-[#fafafa] border border-hairline rounded-full px-2.5 py-0.5">
+          <span className="text-xs text-mute bg-surface-soft border border-hairline rounded-full px-2.5 py-0.5">
             {product.price === 0 ? "무료 · 바로 확인" : "결제 후 바로 확인 가능"}
           </span>
         </div>

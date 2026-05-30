@@ -81,11 +81,12 @@ export async function generateSajuResult(orderInternalId: string, productId: str
   // 만세력/풀 분석: luckyloveme 키가 있으면 실제 API, 없거나 실패하면 mock 으로 fallback
   let myeongsik: Myeongsik;
   let manseryeokText: string | undefined;
+  let analysis: Awaited<ReturnType<typeof fetchSajuAnalysis>> | null = null;
 
   if (isSajuApiConfigured()) {
     try {
       const birthInfo = toBirthInfo(input);
-      const analysis = await fetchSajuAnalysis(birthInfo, []); // [] = 16종 전체
+      analysis = await fetchSajuAnalysis(birthInfo, []); // [] = 16종 전체
       const converted = ganjiToMyeongsik(analysis);
       if (converted) {
         myeongsik = converted;
@@ -95,6 +96,7 @@ export async function generateSajuResult(orderInternalId: string, productId: str
       }
     } catch (apiErr) {
       console.error("[saju-api] fallback to mock:", apiErr);
+      analysis = null;
       myeongsik = await computeMyeongsik(toComputeInput(input));
     }
   } else {
@@ -123,6 +125,7 @@ export async function generateSajuResult(orderInternalId: string, productId: str
       interpretation_md: llm.text,
       llm_provider: llm.provider,
       llm_model: llm.model,
+      analysis: (analysis ?? null) as never, // 만세력 원본 — 결과 페이지 리포트 재구성용
     })
     .select("id")
     .single();

@@ -23,7 +23,7 @@ export function MobileMenu({ isLoggedIn }: Props) {
     <>
       {/* 햄버거 버튼 — 모바일만 표시 */}
       <button
-        className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px] rounded-md hover:bg-[#f5f5f5] transition-colors"
+        className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px] rounded-md hover:bg-surface-soft transition-colors"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
         aria-expanded={open}

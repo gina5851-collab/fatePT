@@ -40,16 +40,16 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Ollama palette aliases (see DESIGN.md)
-        ink: "#000000",
-        canvas: "#ffffff",
-        "surface-soft": "#fafafa",
-        "surface-dark": "#171717",
-        charcoal: "#525252",
-        body: "#737373",
-        mute: "#a3a3a3",
-        hairline: "#e5e5e5",
-        "hairline-strong": "#d4d4d4",
+        // 다크(네이비) 테마 팔레트 — 검정처럼 안 보이게 더 밝고 파랗게
+        ink: "#eef2fb",          // 글자: 쿨 화이트
+        canvas: "#11203c",       // 배경: 또렷한 네이비
+        "surface-soft": "#1c2c4c", // 살짝 밝은 네이비 표면
+        "surface-dark": "#0c1730",
+        charcoal: "#cdd5e6",
+        body: "#9aa6bf",         // 보조 글자 (쿨 그레이)
+        mute: "#6f7c97",
+        hairline: "#2c3c5b",     // 테두리: 네이비
+        "hairline-strong": "#42547a",
       },
       borderRadius: {
         lg: "var(--radius)",

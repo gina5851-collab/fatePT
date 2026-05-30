@@ -59,6 +59,7 @@ type SajuInputRow = {
   gender: GenderKind;
   calendar: CalendarKind;
   concerns: string[];
+  mbti: string | null;
   created_at: string;
 };
 
@@ -69,6 +70,7 @@ type SajuResultRow = {
   interpretation_md: string;
   llm_provider: string;
   llm_model: string;
+  analysis: Json | null;
   created_at: string;
 };
 
@@ -145,6 +147,7 @@ export type Database = {
           gender: GenderKind;
           calendar?: CalendarKind;
           concerns?: string[];
+          mbti?: string | null;
           created_at?: string;
         };
         Update: Partial<SajuInputRow>;
@@ -159,6 +162,7 @@ export type Database = {
           interpretation_md: string;
           llm_provider: string;
           llm_model: string;
+          analysis?: Json | null;
           created_at?: string;
         };
         Update: Partial<SajuResultRow>;

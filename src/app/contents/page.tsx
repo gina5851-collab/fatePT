@@ -86,21 +86,21 @@ const CATEGORIES = [
 export default function ContentsPage() {
   return (
     <div className="container py-12">
-      <header className="mb-10">
+      <header className="mb-10 text-center">
         <p className="text-xs font-mono text-mute mb-2">CONTENTS</p>
         <h1 className="text-3xl font-semibold tracking-tight">고민별 콘텐츠</h1>
-        <p className="mt-2 text-sm text-body max-w-md">
+        <p className="mt-2 text-sm text-body max-w-md mx-auto">
           반복되는 관계·돈·선택의 패턴을 정리하는 콘텐츠 모음입니다.
           읽다가 내 이야기처럼 느껴진다면, 리포트에서 더 자세히 확인해보세요.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 max-w-[400px] mx-auto">
         {CATEGORIES.map((cat) => (
           <Link
             key={cat.slug}
             href={`/contents/${cat.slug}`}
-            className="group block rounded-lg border border-hairline bg-canvas p-6 transition-colors hover:border-ink"
+            className="group block rounded-lg border border-hairline bg-surface-soft p-6 transition-colors hover:border-ink"
           >
             <p className="text-2xl mb-3">{cat.emoji}</p>
             <p className="text-base font-semibold text-ink">{cat.title}</p>
@@ -120,18 +120,18 @@ export default function ContentsPage() {
       </div>
 
       {/* 하단 CTA */}
-      <div className="mt-16 rounded-lg border border-hairline p-8 text-center">
+      <div className="mt-16 rounded-lg border border-hairline bg-surface-soft p-8 text-center max-w-[400px] mx-auto">
         <p className="text-sm font-semibold text-ink mb-2">
           읽다가 내 이야기처럼 느껴졌다면
         </p>
         <p className="text-sm text-body mb-5">
-          생년월일 기반 AI 리포트에서 더 구체적인 분석을 확인해보세요.
+          생년월일 기반 AI 진단으로 더 구체적인 분석을 확인해보세요.
         </p>
         <Link
-          href="/products"
-          className="inline-block rounded-full bg-ink text-canvas text-sm font-medium px-5 py-2.5 hover:opacity-80 transition-opacity"
+          href="/start"
+          className="inline-block rounded-full bg-ink text-canvas text-sm font-medium px-5 py-2.5 hover:opacity-90 transition-opacity"
         >
-          리포트 보기 →
+          1분 무료로 진단받기 →
         </Link>
       </div>
     </div>

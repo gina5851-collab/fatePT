@@ -12,6 +12,7 @@ const bodySchema = z.object({
   gender: z.enum(["male", "female"]),
   calendar: z.enum(["solar", "lunar"]),
   concerns: z.array(z.string().max(20)).max(20),
+  mbti: z.string().max(8).optional(),
   paymentMethod: z.enum(["toss", "bank_transfer"]).default("toss"),
   depositorName: z.string().max(50).optional(),
 });
@@ -73,6 +74,7 @@ export async function POST(request: NextRequest) {
     gender: body.gender,
     calendar: body.calendar,
     concerns: body.concerns,
+    mbti: body.mbti ?? null,
   });
 
   if (inputErr) {
