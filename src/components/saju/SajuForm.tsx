@@ -15,6 +15,8 @@ type Props = {
   productSlug: string;
   isLoggedIn: boolean;
   isFree?: boolean;
+  /** 무료 결과(/results/[id])에서 이어 온 경우 그 resultId. /api/orders/create payload 에 echo. */
+  sourceResultId?: string;
 };
 
 const CONCERN_OPTIONS = ["연애", "결혼", "직장", "재물", "건강", "학업", "이직", "사업"];
@@ -27,7 +29,7 @@ function normalizeBirthTimeForApi(raw: string, timeUnknown: boolean): string | n
   return `${m[1].padStart(2, "0")}:${m[2]}`;
 }
 
-export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }: Props) {
+export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false, sourceResultId }: Props) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -94,6 +96,8 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false }:
           ...payload,
           paymentMethod,
           depositorName: paymentMethod === "bank_transfer" ? depositorName.trim() : undefined,
+          // 무료 결과 → 결제 흐름에 carry. API 는 받기만 함 (DB 저장은 다음 작업).
+          sourceResultId,
         }),
       });
       const json = await res.json();

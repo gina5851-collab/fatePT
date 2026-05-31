@@ -12,10 +12,15 @@ type Review = { id: string; rating: number; content: string; created_at: string 
 
 export default async function ProductDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ source?: string }>;
 }) {
   const { slug } = await params;
+  // 무료 결과 페이지에서 이어 온 경우 ?source={resultId} carry — 결제 payload 에 echo.
+  const { source } = (await searchParams) ?? {};
+  const sourceResultId = typeof source === "string" && source.length > 0 ? source : undefined;
 
   let product: Product | null;
   let reviews: Review[] | null = null;
@@ -138,7 +143,13 @@ export default async function ProductDetailPage({
           </span>
         </div>
         <p className="text-xs text-body mb-4">정확할수록 더 정밀한 결과가 나옵니다.</p>
-        <SajuForm productId={product.id} productSlug={product.slug} isLoggedIn={!!user} isFree={product.price === 0} />
+        <SajuForm
+          productId={product.id}
+          productSlug={product.slug}
+          isLoggedIn={!!user}
+          isFree={product.price === 0}
+          sourceResultId={sourceResultId}
+        />
       </section>
 
       {/* ── 후기 ── */}

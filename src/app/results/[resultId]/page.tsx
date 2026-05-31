@@ -103,7 +103,7 @@ export default async function ResultPage({
   const isPaid = !!order?.paid_at && !isFreeTaste;
   if (result.analysis && (isFreeTaste || isPaid)) {
     const report = buildDunmyeongReport(result.analysis as never, mbti);
-    return <ReportView name={rawName} report={report} unlocked={isPaid} />;
+    return <ReportView name={rawName} report={report} unlocked={isPaid} resultId={resultId} />;
   }
 
   const myeongsik = result.myeongsik as unknown as Myeongsik;

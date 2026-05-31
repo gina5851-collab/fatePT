@@ -8,11 +8,21 @@ import { trackEvent } from "@/lib/analytics";
 
 // 모바일 하단 고정 CTA — 무료 결과 첫 섹션을 지나면 등장.
 // "결제" 아닌 "열기/해금" 톤. 페이월 카드 근처에선 중복 회피로 숨김.
-export function StickyUnlockCTA({ displayName, totalLocked }: { displayName: string; totalLocked: number }) {
+export function StickyUnlockCTA({
+  displayName,
+  totalLocked,
+  sourceResultId,
+}: {
+  displayName: string;
+  totalLocked: number;
+  /** 무료 결과 → 결제 흐름에 source 로 carry. */
+  sourceResultId?: string;
+}) {
   const [show, setShow] = useState(false);
   const tiers = activeTiers();
   const best = tiers.find((t) => t.highlight) ?? tiers[0];
   if (!best) return null;
+  const qs = sourceResultId ? `?source=${encodeURIComponent(sourceResultId)}` : "";
 
   useEffect(() => {
     const onScroll = () => {
@@ -38,12 +48,13 @@ export function StickyUnlockCTA({ displayName, totalLocked }: { displayName: str
     >
       <div className="mx-auto max-w-[440px] px-3 pb-3">
         <Link
-          href={`/products/${best.productSlug}`}
+          href={`/products/${best.productSlug}${qs}`}
           onClick={() =>
             trackEvent("sticky_unlock_click", {
               page: "free_result",
               product: best.productSlug,
               price: best.price,
+              source: sourceResultId,
             })
           }
           className="flex items-center justify-between rounded-2xl bg-amber-400 text-[#0c1322] px-5 py-3.5 shadow-lg hover:opacity-90 active:scale-[0.99] transition"

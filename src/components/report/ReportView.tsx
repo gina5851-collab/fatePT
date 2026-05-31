@@ -23,10 +23,13 @@ export function ReportView({
   name,
   report,
   unlocked = false,
+  resultId,
 }: {
   name?: string | null;
   report: DunmyeongReport;
   unlocked?: boolean;
+  /** 무료 결과 → 결제 흐름에 source 로 전달하기 위한 무료 결과 ID. 추후 unlock 매핑 발판. */
+  resultId?: string;
 }) {
   const displayName = getDisplayName(name);
   const totalLocked = report.items.filter((i) => !i.free).length;
@@ -79,7 +82,12 @@ export function ReportView({
 
         {/* ⑨ 페이월 — 무료에서만 */}
         {!unlocked && (
-          <Paywall displayName={displayName} cta={report.cta} totalLocked={totalLocked} />
+          <Paywall
+            displayName={displayName}
+            cta={report.cta}
+            totalLocked={totalLocked}
+            sourceResultId={resultId}
+          />
         )}
 
         <p className="text-center text-[11px] leading-relaxed text-mute pt-4 pb-20 md:pb-4">
@@ -89,7 +97,13 @@ export function ReportView({
       </div>
 
       {/* ⑩ Sticky CTA — 무료에서만 */}
-      {!unlocked && <StickyUnlockCTA displayName={displayName} totalLocked={totalLocked} />}
+      {!unlocked && (
+        <StickyUnlockCTA
+          displayName={displayName}
+          totalLocked={totalLocked}
+          sourceResultId={resultId}
+        />
+      )}
     </>
   );
 }

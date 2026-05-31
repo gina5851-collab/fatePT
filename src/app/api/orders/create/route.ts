@@ -15,6 +15,9 @@ const bodySchema = z.object({
   mbti: z.string().max(8).optional(),
   paymentMethod: z.enum(["toss", "bank_transfer"]).default("toss"),
   depositorName: z.string().max(50).optional(),
+  // 무료 결과 → 결제 흐름 carry. 받기만 하고 저장 X.
+  // TODO(next): orders.source_result_id 컬럼 추가 후 영속화 + /api/orders/confirm 에서 unlock 매핑.
+  sourceResultId: z.string().uuid().optional(),
 });
 
 export async function POST(request: NextRequest) {
