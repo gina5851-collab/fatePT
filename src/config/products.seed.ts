@@ -25,6 +25,16 @@ export const productsSeed: ProductSeed[] = [
     is_active: true,
   },
   {
+    // 외부(/contents) → "오늘의 선택 리포트" 라벨로 유입되는 경량 리포트.
+    // DB 마이그레이션 0003 과 동기화. product-copy.ts / prompt.ts 의 today-fortune 항목과 톤 일치.
+    slug: "today-fortune",
+    name: "오늘의 선택 리포트",
+    description: "아침에 가볍게 확인하는 오늘 하루의 선택 흐름 — 점괘가 아니라 오늘 의식할 패턴",
+    price: 4900,
+    display_order: 8,
+    is_active: true,
+  },
+  {
     slug: "inbody",
     name: "운명 인바디",
     description: "내 운명 체성분 측정 — 타고난 기질·강점·약점을 한 장으로 진단",
