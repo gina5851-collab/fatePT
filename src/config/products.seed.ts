@@ -75,6 +75,17 @@ export const productsSeed: ProductSeed[] = [
     is_active: true,
   },
   {
+    // 본상품 (29,000원) — 무료 테스트 이후 보는 심화 전체 리포트.
+    // 운영 DB 0003 마이그레이션의 premium-saju slug 를 본상품으로 재정의 (DB 콘솔 UPDATE 완료).
+    // product-copy.ts / prompt.ts 의 premium-saju 항목과 톤 일치.
+    slug: "premium-saju",
+    name: "나의 전체 흐름 리포트",
+    description: "무료 테스트 이후 보는 심화 전체 리포트 — 타고난 기질, 관계, 돈과 일, 현재 선택 흐름까지 한 번에 확인합니다.",
+    price: 29000,
+    display_order: 35,
+    is_active: true,
+  },
+  {
     slug: "life-master",
     name: "인생 리디자인 마스터",
     description: "직업·재물·관계·건강·대운까지 인생 전체를 재설계하는 마스터 프로그램",
