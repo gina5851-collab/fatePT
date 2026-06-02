@@ -21,7 +21,8 @@ export function Paywall({
 }) {
   const tiers = activeTiers();
   const best = tiers.find((t) => t.highlight) ?? tiers[0];
-  const bestSlug = best?.productSlug ?? "reunion-check";
+  // 본상품 폴백: activeTiers 가 비어있는 비정상 케이스에서도 premium-saju 로 이동.
+  const bestSlug = best?.productSlug ?? "premium-saju";
   // 결제 페이지로 무료 결과 id 를 carry — 다음 작업(unlock 매핑)에서 사용.
   const qs = sourceResultId ? `?source=${encodeURIComponent(sourceResultId)}` : "";
   const withSource = (slug: string) => `/products/${slug}${qs}`;
@@ -34,30 +35,30 @@ export function Paywall({
       </div>
 
       <h3 className="text-center text-lg font-bold text-ink leading-snug">
-        무료 결과는 시작일 뿐입니다.
+        놓치지 마
         <br />
-        {displayName}님의 다음 장을
+        {displayName}님의 이어지는 해석을
         <br />
-        이어서 확인해보세요.
+        차분히 받아보세요.
       </h3>
       <p className="mt-3 text-center text-[13px] leading-relaxed text-body">
-        무료 결과는 핵심 요약만 보여드렸어요.
+        지금 보이는 고민은
         <br />
-        전체 리포트에서는 관계, 돈, 일, 올해 흐름까지
+        결과가 아니라 반복되는 흐름의 일부일 수 있어요.
         <br />
-        이어서 확인할 수 있어요.
+        조금 더 깊은 흐름을 이어서 볼 수 있어요.
       </p>
 
-      {/* 잠긴 것 요약 (손실 강조) */}
+      {/* 이어보기 — 종용형 X, 탐색형 톤 */}
       <ul className="mt-4 space-y-1.5 text-[12px] text-body">
         <li className="flex items-center gap-2">
-          <span className="text-amber-300">🔓</span> 반복을 만드는 <b className="text-ink">출발점</b>과 끊는 법
+          <span className="text-amber-300">↗</span> 반복되는 <b className="text-ink">패턴의 출발점</b>
         </li>
         <li className="flex items-center gap-2">
-          <span className="text-amber-300">🔓</span> 돈·에너지가 <b className="text-ink">새는 지점</b>과 막는 법
+          <span className="text-amber-300">↗</span> 돈과 일이 <b className="text-ink">흐르는 결</b>
         </li>
         <li className="flex items-center gap-2">
-          <span className="text-amber-300">🔓</span> 2026년 <b className="text-ink">전환 타이밍</b>과 주의 시기
+          <span className="text-amber-300">↗</span> 지금 시기에 <b className="text-ink">의식할 선택</b>
         </li>
       </ul>
 
@@ -136,7 +137,7 @@ export function Paywall({
           }
           className="text-center text-[12px] text-body hover:text-ink underline underline-offset-4"
         >
-          심화 해석 보기 · 잠긴 {totalLocked}개 항목 전체 열기
+          이어지는 해석 보기 · 내 흐름의 다음 장
         </Link>
         <Link
           href={withSource("life-master")}
@@ -153,9 +154,11 @@ export function Paywall({
         </Link>
       </div>
 
-      {/* 결제 안심 */}
-      <p className="mt-4 text-center text-[11px] text-mute">
-        토스페이먼츠 안전결제 · 결제 후 바로 확인 · 마음에 안 들면 환불 안내
+      {/* 결제 안내 — 카카오톡 오픈채팅 결과 전달 구조 */}
+      <p className="mt-4 text-center text-[11px] text-mute leading-relaxed">
+        토스페이먼츠 안전결제
+        <br />
+        결제 완료 후 카카오톡 오픈채팅으로 결과지 안내가 전달됩니다.
       </p>
     </section>
   );

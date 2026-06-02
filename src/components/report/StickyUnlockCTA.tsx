@@ -62,13 +62,13 @@ export function StickyUnlockCTA({
           <div className="text-left">
             <p className="text-[11px] font-medium opacity-70">{formatKRW(best.price)}</p>
             <p className="text-[14px] font-bold leading-tight">
-              잠긴 {totalLocked}개 항목 전체 열기
+              내 흐름의 다음 장 보기
             </p>
           </div>
           <span className="text-xl font-bold ml-3" aria-hidden>→</span>
         </Link>
         <p className="mt-1.5 text-center text-[10px] text-mute">
-          {displayName}님 전체 리포트를 이어서 확인하세요
+          {displayName}님의 이어지는 해석을 차분히 받아보세요
         </p>
       </div>
     </div>
