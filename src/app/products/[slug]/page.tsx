@@ -58,18 +58,10 @@ export default async function ProductDetailPage({
 
   return (
     <div className="container py-12 max-w-2xl">
-      {/* ── 헤더 ── */}
+      {/* ── 헤더 (고객 언어만: 제목 / 짧은 설명 / 가격) ── */}
       <header className="mb-10">
-        <div className="flex items-center gap-2 mb-2">
-          <p className="text-xs font-mono text-mute">PROGRAM / {product.slug}</p>
-          {copy?.badge ? (
-            <span className="text-[11px] font-semibold rounded-full bg-ink text-canvas px-2 py-0.5">{copy.badge}</span>
-          ) : null}
-        </div>
-
         {copy ? (
           <>
-            <p className="text-xs text-body mb-1">{copy.positioning}</p>
             <h1 className="text-3xl font-semibold tracking-tight leading-snug">
               {copy.headline}
             </h1>
