@@ -108,7 +108,10 @@ function SiteFooter() {
   return (
     <footer className="border-t border-hairline mt-20">
       <div className="container py-10 text-xs text-body space-y-4">
-        <div className="flex flex-wrap gap-x-5 gap-y-1.5">
+        <div className="grid grid-cols-2 gap-y-2 gap-x-6 sm:flex sm:flex-wrap sm:gap-x-5 sm:gap-y-1.5">
+          <Link href="/about" className="hover:text-ink">BrandG 소개</Link>
+          <Link href="/help" className="hover:text-ink">고객센터</Link>
+          <Link href="/faq" className="hover:text-ink">자주 묻는 질문</Link>
           <Link href="/legal/terms" className="hover:text-ink">이용약관</Link>
           <Link href="/legal/privacy" className="hover:text-ink">개인정보처리방침</Link>
           <Link href="/legal/refund-policy" className="hover:text-ink">환불정책</Link>

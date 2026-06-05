@@ -29,11 +29,12 @@ export default function ResetPage() {
   }
 
   return (
+    <div className="brandg-shop">
     <div className="container py-16 max-w-md">
       <Card>
         <CardHeader>
           <CardTitle>비밀번호 재설정</CardTitle>
-          <CardDescription>이메일로 재설정 링크를 보내드립니다.</CardDescription>
+          <CardDescription>가입하신 이메일로 재설정 링크를 보내드립니다.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -47,6 +48,7 @@ export default function ResetPage() {
           </form>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }

@@ -16,14 +16,17 @@ export default async function MyPage() {
     .maybeSingle();
 
   const items = [
-    { href: "/mypage/orders", label: "결제 내역 / 결과지" },
+    { href: "/mypage/orders", label: "주문 / 결제 내역" },
     { href: "/mypage/reviews", label: "내 후기" },
+    { href: "/cart", label: "장바구니" },
+    { href: "/help", label: "고객센터" },
   ];
 
   return (
+    <div className="brandg-shop">
     <div className="container py-12 max-w-xl">
       <header className="mb-10">
-        <p className="text-xs font-mono text-mute mb-2">ACCOUNT</p>
+        <p className="text-xs font-mono text-mute mb-2">MY G</p>
         <h1 className="text-2xl font-semibold tracking-tight">
           {profile?.display_name ?? user.email}
         </h1>
@@ -53,6 +56,7 @@ export default async function MyPage() {
           </form>
         </li>
       </ul>
+    </div>
     </div>
   );
 }
