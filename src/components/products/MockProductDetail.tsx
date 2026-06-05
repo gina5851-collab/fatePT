@@ -2,7 +2,7 @@ import Link from "next/link";
 import { formatKRW } from "@/lib/utils";
 import type { MockProduct } from "@/config/products.mock";
 import { findGCategory } from "@/config/categories";
-import { ProductGallery } from "@/components/products/ProductGallery";
+import { ProductMockBackdrop } from "@/components/products/ProductMockBackdrop";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 // BrandG mock 상품 상세 — DB/결제 무관, 데모 전용.
@@ -15,7 +15,11 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
 
   return (
     <div className="container py-10 max-w-2xl">
-      <ProductGallery gradient={product.gradient} alt={product.name} />
+      <section className="mb-8 -mx-4 sm:mx-0">
+        <div className="relative w-full sm:max-w-[460px] sm:mx-auto aspect-[4/5] sm:rounded-2xl overflow-hidden">
+          <ProductMockBackdrop product={product} size="lg" />
+        </div>
+      </section>
 
       <header className="mb-8">
         <div className="flex items-center gap-2 mb-3">

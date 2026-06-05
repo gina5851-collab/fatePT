@@ -51,6 +51,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     originalPrice: 26000,
     isBest: true,
     isSale: true,
+    isNew: true,
     gradient: "from-emerald-200 via-teal-300 to-emerald-400",
     reviewCount: 892,
     rating: 4.7,
@@ -152,6 +153,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     longDescription: "락토페린 200mg + 프리바이오틱스. 아침 공복에 한 정.",
     category_slug: "good-health",
     price: 39000,
+    isNew: true,
     gradient: "from-green-200 via-emerald-300 to-teal-500",
     reviewCount: 348,
     rating: 4.6,
@@ -299,6 +301,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     category_slug: "good-balance",
     price: 18000,
     isBest: true,
+    isNew: true,
     gradient: "from-emerald-200 via-teal-300 to-cyan-500",
     reviewCount: 421,
     rating: 4.7,
@@ -415,4 +418,14 @@ export function getSaleMockProducts(limit?: number): MockProduct[] {
 
 export function getJinasPicks(limit = 5): MockProduct[] {
   return BRANDG_MOCK_PRODUCTS.filter((p) => p.brand === "지나 PICK").slice(0, limit);
+}
+
+export function getNewMockProducts(limit?: number): MockProduct[] {
+  const items = BRANDG_MOCK_PRODUCTS.filter((p) => p.isNew);
+  return typeof limit === "number" ? items.slice(0, limit) : items;
+}
+
+export function getBrandMockProducts(brand: string, limit?: number): MockProduct[] {
+  const items = BRANDG_MOCK_PRODUCTS.filter((p) => p.brand === brand);
+  return typeof limit === "number" ? items.slice(0, limit) : items;
 }
