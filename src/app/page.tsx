@@ -1,5 +1,6 @@
 import { Hero } from "@/components/landing/Hero";
 import { LifeIssueChips } from "@/components/landing/LifeIssueChips";
+import { PromoBanner } from "@/components/landing/PromoBanner";
 import { GCategoryCards } from "@/components/landing/GCategoryCards";
 import { BestPicks } from "@/components/landing/BestPicks";
 import { JinasCart } from "@/components/landing/JinasCart";
@@ -19,6 +20,7 @@ export default function HomePage() {
       <div className="mx-auto max-w-[1080px]">
         <Hero />
         <LifeIssueChips />
+        <PromoBanner />
         <GCategoryCards />
         <BestPicks />
         <JinasCart />

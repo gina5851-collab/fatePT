@@ -1,4 +1,5 @@
 import { useId } from "react";
+import Image from "next/image";
 import type { MockProduct } from "@/config/products.mock";
 
 // =====================================================
@@ -101,6 +102,21 @@ export function ProductMockBackdrop({
   size?: "sm" | "md" | "lg";
   showName?: boolean;
 }) {
+  // 실제 이미지 우선 — 있으면 full-bleed cover, 없으면 SVG fallback (아래)
+  if (product.imageUrl) {
+    return (
+      <div className="relative w-full h-full overflow-hidden bg-[#F5F0E8]">
+        <Image
+          src={product.imageUrl}
+          alt={product.name}
+          fill
+          sizes="(max-width: 768px) 50vw, 33vw"
+          className="object-cover"
+        />
+      </div>
+    );
+  }
+
   const a = CATEGORY_ACCENT[product.category_slug] ?? FALLBACK;
   const pkg = pickPackage(product);
   const label = shortLabel(product);

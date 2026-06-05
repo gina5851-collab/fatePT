@@ -20,6 +20,7 @@ export type MockProduct = {
   reviewCount?: number;
   rating?: number;
   highlights?: string[];
+  imageUrl?: string;       // 있으면 실제 이미지, 없으면 SVG fallback
 };
 
 export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
@@ -39,6 +40,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 1284,
     rating: 4.8,
     highlights: ["안정형 비타C 12%", "데일리 사용 OK", "끈적임 0"],
+    imageUrl: "/brandg-demo/product-serum-01_pexels-vie-studio-4857810.jpg",
   },
   {
     slug: "skin-cica-toner-pad",
@@ -56,6 +58,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 892,
     rating: 4.7,
     highlights: ["저자극 시카", "마스크 겸용", "60매"],
+    imageUrl: "/brandg-demo/product-cream-02_pexels-karola-g-7321553.jpg",
   },
   {
     slug: "skin-daily-moisture-cream",
@@ -69,6 +72,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 412,
     rating: 4.6,
     highlights: ["히알루론산 5종", "묵직한 보습", "끈적임 ↓"],
+    imageUrl: "/brandg-demo/product-cream-01_pexels-polina-kovaleva-8101587.jpg",
   },
   {
     slug: "skin-scalp-detox-cleanser",
@@ -115,6 +119,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 1592,
     rating: 4.7,
     highlights: ["비타민 13종", "미네랄 9종", "60일분"],
+    imageUrl: "/brandg-demo/product-supplement-01_pexels-future-kind-vegan-supplements-3039191-4607248.jpg",
   },
   {
     slug: "health-collagen-stick",
@@ -131,6 +136,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 1108,
     rating: 4.8,
     highlights: ["저분자 1,500mg", "자몽맛", "30일분"],
+    imageUrl: "/brandg-demo/product-supplement-03_pexels-leeloothefirst-20140033.jpg",
   },
   {
     slug: "health-chamomile-tea",
@@ -158,6 +164,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 348,
     rating: 4.6,
     highlights: ["락토페린 200mg", "프리바이오틱스", "60일분"],
+    imageUrl: "/brandg-demo/product-supplement-02_pexels-supliful-14027302.jpg",
   },
   {
     slug: "health-plant-protein",
@@ -189,6 +196,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 781,
     rating: 4.8,
     highlights: ["히말라야 솔트", "에센셜 오일", "500g"],
+    imageUrl: "/brandg-demo/banner-homecare-01_pexels-polina-tankilevitch-7669552.jpg",
   },
   {
     slug: "recovery-foot-detox-patch",
@@ -231,6 +239,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 612,
     rating: 4.7,
     highlights: ["카올린·화이트클레이", "주 1회", "100g"],
+    imageUrl: "/brandg-demo/banner-routine-01_pexels-pnw-prod-9219008.jpg",
   },
   {
     slug: "recovery-lavender-diffuser",
@@ -247,6 +256,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 247,
     rating: 4.8,
     highlights: ["라벤더 + 우디", "약 8주 지속", "200ml"],
+    imageUrl: "/brandg-demo/banner-healing-01_pexels-da-na-461418424-31448498.jpg",
   },
 
   // ───── 가벼워지G (good-balance) 🌬️
@@ -337,6 +347,7 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     reviewCount: 1342,
     rating: 4.8,
     highlights: ["약산성 5.5", "무향", "200ml"],
+    imageUrl: "/brandg-demo/banner-beauty-routine-01_pexels-cottonbro-5999362.jpg",
   },
   {
     slug: "inner-lactobacillus",
