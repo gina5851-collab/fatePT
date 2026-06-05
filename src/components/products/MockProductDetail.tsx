@@ -14,6 +14,7 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
     : 0;
 
   return (
+    <div className="brandg-shop">
     <div className="container py-10 max-w-2xl">
       <section className="mb-8 -mx-4 sm:mx-0">
         <div className="relative w-full sm:max-w-[460px] sm:mx-auto aspect-[4/5] sm:rounded-2xl overflow-hidden">
@@ -124,6 +125,7 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
           </Link>
         </p>
       ) : null}
+    </div>
     </div>
   );
 }

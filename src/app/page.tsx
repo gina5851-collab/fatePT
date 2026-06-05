@@ -15,19 +15,21 @@ import { CTA } from "@/components/landing/CTA";
 // Hero (축소) → 생활문제 chip → 5G → BEST → 지나스 → 특가 → G 연구소 → 브랜드 → NEW → 가이드 → 기획전 → CTA
 export default function HomePage() {
   return (
-    <div className="mx-auto max-w-[1080px]">
-      <Hero />
-      <LifeIssueChips />
-      <GCategoryCards />
-      <BestPicks />
-      <JinasCart />
-      <TodaysSale />
-      <GLab />
-      <BrandCuration />
-      <NewArrivals />
-      <GGuides />
-      <LifeIssuePlans />
-      <CTA />
+    <div className="brandg-shop">
+      <div className="mx-auto max-w-[1080px]">
+        <Hero />
+        <LifeIssueChips />
+        <GCategoryCards />
+        <BestPicks />
+        <JinasCart />
+        <TodaysSale />
+        <GLab />
+        <BrandCuration />
+        <NewArrivals />
+        <GGuides />
+        <LifeIssuePlans />
+        <CTA />
+      </div>
     </div>
   );
 }

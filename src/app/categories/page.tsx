@@ -7,6 +7,7 @@ export const metadata = { title: "G 카테고리" };
 // 카테고리별 상품 노출은 Phase 2c (products.category_slug 마이그레이션) 후 활성화.
 export default function CategoriesPage() {
   return (
+    <div className="brandg-shop">
     <div className="container py-12 max-w-2xl">
       <header className="text-center mb-10">
         <p className="text-[11px] font-mono tracking-[0.3em] text-mute mb-2">CATEGORY</p>
@@ -61,6 +62,7 @@ export default function CategoriesPage() {
         </Link>
         {" "} 진단으로 시작해보세요.
       </p>
+    </div>
     </div>
   );
 }

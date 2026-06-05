@@ -32,6 +32,29 @@
   }
 }
 
+/* BrandG 데모 페이지 톤 오버라이드 — 운명PT 페이지 (results/start/checkout/login 등) 는 무영향.
+   적용 범위: .brandg-shop 클래스가 붙은 wrapper 안쪽만.
+   tailwind.config / 디자인 토큰 변경 없음. 단순 데모용 CSS 스코프 오버라이드. */
+@layer components {
+  .brandg-shop {
+    background-color: #FAF4E6;
+    color: #26261E;
+    min-height: 100vh;
+  }
+  .brandg-shop .bg-canvas        { background-color: #FAF4E6; }
+  .brandg-shop .bg-surface-soft  { background-color: #FFFFFF; }
+  .brandg-shop .text-ink         { color: #26261E; }
+  .brandg-shop .text-body        { color: #5C5848; }
+  .brandg-shop .text-mute        { color: #8B8575; }
+  .brandg-shop .text-charcoal    { color: #353529; }
+  .brandg-shop .border-hairline  { border-color: #E6DCC4; }
+  .brandg-shop .border-ink       { border-color: #26261E; }
+  .brandg-shop .bg-ink           { background-color: #26261E; }
+  .brandg-shop .text-canvas      { color: #FAF4E6; }
+  .brandg-shop .hover\:border-ink:hover { border-color: #26261E; }
+  .brandg-shop .hover\:text-ink:hover   { color: #26261E; }
+}
+
 @layer base {
   * {
     @apply border-border;

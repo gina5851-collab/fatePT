@@ -18,6 +18,7 @@ export default async function ProductsPage({
   const activeCat = active ? findGCategory(active) : null;
 
   return (
+    <div className="brandg-shop">
     <div className="container py-10 max-w-[1080px]">
       <header className="mb-7 text-center">
         <p className="text-[11px] font-mono tracking-[0.3em] text-mute mb-2">SHOP</p>
@@ -64,6 +65,7 @@ export default async function ProductsPage({
           내 G 찾기 진단 시작 →
         </Link>
       </div>
+    </div>
     </div>
   );
 }

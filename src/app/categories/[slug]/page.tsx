@@ -32,6 +32,7 @@ export default async function CategoryDetailPage({
   const products = getMockProductsByCategory(category.slug);
 
   return (
+    <div className="brandg-shop">
     <div className="container py-12 max-w-2xl">
       {/* 카테고리 헤더 */}
       <header className="text-center mb-10">
@@ -131,6 +132,7 @@ export default async function CategoryDetailPage({
           ← 카테고리 전체로 돌아가기
         </Link>
       </p>
+    </div>
     </div>
   );
 }
