@@ -28,7 +28,7 @@ export function CheckoutDemoView() {
         <p className="text-[12px] text-mute mb-6">먼저 장바구니에 담아주세요.</p>
         <Link
           href="/products"
-          className="inline-flex rounded-xl bg-ink text-canvas px-5 py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+          className="inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
         >
           상품 둘러보기 →
         </Link>
@@ -129,7 +129,7 @@ export function CheckoutDemoView() {
         <button
           type="submit"
           disabled={submitting}
-          className="hidden md:flex mt-4 w-full items-center justify-center gap-2 rounded-xl bg-ink text-canvas py-4 text-[15px] font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="hidden md:flex mt-4 w-full items-center justify-center gap-2 rounded-xl bg-amber-500 text-white py-4 text-[15px] font-bold hover:bg-amber-600 transition-colors disabled:opacity-50 shadow-sm"
         >
           {submitting ? (
             "처리 중..."
@@ -150,7 +150,7 @@ export function CheckoutDemoView() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink text-canvas py-3.5 text-[14px] font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 text-white py-3.5 text-[14px] font-bold hover:bg-amber-600 transition-colors disabled:opacity-50 shadow-md"
         >
           {submitting ? (
             "처리 중..."

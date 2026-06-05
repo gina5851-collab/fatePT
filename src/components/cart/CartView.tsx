@@ -23,7 +23,7 @@ export function CartView() {
         <p className="text-[12px] text-mute mb-6">먼저 둘러보고 마음에 드는 걸 담아보세요.</p>
         <Link
           href="/products"
-          className="inline-flex rounded-xl bg-ink text-canvas px-5 py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+          className="inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
         >
           상품 둘러보기 →
         </Link>
@@ -55,10 +55,10 @@ export function CartView() {
         {/* 데스크톱 메인 CTA (모바일은 sticky 하단 사용) */}
         <Link
           href="/checkout-demo"
-          className="hidden sm:flex w-full rounded-xl bg-ink text-canvas py-4 text-center text-[15px] font-bold hover:opacity-90 transition-opacity items-center justify-center gap-2"
+          className="hidden sm:flex w-full rounded-xl bg-amber-500 text-white py-4 text-center text-[15px] font-bold hover:bg-amber-600 transition-colors items-center justify-center gap-2 shadow-sm"
         >
           주문서 작성하기
-          <span className="font-mono opacity-80">· {formatKRW(total)}</span>
+          <span className="font-mono opacity-90">· {formatKRW(total)}</span>
         </Link>
         <p className="hidden sm:block mt-2 text-center text-[11px] text-mute">
           결제 연결은 추후. 지금은 주문 흐름까지 미리 보여드려요.
@@ -77,10 +77,10 @@ export function CartView() {
       <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 border-t border-hairline bg-canvas/95 backdrop-blur px-4 pt-3 pb-4">
         <Link
           href="/checkout-demo"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink text-canvas py-3.5 text-center text-[14px] font-bold hover:opacity-90 transition-opacity"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 text-white py-3.5 text-center text-[14px] font-bold hover:bg-amber-600 transition-colors shadow-md"
         >
           주문서 작성하기
-          <span className="font-mono opacity-80">· {formatKRW(total)}</span>
+          <span className="font-mono opacity-90">· {formatKRW(total)}</span>
         </Link>
       </div>
     </div>

@@ -55,7 +55,7 @@ export default function SignupPage() {
               <p className="text-sm text-red-500">{state.error}</p>
             )}
 
-            <Button type="submit" disabled={isPending} className="w-full">
+            <Button type="submit" disabled={isPending} className="w-full bg-amber-500 text-white hover:bg-amber-600 font-bold">
               {isPending ? "가입 중..." : "가입하기"}
             </Button>
             <p className="text-sm text-center text-mute">

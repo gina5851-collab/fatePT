@@ -27,7 +27,7 @@ export function OrderCompleteDemoView() {
         <p className="text-[12px] text-mute mb-6">주문서에서 다시 시작해 주세요.</p>
         <Link
           href="/products"
-          className="inline-flex rounded-xl bg-ink text-canvas px-5 py-3 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+          className="inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
         >
           상품 둘러보기 →
         </Link>
@@ -110,7 +110,7 @@ export function OrderCompleteDemoView() {
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-6">
         <Link
           href="/products"
-          className="rounded-xl bg-ink text-canvas py-3.5 text-center text-[13px] font-semibold hover:opacity-90 transition-opacity"
+          className="rounded-xl bg-amber-500 text-white py-3.5 text-center text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
         >
           쇼핑 계속하기
         </Link>

@@ -22,11 +22,11 @@ export function AddToCartButton({ item, qty = 1, variant = "primary", size = "de
     setTimeout(() => setAdding(false), 600);
   }
 
-  const base = "rounded-xl font-semibold transition-opacity disabled:opacity-50";
+  const base = "rounded-xl font-bold transition-colors disabled:opacity-50";
   const sizing = size === "lg" ? "px-6 py-3.5 text-[15px]" : "px-4 py-2.5 text-[13px]";
   const tone =
     variant === "primary"
-      ? "bg-ink text-canvas hover:opacity-90"
+      ? "bg-amber-500 text-white hover:bg-amber-600 shadow-sm"
       : "border border-hairline bg-canvas text-ink hover:border-ink";
 
   return (

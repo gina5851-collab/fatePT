@@ -56,7 +56,7 @@ export default async function MyOrdersPage() {
           <p className="text-[12px] text-mute mb-6">담아둔 G가 있으면 바로 주문해보세요.</p>
           <Link
             href="/products"
-            className="inline-flex rounded-xl bg-ink text-canvas px-5 py-3 text-[13px] font-semibold hover:opacity-90"
+            className="inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
           >
             상품 둘러보기 →
           </Link>

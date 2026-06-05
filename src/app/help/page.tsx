@@ -27,7 +27,7 @@ export default function HelpPage() {
           </p>
           <a
             href={`mailto:${businessInfo.email}?subject=[BrandG] 문의`}
-            className="mt-4 inline-flex rounded-xl bg-ink text-canvas px-5 py-3 text-[13px] font-semibold hover:opacity-90"
+            className="mt-4 inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
           >
             메일로 문의하기 →
           </a>
