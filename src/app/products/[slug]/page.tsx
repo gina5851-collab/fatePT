@@ -7,6 +7,8 @@ import { isSupabaseConfigured } from "@/lib/env";
 import { productsSeed } from "@/config/products.seed";
 import { PRODUCT_COPY } from "@/config/product-copy";
 import { ProductGallery } from "@/components/products/ProductGallery";
+import { findMockProduct } from "@/config/products.mock";
+import { MockProductDetail } from "@/components/products/MockProductDetail";
 
 type Product = { id: string; slug: string; name: string; description: string; price: number };
 type Review = { id: string; rating: number; content: string; created_at: string };
@@ -22,6 +24,12 @@ export default async function ProductDetailPage({
   // 무료 결과 페이지에서 이어 온 경우 ?source={resultId} carry — 결제 payload 에 echo.
   const { source } = (await searchParams) ?? {};
   const sourceResultId = typeof source === "string" && source.length > 0 ? source : undefined;
+
+  // BrandG mock 상품 — DB 무관, 데모 전용. 결제 흐름 (SajuForm) 분기 없음.
+  const mockProduct = findMockProduct(slug);
+  if (mockProduct) {
+    return <MockProductDetail product={mockProduct} />;
+  }
 
   let product: Product | null;
   let reviews: Review[] | null = null;

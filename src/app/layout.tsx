@@ -5,6 +5,7 @@ import { siteConfig, businessInfo } from "@/config/site";
 import { isSupabaseConfigured } from "@/lib/env";
 import { getCurrentUser } from "@/lib/auth";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { CartIcon } from "@/components/cart/CartIcon";
 import { Analytics } from "@/components/analytics/Analytics";
 import "./globals.css";
 
@@ -48,8 +49,8 @@ function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
 
         {/* 데스크톱 네비 */}
         <nav className="hidden md:flex items-center gap-6 text-[13px] font-medium">
-          <Link href="/contents" className="text-ink hover:text-body">콘텐츠</Link>
-          <Link href="/products" className="text-ink hover:text-body">프로그램</Link>
+          <Link href="/categories" className="text-ink hover:text-body">카테고리</Link>
+          <Link href="/products" className="text-ink hover:text-body">상품</Link>
           {isLoggedIn ? (
             <>
               <Link href="/mypage" className="text-ink hover:text-body">마이페이지</Link>
@@ -60,11 +61,15 @@ function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           ) : (
             <Link href="/login" className="text-ink hover:text-body">로그인</Link>
           )}
-          <Link href="/start" className="rounded-full bg-ink text-canvas px-3.5 py-1.5 hover:opacity-90 transition-opacity">무료 진단</Link>
+          <Link href="/start" className="rounded-full bg-ink text-canvas px-3.5 py-1.5 hover:opacity-90 transition-opacity">내 G 찾기</Link>
+          <CartIcon />
         </nav>
 
-        {/* 모바일 햄버거 (클라이언트 컴포넌트) */}
-        <MobileMenu isLoggedIn={isLoggedIn} />
+        {/* 모바일: 장바구니 아이콘 + 햄버거 */}
+        <div className="flex items-center md:hidden">
+          <CartIcon />
+          <MobileMenu isLoggedIn={isLoggedIn} />
+        </div>
       </div>
     </header>
   );

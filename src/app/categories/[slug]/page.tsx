@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { G_CATEGORIES, findGCategory } from "@/config/categories";
+import { getMockProductsByCategory } from "@/config/products.mock";
+import { MockProductCard } from "@/components/products/MockProductCard";
 
 export const dynamicParams = false;
 
@@ -27,6 +29,7 @@ export default async function CategoryDetailPage({
   if (!category) notFound();
 
   const otherCategories = G_CATEGORIES.filter((c) => c.slug !== category.slug);
+  const products = getMockProductsByCategory(category.slug);
 
   return (
     <div className="container py-12 max-w-2xl">
@@ -58,18 +61,41 @@ export default async function CategoryDetailPage({
         </div>
       </section>
 
-      {/* 상품 노출 자리 — Phase 2c 까지 placeholder */}
+      {/* 상품 노출 — mock 데이터 (데모용) */}
+      {products.length > 0 ? (
+        <section className="mb-12">
+          <div className="flex items-end justify-between mb-4">
+            <p className="text-[12px] font-semibold text-ink">{category.korean} 상품</p>
+            <Link
+              href={`/products?cat=${category.slug}`}
+              className="text-[11px] text-mute hover:text-ink underline underline-offset-4"
+            >
+              전체 보기 →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-7">
+            {products.map((p) => (
+              <MockProductCard key={p.slug} product={p} variant="grid" />
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section className="mb-12 rounded-2xl border border-hairline bg-surface-soft p-6 text-center">
+          <p className="text-[12px] font-mono tracking-[0.2em] text-mute mb-2">COMING SOON</p>
+          <p className="text-[14px] text-body leading-relaxed">
+            {category.korean} 상품 라인업이 곧 열립니다.
+          </p>
+        </section>
+      )}
+
+      {/* 진단 안내 */}
       <section className="mb-12 rounded-2xl border border-hairline bg-surface-soft p-6 text-center">
-        <p className="text-[12px] font-mono tracking-[0.2em] text-mute mb-2">COMING SOON</p>
-        <p className="text-[14px] text-body leading-relaxed">
-          {category.korean} 상품 라인업이 곧 열립니다.
-        </p>
-        <p className="mt-2 text-[12px] text-mute">
-          내 G 진단을 먼저 받아보면, 맞춤 추천이 준비됐을 때 가장 먼저 안내해드려요.
+        <p className="text-[12px] text-body leading-relaxed">
+          내 G가 헷갈리면 — 진단부터 받아보세요. 맞춤 추천이 더 정확해져요.
         </p>
         <Link
           href="/start"
-          className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-amber-400 text-[#0c1322] px-5 py-2.5 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-amber-400 text-[#0c1322] px-5 py-2.5 text-[13px] font-semibold hover:opacity-90 transition-opacity"
         >
           내 G 찾기 시작 →
         </Link>
