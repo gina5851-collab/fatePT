@@ -6,6 +6,7 @@ import { formatKRW, formatDate } from "@/lib/utils";
 import { isSupabaseConfigured } from "@/lib/env";
 import { productsSeed } from "@/config/products.seed";
 import { PRODUCT_COPY } from "@/config/product-copy";
+import { ProductGallery } from "@/components/products/ProductGallery";
 
 type Product = { id: string; slug: string; name: string; description: string; price: number };
 type Review = { id: string; rating: number; content: string; created_at: string };
@@ -58,6 +59,9 @@ export default async function ProductDetailPage({
 
   return (
     <div className="container py-12 max-w-2xl">
+      {/* ── 이미지 갤러리 (Phase 2c 후 DB images 자동 반영) ── */}
+      <ProductGallery alt={product.name} />
+
       {/* ── 헤더 (고객 언어만: 제목 / 짧은 설명 / 가격) ── */}
       <header className="mb-10">
         {copy ? (
