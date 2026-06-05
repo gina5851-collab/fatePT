@@ -3,6 +3,8 @@ import { formatKRW } from "@/lib/utils";
 import type { MockProduct } from "@/config/products.mock";
 import { findGCategory } from "@/config/categories";
 import { ProductMockBackdrop } from "@/components/products/ProductMockBackdrop";
+import { ProductFAQ } from "@/components/products/ProductFAQ";
+import { RelatedProducts } from "@/components/products/RelatedProducts";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 // BrandG mock 상품 상세 — DB/결제 무관, 데모 전용.
@@ -113,9 +115,15 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
           </Link>
         </div>
         <p className="mt-2 text-center text-[11px] text-mute sm:text-left">
-          결제 연결은 다음 단계에 열립니다. 지금은 담아만 볼 수 있어요.
+          담아두면 주문서(데모)까지 흐름을 미리 보실 수 있어요.
         </p>
       </section>
+
+      {/* 안내 (배송/교환/안전) */}
+      <ProductFAQ />
+
+      {/* 같은 G 추천 3개 */}
+      <RelatedProducts product={product} />
 
       {/* 같은 G 더보기 */}
       {category ? (

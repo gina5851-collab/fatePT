@@ -51,16 +51,14 @@ export function CartView() {
           <span className="text-[14px] font-semibold text-ink">예상 결제 금액</span>
           <span className="text-[18px] font-mono font-bold text-ink">{formatKRW(total)}</span>
         </div>
-        <button
-          type="button"
-          disabled
-          className="w-full rounded-xl bg-ink/50 text-canvas py-3.5 text-[14px] font-semibold cursor-not-allowed"
-          aria-disabled
+        <Link
+          href="/checkout-demo"
+          className="block w-full rounded-xl bg-ink text-canvas py-3.5 text-center text-[14px] font-semibold hover:opacity-90 transition-opacity"
         >
-          결제하기 — 데모 준비 중
-        </button>
+          주문하기 (데모)
+        </Link>
         <p className="mt-2 text-center text-[11px] text-mute">
-          결제 연결은 다음 단계에 열립니다. 지금은 담아만 볼 수 있어요.
+          결제 연결은 추후. 지금은 주문 흐름까지 미리 보여드려요.
         </p>
         <button
           type="button"
