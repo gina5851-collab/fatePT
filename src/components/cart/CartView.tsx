@@ -35,7 +35,7 @@ export function CartView() {
   const count = cartCount(items);
 
   return (
-    <div>
+    <div className="pb-24 sm:pb-0">
       <div className="rounded-2xl border border-hairline bg-canvas">
         {items.map((it) => (
           <CartItemRow key={it.slug} item={it} />
@@ -49,17 +49,21 @@ export function CartView() {
         </div>
         <div className="flex items-center justify-between mb-4 pt-2 border-t border-hairline">
           <span className="text-[14px] font-semibold text-ink">예상 결제 금액</span>
-          <span className="text-[18px] font-mono font-bold text-ink">{formatKRW(total)}</span>
+          <span className="text-[20px] font-mono font-bold text-ink">{formatKRW(total)}</span>
         </div>
+
+        {/* 데스크톱 메인 CTA (모바일은 sticky 하단 사용) */}
         <Link
           href="/checkout-demo"
-          className="block w-full rounded-xl bg-ink text-canvas py-3.5 text-center text-[14px] font-semibold hover:opacity-90 transition-opacity"
+          className="hidden sm:flex w-full rounded-xl bg-ink text-canvas py-4 text-center text-[15px] font-bold hover:opacity-90 transition-opacity items-center justify-center gap-2"
         >
-          주문하기 (데모)
+          주문서 작성하기
+          <span className="font-mono opacity-80">· {formatKRW(total)}</span>
         </Link>
-        <p className="mt-2 text-center text-[11px] text-mute">
+        <p className="hidden sm:block mt-2 text-center text-[11px] text-mute">
           결제 연결은 추후. 지금은 주문 흐름까지 미리 보여드려요.
         </p>
+
         <button
           type="button"
           onClick={() => clearCart()}
@@ -67,6 +71,17 @@ export function CartView() {
         >
           장바구니 비우기
         </button>
+      </div>
+
+      {/* 모바일 sticky 하단 CTA */}
+      <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 border-t border-hairline bg-canvas/95 backdrop-blur px-4 pt-3 pb-4">
+        <Link
+          href="/checkout-demo"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink text-canvas py-3.5 text-center text-[14px] font-bold hover:opacity-90 transition-opacity"
+        >
+          주문서 작성하기
+          <span className="font-mono opacity-80">· {formatKRW(total)}</span>
+        </Link>
       </div>
     </div>
   );

@@ -60,7 +60,7 @@ export function CheckoutDemoView() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid md:grid-cols-[1.3fr_1fr] gap-6">
+    <form onSubmit={handleSubmit} className="grid md:grid-cols-[1.3fr_1fr] gap-6 pb-24 md:pb-0">
       {/* 좌측: 배송 정보 */}
       <div>
         <Section title="배송 정보">
@@ -125,17 +125,43 @@ export function CheckoutDemoView() {
           </div>
         </div>
 
+        {/* 데스크톱 메인 CTA */}
         <button
           type="submit"
           disabled={submitting}
-          className="mt-4 w-full rounded-xl bg-ink text-canvas py-4 text-[14px] font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="hidden md:flex mt-4 w-full items-center justify-center gap-2 rounded-xl bg-ink text-canvas py-4 text-[15px] font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
         >
-          {submitting ? "처리 중..." : "주문 완료하기 (데모)"}
+          {submitting ? (
+            "처리 중..."
+          ) : (
+            <>
+              결제 완료하기
+              <span className="font-mono opacity-80">· {formatKRW(grandTotal)}</span>
+            </>
+          )}
         </button>
-        <p className="mt-2 text-[10px] text-mute text-center">
+        <p className="hidden md:block mt-2 text-[10px] text-mute text-center">
           * 데모입니다. 실제 결제가 일어나지 않습니다.
         </p>
       </aside>
+
+      {/* 모바일 sticky 하단 CTA — 동일 form 의 submit */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-hairline bg-canvas/95 backdrop-blur px-4 pt-3 pb-4">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink text-canvas py-3.5 text-[14px] font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+        >
+          {submitting ? (
+            "처리 중..."
+          ) : (
+            <>
+              결제 완료하기
+              <span className="font-mono opacity-80">· {formatKRW(grandTotal)}</span>
+            </>
+          )}
+        </button>
+      </div>
     </form>
   );
 }
