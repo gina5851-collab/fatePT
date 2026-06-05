@@ -6,6 +6,11 @@ import { usePathname } from "next/navigation";
 
 type Props = { isLoggedIn: boolean };
 
+// 헤더 뉴트럴 톤 매칭 — 햄버거 라인 / 드로어 / 텍스트 모두 #2A2A24 + cream bg.
+const INK = "#2A2A24";
+const CREAM = "#FBF8EE";
+const BORDER = "#E8DFC9";
+
 export function MobileMenu({ isLoggedIn }: Props) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -23,14 +28,14 @@ export function MobileMenu({ isLoggedIn }: Props) {
     <>
       {/* 햄버거 버튼 — 모바일만 표시 */}
       <button
-        className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px] rounded-md hover:bg-surface-soft transition-colors"
+        className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px] rounded-md transition-colors hover:bg-black/5"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
         aria-expanded={open}
       >
-        <span className={`block w-5 h-[1.5px] bg-ink transition-all duration-200 ${open ? "translate-y-[6.5px] rotate-45" : ""}`} />
-        <span className={`block w-5 h-[1.5px] bg-ink transition-all duration-200 ${open ? "opacity-0" : ""}`} />
-        <span className={`block w-5 h-[1.5px] bg-ink transition-all duration-200 ${open ? "-translate-y-[6.5px] -rotate-45" : ""}`} />
+        <span style={{ backgroundColor: INK }} className={`block w-5 h-[1.5px] transition-all duration-200 ${open ? "translate-y-[6.5px] rotate-45" : ""}`} />
+        <span style={{ backgroundColor: INK }} className={`block w-5 h-[1.5px] transition-all duration-200 ${open ? "opacity-0" : ""}`} />
+        <span style={{ backgroundColor: INK }} className={`block w-5 h-[1.5px] transition-all duration-200 ${open ? "-translate-y-[6.5px] -rotate-45" : ""}`} />
       </button>
 
       {/* 모바일 드로어 */}
@@ -38,11 +43,14 @@ export function MobileMenu({ isLoggedIn }: Props) {
         <>
           {/* 배경 오버레이 */}
           <div
-            className="md:hidden fixed inset-0 top-14 bg-black/20 z-40"
+            className="md:hidden fixed inset-0 top-14 bg-black/30 z-40"
             onClick={() => setOpen(false)}
           />
           {/* 메뉴 패널 */}
-          <nav className="md:hidden fixed top-14 left-0 right-0 bg-canvas border-b border-hairline z-50 px-5 py-4 space-y-0">
+          <nav
+            className="md:hidden fixed top-14 left-0 right-0 border-b z-50 px-5 py-4 space-y-0"
+            style={{ backgroundColor: CREAM, borderColor: BORDER }}
+          >
             <MobileLink href="/start" onClick={() => setOpen(false)}>
               ✨ 내 G 찾기
             </MobileLink>
@@ -64,7 +72,8 @@ export function MobileMenu({ isLoggedIn }: Props) {
                   <form action="/api/auth/signout" method="post">
                     <button
                       type="submit"
-                      className="w-full text-left py-3.5 text-[15px] text-body border-t border-hairline"
+                      className="w-full text-left py-3.5 text-[15px] border-t"
+                      style={{ color: INK, borderColor: BORDER, opacity: 0.7 }}
                     >
                       로그아웃
                     </button>
@@ -96,7 +105,8 @@ function MobileLink({
     <Link
       href={href}
       onClick={onClick}
-      className="block py-3.5 text-[15px] font-medium text-ink border-t border-hairline first:border-t-0"
+      className="block py-3.5 text-[15px] font-medium border-t first:border-t-0"
+      style={{ color: INK, borderColor: BORDER }}
     >
       {children}
     </Link>

@@ -38,30 +38,40 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   );
 }
 
-// Ollama: 56px utility nav, primary nav on canvas, no shadow.
+// 뉴트럴 톤 헤더 — BrandG 크림 본문과 자연스럽게 밸런스.
+// 텍스트는 따뜻한 다크 (#2A2A24), 배경은 살짝 따뜻한 크림 (#FBF8EE).
 function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
-    <header className="border-b border-hairline bg-canvas sticky top-0 z-30">
+    <header
+      className="border-b sticky top-0 z-30"
+      style={{ backgroundColor: "#FBF8EE", borderColor: "#E8DFC9", color: "#2A2A24" }}
+    >
       <div className="container flex h-14 items-center justify-between">
-        <Link href="/" className="font-semibold text-[15px] text-ink">
+        <Link href="/" className="font-semibold text-[15px]" style={{ color: "#2A2A24" }}>
           {siteConfig.name}
         </Link>
 
         {/* 데스크톱 네비 */}
-        <nav className="hidden md:flex items-center gap-6 text-[13px] font-medium">
-          <Link href="/categories" className="text-ink hover:text-body">카테고리</Link>
-          <Link href="/products" className="text-ink hover:text-body">상품</Link>
+        <nav className="hidden md:flex items-center gap-6 text-[13px] font-medium" style={{ color: "#2A2A24" }}>
+          <Link href="/categories" className="hover:opacity-70">카테고리</Link>
+          <Link href="/products" className="hover:opacity-70">상품</Link>
           {isLoggedIn ? (
             <>
-              <Link href="/mypage" className="text-ink hover:text-body">마이페이지</Link>
+              <Link href="/mypage" className="hover:opacity-70">마이페이지</Link>
               <form action="/api/auth/signout" method="post">
-                <button type="submit" className="text-ink hover:text-body">로그아웃</button>
+                <button type="submit" className="hover:opacity-70">로그아웃</button>
               </form>
             </>
           ) : (
-            <Link href="/login" className="text-ink hover:text-body">로그인</Link>
+            <Link href="/login" className="hover:opacity-70">로그인</Link>
           )}
-          <Link href="/start" className="rounded-full bg-ink text-canvas px-3.5 py-1.5 hover:opacity-90 transition-opacity">내 G 찾기</Link>
+          <Link
+            href="/start"
+            className="rounded-full px-3.5 py-1.5 hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: "#2A2A24", color: "#FBF8EE" }}
+          >
+            내 G 찾기
+          </Link>
           <CartIcon />
         </nav>
 

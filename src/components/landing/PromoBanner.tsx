@@ -4,18 +4,20 @@ import Link from "next/link";
 // 홈 Hero 직후 큰 라이프스타일 배너 — 2장 (모바일 가로 스크롤 / 데스크톱 그리드).
 const BANNERS = [
   {
-    src: "/brandg-demo/hero-lifestyle-01_pexels-michelle-leman-6798761.jpg",
-    eyebrow: "G EDITORIAL",
-    title: "오늘의 나에게 주는\n작은 의식",
-    body: "꽃 한 송이, 한 잔의 커피. 작은 의식이 하루를 채워줍니다.",
-    href: "/categories/good-recovery",
+    src: "/brandg-demo/banner-healing-01_pexels-da-na-461418424-31448498.jpg",
+    eyebrow: "MORNING G",
+    title: "거울 앞 5분,\n내게 주는 한 컷",
+    body: "잠깐의 거울 앞 시간이 하루의 톤을 정해줍니다.",
+    href: "/categories/good-skin",
+    objectPosition: "center 30%",
   },
   {
-    src: "/brandg-demo/hero-lifestyle-02_pexels-jaqor-33601863.jpg",
-    eyebrow: "MORNING G",
-    title: "느슨한 아침의\n루틴 한 컷",
-    body: "5분 더 빠른 아침, 5분 더 느슨한 마음.",
-    href: "/categories/good-balance",
+    src: "/brandg-demo/banner-homecare-01_pexels-polina-tankilevitch-7669552.jpg",
+    eyebrow: "DAILY G",
+    title: "느슨한 식탁에서\n시작하는 하루",
+    body: "잘 먹는 일이 자기관리의 시작.",
+    href: "/categories/good-health",
+    objectPosition: "center 35%",
   },
 ];
 
@@ -34,6 +36,7 @@ export function PromoBanner() {
               alt={b.title.replace("\n", " ")}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
+              style={{ objectPosition: b.objectPosition }}
               className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               priority={i === 0}
             />

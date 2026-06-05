@@ -13,9 +13,10 @@ export function CartIcon({ className = "" }: { className?: string }) {
     <Link
       href="/cart"
       aria-label={`장바구니${count > 0 ? ` (${count}개)` : ""}`}
-      className={`relative inline-flex items-center justify-center w-9 h-9 rounded-md hover:bg-surface-soft transition-colors ${className}`}
+      className={`relative inline-flex items-center justify-center w-9 h-9 rounded-md hover:bg-black/5 transition-colors ${className}`}
+      style={{ color: "#2A2A24" }}
     >
-      <svg viewBox="0 0 24 24" className="w-5 h-5 text-ink" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <path d="M3 4h2l2.5 12.5a2 2 0 0 0 2 1.5h8a2 2 0 0 0 2-1.5L21 8H6" />
         <circle cx="10" cy="20" r="1.2" />
         <circle cx="17" cy="20" r="1.2" />
