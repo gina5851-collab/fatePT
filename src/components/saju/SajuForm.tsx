@@ -40,6 +40,7 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false, s
   const [concerns, setConcerns] = useState<string[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<"toss" | "bank_transfer">("toss");
   const [depositorName, setDepositorName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const bankEnabled = isBankTransferEnabled();
@@ -56,6 +57,10 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false, s
     }
     if (!isFree && paymentMethod === "bank_transfer" && !depositorName.trim()) {
       toast.error("입금자명을 입력해 주세요");
+      return;
+    }
+    if (!isFree && !isLoggedIn && !guestEmail.trim()) {
+      toast.error("결과 수신용 이메일을 입력해 주세요");
       return;
     }
     setSubmitting(true);
@@ -98,6 +103,8 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false, s
           depositorName: paymentMethod === "bank_transfer" ? depositorName.trim() : undefined,
           // 무료 결과 → 결제 흐름에 carry. API 는 받기만 함 (DB 저장은 다음 작업).
           sourceResultId,
+          // 비로그인 시 게스트 이메일 (CLAUDE.md §7-1)
+          guestEmail: !isLoggedIn ? guestEmail.trim() : undefined,
         }),
       });
       const json = await res.json();
@@ -241,15 +248,36 @@ export function SajuForm({ productId, productSlug, isLoggedIn, isFree = false, s
           )}
         </div>
       ) : (
-        <div className="space-y-2">
-          <Link
-            href={`/login?redirect=${encodeURIComponent(`/products/${productSlug}`)}`}
-            className={cn(buttonVariants({ size: "lg" }), "w-full")}
-          >
-            로그인하고 결제하기
-          </Link>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label htmlFor="guestEmail">이메일 (결과 수신용)</Label>
+            <Input
+              id="guestEmail"
+              type="email"
+              required
+              value={guestEmail}
+              onChange={(e) => setGuestEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
+            <p className="text-xs text-body">
+              결제 후 결과 페이지 링크를 이 이메일로 보내드립니다. 회원가입 없이 진행됩니다.
+            </p>
+          </div>
+          <Button type="submit" size="lg" className="w-full" disabled={submitting || !guestEmail.trim()}>
+            {submitting
+              ? "주문 생성 중..."
+              : paymentMethod === "bank_transfer"
+                ? "비회원 입금 안내 받기"
+                : "비회원으로 결제하기"}
+          </Button>
           <p className="text-xs text-body text-center">
-            결과는 로그인 후 <span className="text-ink">마이페이지</span> 에서 확인할 수 있어요.
+            <Link
+              href={`/login?redirect=${encodeURIComponent(`/products/${productSlug}`)}`}
+              className="text-ink underline underline-offset-4 hover:opacity-80"
+            >
+              로그인
+            </Link>
+            하고 결제하면 마이페이지에서도 다시 볼 수 있어요.
           </p>
         </div>
       )}
