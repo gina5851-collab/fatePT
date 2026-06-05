@@ -4,20 +4,20 @@ import Link from "next/link";
 // 홈 Hero 직후 큰 라이프스타일 배너 — 2장 (모바일 가로 스크롤 / 데스크톱 그리드).
 const BANNERS = [
   {
-    src: "/brandg-demo/banner-healing-01_pexels-da-na-461418424-31448498.jpg",
+    src: "/brandg-demo/pexels-sora-shimazaki-5938243.jpg",
     eyebrow: "MORNING G",
-    title: "거울 앞 5분,\n내게 주는 한 컷",
+    title: "거울 앞 5분,\n나에게 주는 의식",
     body: "잠깐의 거울 앞 시간이 하루의 톤을 정해줍니다.",
     href: "/categories/good-skin",
     objectPosition: "center 30%",
   },
   {
-    src: "/brandg-demo/banner-homecare-01_pexels-polina-tankilevitch-7669552.jpg",
+    src: "/brandg-demo/pexels-pavel-danilyuk-6417971.jpg",
     eyebrow: "DAILY G",
-    title: "느슨한 식탁에서\n시작하는 하루",
-    body: "잘 먹는 일이 자기관리의 시작.",
-    href: "/categories/good-health",
-    objectPosition: "center 35%",
+    title: "한 방울의\n작은 의식",
+    body: "오늘의 컨디션에 맞게, 한 방울씩 더하는 루틴.",
+    href: "/categories/good-skin",
+    objectPosition: "center 45%",
   },
 ];
 
