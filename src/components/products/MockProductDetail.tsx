@@ -109,7 +109,7 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
           />
           <Link
             href="/cart"
-            className="rounded-xl border border-hairline bg-canvas px-5 py-3.5 text-[13px] font-semibold text-ink hover:border-ink transition-colors"
+            className="rounded-xl bg-amber-400 px-5 py-3.5 text-[13px] font-bold text-[#0c1322] hover:opacity-90 transition-opacity shadow-sm"
           >
             장바구니 보기
           </Link>
