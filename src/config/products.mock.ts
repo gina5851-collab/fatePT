@@ -4,6 +4,17 @@
 // 5G × 5상품 = 25개. /products, /categories/[slug], 홈 BEST/특가/지나스장바구니가 공통 참조.
 // 실제 INSERT/DB 연동은 Phase 2c (별도 사전 승인). 현재는 화면 데모 전용.
 
+export type PurchaseType = "internal" | "groupbuy" | "external";
+
+export type ExternalLinkType = "coupang" | "youtube" | "naver" | "official" | "etc";
+
+export type ExternalPurchaseLink = {
+  label: string;
+  url: string;
+  type: ExternalLinkType;
+  badge?: string;
+};
+
 export type MockProduct = {
   slug: string;
   brand: string;
@@ -21,6 +32,14 @@ export type MockProduct = {
   rating?: number;
   highlights?: string[];
   imageUrl?: string;       // 있으면 실제 이미지, 없으면 SVG fallback
+  // ── 상품 상세 보강 (Phase: 상세 spec) — 모두 선택 ────────────────
+  purchaseType?: PurchaseType;                  // default 'internal'
+  externalPurchaseLinks?: ExternalPurchaseLink[];
+  detailImages?: string[];                      // 공구 상세 이미지 (groupbuy)
+  detailHtml?: string;                          // 상세 설명 HTML/Markdown
+  jinaComment?: string;                         // 지나스 한 줄 코멘트
+  recommendedFor?: string[];                    // 이런 분께 추천
+  cautionNote?: string;                         // 주의사항
 };
 
 export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
@@ -41,6 +60,14 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     rating: 4.8,
     highlights: ["안정형 비타C 12%", "데일리 사용 OK", "끈적임 0"],
     imageUrl: "/brandg-demo/product-serum-01_pexels-vie-studio-4857810.jpg",
+    purchaseType: "internal",
+    jinaComment: "비타C 세럼 입문자에게 추천. 안정형이라 자극 거의 없이 데일리 사용 가능해요. 저는 아침에 한 방울씩 발라요.",
+    recommendedFor: [
+      "처음 비타C 세럼 시도하는 분",
+      "끈적임 싫어하는 분",
+      "겉으론 멀쩡한데 광이 안 살아나는 분",
+    ],
+    cautionNote: "최초 1주는 격일 사용을 권장합니다. 자극이 생기면 즉시 사용 중단 후 전문의와 상담하세요. 직사광선을 피해 서늘한 곳에 보관.",
   },
   {
     slug: "skin-cica-toner-pad",
@@ -137,6 +164,19 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     rating: 4.8,
     highlights: ["저분자 1,500mg", "자몽맛", "30일분"],
     imageUrl: "/brandg-demo/product-supplement-03_pexels-leeloothefirst-20140033.jpg",
+    purchaseType: "external",
+    jinaComment: "이 콜라겐은 BrandG 자체 입점이 아니라, 지나가 매일 먹고 있어서 외부 판매처를 안내드려요.",
+    recommendedFor: [
+      "스틱 형태 선호하는 분",
+      "물 없이 먹을 수 있는 콜라겐 찾는 분",
+      "자몽맛 좋아하는 분",
+    ],
+    cautionNote: "1일 1포 권장. 임산부·수유부는 의사와 상담 후 섭취하세요.",
+    externalPurchaseLinks: [
+      { label: "쿠팡에서 보기", url: "https://www.coupang.com", type: "coupang", badge: "최저가" },
+      { label: "유튜브 쇼핑에서 보기", url: "https://shopping.youtube.com", type: "youtube" },
+      { label: "공식몰에서 보기", url: "https://example.com", type: "official" },
+    ],
   },
   {
     slug: "health-chamomile-tea",
@@ -257,6 +297,19 @@ export const BRANDG_MOCK_PRODUCTS: MockProduct[] = [
     rating: 4.8,
     highlights: ["라벤더 + 우디", "약 8주 지속", "200ml"],
     imageUrl: "/brandg-demo/banner-healing-01_pexels-da-na-461418424-31448498.jpg",
+    purchaseType: "groupbuy",
+    jinaComment: "퇴근하고 들어와서 가장 먼저 켜는 향. 라벤더+우디 비율이 너무 좋아서 우리 팀이 단독 공구로 가져온 한정 라인이에요.",
+    recommendedFor: [
+      "침실용 디퓨저 찾는 분",
+      "라벤더+우디 톤 선호하는 분",
+      "8주 이상 향 오래가는 거 원하는 분",
+    ],
+    cautionNote: "직사광선을 피해 서늘한 곳에 보관. 어린이/반려동물 손에 닿지 않게.",
+    detailImages: [
+      "/brandg-demo/banner-healing-01_pexels-da-na-461418424-31448498.jpg",
+      "/brandg-demo/pexels-pavel-danilyuk-6417971.jpg",
+      "/brandg-demo/banner-routine-01_pexels-pnw-prod-9219008.jpg",
+    ],
   },
 
   // ───── 가벼워지G (good-balance) 🌬️

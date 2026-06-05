@@ -5,15 +5,25 @@ import { findGCategory } from "@/config/categories";
 import { ProductMockBackdrop } from "@/components/products/ProductMockBackdrop";
 import { ProductFAQ } from "@/components/products/ProductFAQ";
 import { RelatedProducts } from "@/components/products/RelatedProducts";
+import { ExternalPurchaseLinks } from "@/components/products/ExternalPurchaseLinks";
+import { DetailImageList } from "@/components/products/DetailImageList";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 // BrandG mock 상품 상세 — DB/결제 무관, 데모 전용.
-// 결제 연결은 별도 phase. 현재는 장바구니 담기까지만.
+// purchaseType 분기:
+//   - internal: 기존 장바구니 흐름
+//   - groupbuy: 장바구니 + 공구 상세 이미지 영역
+//   - external: 장바구니 숨김, 외부 링크만
 export function MockProductDetail({ product }: { product: MockProduct }) {
   const category = findGCategory(product.category_slug);
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
+
+  const purchaseType = product.purchaseType ?? "internal";
+  const showCart = purchaseType !== "external";
+  const showGroupbuyImages = purchaseType === "groupbuy" && (product.detailImages?.length ?? 0) > 0;
+  const showExternalLinks = purchaseType === "external" && (product.externalPurchaseLinks?.length ?? 0) > 0;
 
   return (
     <div className="brandg-shop">
@@ -25,7 +35,7 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
       </section>
 
       <header className="mb-8">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-3 flex-wrap">
           {category ? (
             <Link
               href={`/categories/${category.slug}`}
@@ -42,6 +52,14 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
           ) : null}
           {product.isSale ? (
             <span className="rounded bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5">특가</span>
+          ) : null}
+          {purchaseType === "groupbuy" ? (
+            <span className="rounded bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5">공구</span>
+          ) : null}
+          {purchaseType === "external" ? (
+            <span className="rounded border border-hairline bg-canvas text-mute text-[10px] font-bold px-2 py-0.5">
+              외부 판매처
+            </span>
           ) : null}
         </div>
 
@@ -85,39 +103,82 @@ export function MockProductDetail({ product }: { product: MockProduct }) {
       ) : null}
 
       {/* 본문 */}
-      <section className="mb-10">
+      <section className="mb-8">
         <p className="text-[12px] font-semibold text-ink mb-3">PRODUCT</p>
         <p className="text-[14px] text-body leading-relaxed whitespace-pre-line">
           {product.longDescription}
         </p>
       </section>
 
-      {/* CTA */}
-      <section className="sticky bottom-0 -mx-4 px-4 py-3 bg-canvas/95 backdrop-blur-sm border-t border-hairline sm:static sm:bg-transparent sm:backdrop-blur-0 sm:border-0 sm:px-0 sm:py-0">
-        <div className="flex gap-2">
-          <AddToCartButton
-            item={{
-              slug: product.slug,
-              name: product.name,
-              brand: product.brand,
-              price: product.price,
-              originalPrice: product.originalPrice,
-              gradient: product.gradient,
-            }}
-            size="lg"
-            className="flex-1"
-          />
-          <Link
-            href="/cart"
-            className="rounded-xl bg-amber-500 px-5 py-3.5 text-[13px] font-bold text-white hover:bg-amber-600 transition-colors shadow-sm"
-          >
-            장바구니 보기
-          </Link>
-        </div>
-        <p className="mt-2 text-center text-[11px] text-mute sm:text-left">
-          담아두면 주문서(데모)까지 흐름을 미리 보실 수 있어요.
-        </p>
-      </section>
+      {/* 지나스 코멘트 */}
+      {product.jinaComment ? (
+        <section className="mb-8 rounded-2xl border-l-4 border-l-amber-400 border border-hairline bg-amber-50/40 p-5">
+          <p className="text-[11px] font-mono tracking-[0.3em] text-amber-700 mb-1.5">JINA&apos;S NOTE</p>
+          <p className="text-[14px] text-ink leading-relaxed whitespace-pre-line">{product.jinaComment}</p>
+        </section>
+      ) : null}
+
+      {/* 이런 분께 추천 */}
+      {product.recommendedFor && product.recommendedFor.length > 0 ? (
+        <section className="mb-8">
+          <p className="text-[12px] font-semibold text-ink mb-3">이런 분께 추천</p>
+          <ul className="space-y-1.5">
+            {product.recommendedFor.map((r, i) => (
+              <li key={i} className="flex items-start gap-2 text-[13px] text-body">
+                <span className="mt-1 text-amber-500 shrink-0" aria-hidden>✓</span>
+                {r}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {/* 공구 상세 이미지 (groupbuy 전용) */}
+      {showGroupbuyImages ? (
+        <DetailImageList images={product.detailImages!} alt={product.name} />
+      ) : null}
+
+      {/* 외부 구매처 (external 전용) */}
+      {showExternalLinks ? (
+        <ExternalPurchaseLinks links={product.externalPurchaseLinks!} productName={product.name} />
+      ) : null}
+
+      {/* 주의사항 */}
+      {product.cautionNote ? (
+        <section className="mb-8 rounded-2xl border border-rose-200 bg-rose-50/40 p-5">
+          <p className="text-[12px] font-semibold text-rose-700 mb-1.5">⚠ 주의사항</p>
+          <p className="text-[12px] text-body leading-relaxed whitespace-pre-line">{product.cautionNote}</p>
+        </section>
+      ) : null}
+
+      {/* CTA — internal/groupbuy 만 노출, external 은 외부 링크가 대체 */}
+      {showCart ? (
+        <section className="sticky bottom-0 -mx-4 px-4 py-3 bg-canvas/95 backdrop-blur-sm border-t border-hairline sm:static sm:bg-transparent sm:backdrop-blur-0 sm:border-0 sm:px-0 sm:py-0">
+          <div className="flex gap-2">
+            <AddToCartButton
+              item={{
+                slug: product.slug,
+                name: product.name,
+                brand: product.brand,
+                price: product.price,
+                originalPrice: product.originalPrice,
+                gradient: product.gradient,
+              }}
+              size="lg"
+              className="flex-1"
+            />
+            <Link
+              href="/cart"
+              className="rounded-xl bg-amber-500 px-5 py-3.5 text-[13px] font-bold text-white hover:bg-amber-600 transition-colors shadow-sm"
+            >
+              장바구니 보기
+            </Link>
+          </div>
+          <p className="mt-2 text-center text-[11px] text-mute sm:text-left">
+            담아두면 주문서(데모)까지 흐름을 미리 보실 수 있어요.
+          </p>
+        </section>
+      ) : null}
 
       {/* 안내 (배송/교환/안전) */}
       <ProductFAQ />
