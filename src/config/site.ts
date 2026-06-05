@@ -30,8 +30,8 @@ export const businessInfo = {
   representative: "장진아",
   businessNumber: "309-47-01110",
   mailOrderNumber: "2026-경기김포-0764", // 통신판매업 신고번호
-  address: "경기도 김포시 김포한강9로75번길22, 804-C038",
-  phone: "", // 미표기 (이메일 고객센터로 대체). 필요 시 안심번호(050)/카카오채널 권장
+  address: "경기도 김포시 김포한강9로75번길 22, 804-C038호",
+  phone: "010-4868-8244",
   phoneNote: "",
   email: "gina5851@gmail.com",
   privacyOfficer: "장진아",

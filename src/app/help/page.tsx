@@ -16,21 +16,40 @@ export default function HelpPage() {
           </p>
         </header>
 
-        {/* 메인 문의 채널 */}
-        <section className="rounded-2xl border border-hairline bg-surface-soft p-6 mb-6">
-          <p className="text-[11px] font-mono tracking-[0.2em] text-mute">EMAIL</p>
-          <p className="mt-1 text-[20px] font-bold text-ink">{businessInfo.email}</p>
-          <p className="mt-2 text-[12px] text-body leading-relaxed">
-            상품·주문·환불·계정 등 모든 문의는 이메일로 받습니다.
-            <br />
-            평일 1영업일 이내 답변 드립니다 (주말·공휴일 제외).
-          </p>
-          <a
-            href={`mailto:${businessInfo.email}?subject=[BrandG] 문의`}
-            className="mt-4 inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
-          >
-            메일로 문의하기 →
-          </a>
+        {/* 메인 문의 채널 — 이메일 + 전화 */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-2xl border border-hairline bg-surface-soft p-5">
+            <p className="text-[11px] font-mono tracking-[0.2em] text-mute">EMAIL</p>
+            <p className="mt-1 text-[18px] font-bold text-ink break-all">{businessInfo.email}</p>
+            <p className="mt-2 text-[12px] text-body leading-relaxed">
+              상품·주문·환불·계정 등 모든 문의는 이메일로 받습니다.
+              <br />
+              평일 1영업일 이내 답변.
+            </p>
+            <a
+              href={`mailto:${businessInfo.email}?subject=[BrandG] 문의`}
+              className="mt-4 inline-flex rounded-xl bg-amber-500 text-white px-4 py-2.5 text-[12px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
+            >
+              메일로 문의하기 →
+            </a>
+          </div>
+          {businessInfo.phone ? (
+            <div className="rounded-2xl border border-hairline bg-surface-soft p-5">
+              <p className="text-[11px] font-mono tracking-[0.2em] text-mute">PHONE</p>
+              <p className="mt-1 text-[18px] font-bold text-ink">{businessInfo.phone}</p>
+              <p className="mt-2 text-[12px] text-body leading-relaxed">
+                긴급한 문의는 전화로도 가능합니다.
+                <br />
+                평일 10:00 ~ 18:00.
+              </p>
+              <a
+                href={`tel:${businessInfo.phone.replace(/-/g, "")}`}
+                className="mt-4 inline-flex rounded-xl border border-hairline bg-canvas text-ink px-4 py-2.5 text-[12px] font-bold hover:border-ink transition-colors"
+              >
+                전화 걸기 →
+              </a>
+            </div>
+          ) : null}
         </section>
 
         {/* 운영 시간 */}
@@ -60,6 +79,8 @@ export default function HelpPage() {
           <p>사업자등록번호 {businessInfo.businessNumber}</p>
           {businessInfo.mailOrderNumber ? <p>통신판매업 신고번호 {businessInfo.mailOrderNumber}</p> : null}
           <p>주소 {businessInfo.address}</p>
+          {businessInfo.phone ? <p>연락처 {businessInfo.phone}</p> : null}
+          <p>이메일 {businessInfo.email}</p>
         </section>
 
         <p className="mt-8 text-center text-[12px] text-mute">
