@@ -11,14 +11,14 @@ export type LifeIssue = {
 };
 
 export const LIFE_ISSUES: LifeIssue[] = [
-  { id: "skin-dry",       issue: "요즘 화장이 안 받아요",       category_slug: "good-skin",       emoji: "💧" },
-  { id: "sleep-bad",      issue: "잠을 푹 못 자요",            category_slug: "good-recovery",   emoji: "🛁" },
-  { id: "leg-heavy",      issue: "오후만 되면 다리가 무거워요",   category_slug: "good-balance",    emoji: "🌬️" },
-  { id: "supplements",    issue: "영양제 챙기는 게 어려워요",     category_slug: "good-health",     emoji: "🌿" },
-  { id: "period-cycle",   issue: "생리 전후 컨디션이 흔들려요",   category_slug: "good-inner-care", emoji: "🌸" },
-  { id: "scalp-itchy",    issue: "두피가 답답해요",            category_slug: "good-skin",       emoji: "💧" },
-  { id: "tired-evening",  issue: "퇴근하고 풀어지질 않아요",     category_slug: "good-recovery",   emoji: "🛁" },
-  { id: "immune",         issue: "환절기 면역이 걱정돼요",       category_slug: "good-health",     emoji: "🌿" },
+  { id: "skin-dry",       issue: "요즘 화장이 안 받아요",       category_slug: "good-skin",       emoji: "🪞" },
+  { id: "sleep-bad",      issue: "잠을 푹 못 자요",            category_slug: "good-recovery",   emoji: "😴" },
+  { id: "leg-heavy",      issue: "오후만 되면 다리가 무거워요",   category_slug: "good-balance",    emoji: "🦵" },
+  { id: "supplements",    issue: "영양제 챙기는 게 어려워요",     category_slug: "good-health",     emoji: "💊" },
+  { id: "period-cycle",   issue: "생리 전후 컨디션이 흔들려요",   category_slug: "good-inner-care", emoji: "🌷" },
+  { id: "scalp-itchy",    issue: "두피가 답답해요",            category_slug: "good-skin",       emoji: "💆" },
+  { id: "tired-evening",  issue: "퇴근하고 풀어지질 않아요",     category_slug: "good-recovery",   emoji: "🛋️" },
+  { id: "immune",         issue: "환절기 면역이 걱정돼요",       category_slug: "good-health",     emoji: "🛡️" },
 ];
 
 // 기획전 (큰 매거진 카드용) — 묶음 단위.
