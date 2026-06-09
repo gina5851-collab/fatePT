@@ -4,6 +4,11 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { confirmTossPayment } from "@/lib/toss/confirm";
 import { generateSajuResult } from "@/lib/saju/generate-result";
 
+// Vercel function timeout 60초 (Pro 플랜 한도). Hobby 플랜이면 10초로 강제됨.
+// generateSajuResult (LLM + 만세력 외부 호출) 이 기본 10초보다 길어 timeout 빈발 → 60초로 확장.
+// 비즈니스 로직 변경 없음.
+export const maxDuration = 60;
+
 const bodySchema = z.object({
   paymentKey: z.string().min(1),
   orderId: z.string().min(1),
