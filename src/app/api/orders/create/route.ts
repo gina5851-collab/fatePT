@@ -15,6 +15,11 @@ const bodySchema = z.object({
   mbti: z.string().max(8).optional(),
   paymentMethod: z.enum(["toss", "bank_transfer"]).default("toss"),
   depositorName: z.string().max(50).optional(),
+  // 무료 결과 → 결제 흐름 carry. 받기만 하고 저장 X.
+  // TODO(next): orders.source_result_id 컬럼 추가 후 영속화 + /api/orders/confirm 에서 unlock 매핑.
+  sourceResultId: z.string().uuid().optional(),
+  // 게스트 결제 (CLAUDE.md §7-1) — 비로그인 시 결과 수신용 이메일.
+  guestEmail: z.string().email().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -24,13 +29,19 @@ export async function POST(request: NextRequest) {
   }
   const body = parsed.data;
 
-  // 로그인 필수 — 결과는 마이페이지에서 수령
+  // 로그인 또는 게스트 이메일 — 둘 중 하나 필수 (CLAUDE.md §7-1 게스트 결제 정책).
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: "로그인이 필요합니다" }, { status: 401 });
+  if (!user && !body.guestEmail) {
+    return NextResponse.json(
+      { error: "결과 수신용 이메일을 입력해 주세요 (또는 로그인)" },
+      { status: 400 }
+    );
   }
+
+  const userId = user?.id ?? null;
+  const guestEmail = user ? null : (body.guestEmail ?? null);
 
   // 가격은 서버에서만 (클라 변조 방지)
   const service = createServiceClient();
@@ -50,8 +61,8 @@ export async function POST(request: NextRequest) {
     .from("orders")
     .insert({
       order_id: orderId,
-      user_id: user.id,
-      guest_email: null,
+      user_id: userId,
+      guest_email: guestEmail,
       product_id: product.id,
       amount: product.price,
       status: "pending",

@@ -42,15 +42,24 @@ export default async function MyOrdersPage() {
   const reviewedSet = new Set((reviews ?? []).map((r) => r.order_id));
 
   return (
+    <div className="brandg-shop">
     <div className="container py-12 max-w-3xl">
       <header className="mb-8">
         <p className="text-xs font-mono text-mute mb-2">ORDERS</p>
-        <h1 className="text-2xl font-semibold tracking-tight">결제 내역</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">주문 내역</h1>
+        <p className="mt-1 text-[12px] text-mute">결제 완료된 주문과 결과지·후기 작성을 모았어요.</p>
       </header>
 
       {!orders || orders.length === 0 ? (
-        <div className="text-center py-20 text-sm text-body">
-          아직 결제 내역이 없어요.
+        <div className="text-center py-20">
+          <p className="text-sm text-body mb-1">아직 주문 내역이 없어요.</p>
+          <p className="text-[12px] text-mute mb-6">담아둔 G가 있으면 바로 주문해보세요.</p>
+          <Link
+            href="/products"
+            className="inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
+          >
+            상품 둘러보기 →
+          </Link>
         </div>
       ) : (
         <ul className="divide-y divide-hairline border-y border-hairline">
@@ -94,6 +103,7 @@ export default async function MyOrdersPage() {
           })}
         </ul>
       )}
+    </div>
     </div>
   );
 }

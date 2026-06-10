@@ -42,11 +42,12 @@ function LoginForm() {
   }
 
   return (
+    <div className="brandg-shop">
     <div className="container py-16 max-w-md">
       <Card>
         <CardHeader>
-          <CardTitle>로그인</CardTitle>
-          <CardDescription>이메일과 비밀번호로 로그인하세요.</CardDescription>
+          <CardTitle>다시 만나서 반가워요</CardTitle>
+          <CardDescription>BrandG 에서 담은 G 를 이어서 봐요.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,16 +59,17 @@ function LoginForm() {
               <Label htmlFor="password">비밀번호</Label>
               <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
-            <Button type="submit" disabled={loading} className="w-full">
+            <Button type="submit" disabled={loading} className="w-full bg-amber-500 text-white hover:bg-amber-600 font-bold">
               {loading ? "로그인 중..." : "로그인"}
             </Button>
             <div className="flex justify-between text-sm">
-              <Link href="/signup" className="text-muted-foreground hover:text-foreground">회원가입</Link>
-              <Link href="/reset" className="text-muted-foreground hover:text-foreground">비밀번호 재설정</Link>
+              <Link href="/signup" className="text-mute hover:text-ink">회원가입</Link>
+              <Link href="/reset" className="text-mute hover:text-ink">비밀번호 재설정</Link>
             </div>
           </form>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }

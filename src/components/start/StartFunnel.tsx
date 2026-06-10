@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { toast } from "sonner";
-import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { MBTI_LIST } from "@/lib/saju/report/mbti";
 import { AnalysisLoading } from "./AnalysisLoading";
 
@@ -14,7 +11,7 @@ import { AnalysisLoading } from "./AnalysisLoading";
 type Step = 0 | 1 | 2 | 3 | 4;
 const TOTAL = 5;
 
-export function StartFunnel({ isLoggedIn }: { isLoggedIn: boolean }) {
+export function StartFunnel(_props: { isLoggedIn?: boolean }) {
   const router = useRouter();
   const [step, setStep] = useState<Step>(0);
   const [analyzing, setAnalyzing] = useState(false);
@@ -35,10 +32,7 @@ export function StartFunnel({ isLoggedIn }: { isLoggedIn: boolean }) {
   const back = () => setStep((s) => Math.max(s - 1, 0) as Step);
 
   async function submit() {
-    if (!isLoggedIn) {
-      router.push(`/login?redirect=${encodeURIComponent("/start")}`);
-      return;
-    }
+    // 무료 진단은 게스트 허용 — 로그인 마찰 없이 결과부터 보여준다.
     const y = birthYear, m = birthMonth.padStart(2, "0"), d = birthDay.padStart(2, "0");
     const birthDate = `${y}-${m}-${d}`;
     const birthTime = timeUnknown || !birthHour ? null : `${birthHour.padStart(2, "0")}:${(birthMin || "0").padStart(2, "0")}`;
@@ -57,7 +51,10 @@ export function StartFunnel({ isLoggedIn }: { isLoggedIn: boolean }) {
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "무료 진단 생성 실패");
+      if (!res.ok) {
+        const msg = json.detail ? `${json.error ?? "실패"}: ${json.detail}` : (json.error ?? "무료 진단 생성 실패");
+        throw new Error(msg);
+      }
       // 분석중 화면 최소 노출 후 이동
       setTimeout(() => router.push(`/results/${json.resultId}`), 2600);
     } catch (err) {
@@ -155,17 +152,10 @@ export function StartFunnel({ isLoggedIn }: { isLoggedIn: boolean }) {
             <input type="checkbox" checked={mbtiUnknown} onChange={(e) => { setMbtiUnknown(e.target.checked); if (e.target.checked) setMbti(""); }} />
             MBTI 모름
           </label>
-          {isLoggedIn ? (
-            <button onClick={submit} disabled={!mbti && !mbtiUnknown}
-              className="mt-6 w-full rounded-xl bg-amber-400 py-4 text-[15px] font-bold text-[#0c1322] disabled:opacity-40 hover:opacity-90 transition-opacity">
-              사주 풀이 받기 →
-            </button>
-          ) : (
-            <Link href={`/login?redirect=${encodeURIComponent("/start")}`}
-              className={cn(buttonVariants({ size: "lg" }), "mt-6 w-full")}>
-              로그인하고 무료로 받기
-            </Link>
-          )}
+          <button onClick={submit} disabled={!mbti && !mbtiUnknown}
+            className="mt-6 w-full rounded-xl bg-amber-400 py-4 text-[15px] font-bold text-[#0c1322] disabled:opacity-40 hover:opacity-90 transition-opacity">
+            무료 결과 보기
+          </button>
         </Step>
       )}
     </div>

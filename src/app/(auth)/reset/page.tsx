@@ -29,11 +29,12 @@ export default function ResetPage() {
   }
 
   return (
+    <div className="brandg-shop">
     <div className="container py-16 max-w-md">
       <Card>
         <CardHeader>
           <CardTitle>비밀번호 재설정</CardTitle>
-          <CardDescription>이메일로 재설정 링크를 보내드립니다.</CardDescription>
+          <CardDescription>가입하신 이메일로 재설정 링크를 보내드립니다.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -41,12 +42,13 @@ export default function ResetPage() {
               <Label htmlFor="email">이메일</Label>
               <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
-            <Button type="submit" disabled={loading} className="w-full">
+            <Button type="submit" disabled={loading} className="w-full bg-amber-500 text-white hover:bg-amber-600 font-bold">
               {loading ? "발송 중..." : "재설정 링크 받기"}
             </Button>
           </form>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }

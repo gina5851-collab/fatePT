@@ -17,11 +17,13 @@ export type ReportTier = {
 export const REPORT_TIERS: ReportTier[] = [
   { id: "test", productSlug: "inbody", price: 4900, label: "테스트 리포트", sub: "핵심 패턴 1가지만 빠르게" },
   { id: "mini", productSlug: "crush-kit", price: 14900, originalPrice: 24900, label: "미니 리포트", sub: "관계·감정 집중 해석" },
-  { id: "full", productSlug: "reunion-check", price: 34900, originalPrice: 64900, label: "전체 리포트", sub: "23개 패턴 전부 해금", highlight: true },
+  // 본상품 (39,000원) — premium-saju "나의 전체 흐름 리포트" 와 매핑.
+  // 운영 DB 와 동기화 필요 (사용자 콘솔 UPDATE 예정). 정가/취소선(originalPrice) 표기는 광고법 위험으로 제거.
+  { id: "full", productSlug: "premium-saju", price: 39000, label: "나의 전체 흐름 리포트", sub: "타고난 기질·관계·돈·일까지 6섹션 전체", highlight: true },
   { id: "premium", productSlug: "life-master", price: 149000, originalPrice: 240000, label: "프리미엄 확장", sub: "대운·2026 흐름·평생 로드맵" },
 ];
 
-// 결과 페이지 메인 페이월 노출 티어 — full(34,900) 집중.
+// 결과 페이지 메인 페이월 노출 티어 — full(39,000) 집중.
 // 표시 순서: 전체(BEST) → 미니 → 프리미엄. 4,900 test는 광고 입구용이라 메인에선 숨김.
 export const ACTIVE_TIER_IDS = ["full", "mini", "premium"];
 

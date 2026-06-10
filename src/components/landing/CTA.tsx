@@ -2,29 +2,29 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-// Ollama-style inverted CTA strip — the single attention-grabbing surface.
+// BrandG 메인 CTA 섹션 — 내 G 진단 vs 쇼핑 양 갈래.
 export function CTA() {
   return (
     <section className="container py-16">
       <div className="rounded-2xl border border-hairline bg-surface-soft px-5 py-10 md:px-8 md:py-12 text-center">
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-ink">
-          막연한 불안을, 단련 가능한 루틴으로
+          내게 맞는 G, 한 번에 정리해드릴게요
         </h2>
         <p className="mt-3 text-sm text-body">
-          1분 무료 진단으로 시작 · 결과는 마이페이지에서 바로 확인
+          생년월일 입력 → 내 타입 → 추천 G + 추천 상품
         </p>
         <div className="mt-7 flex flex-col items-center gap-3 max-w-[300px] mx-auto">
           <Link
             href="/start"
             className={cn(buttonVariants({ size: "lg" }), "w-full")}
           >
-            1분 무료로 진단받기
+            내 G 찾기
           </Link>
           <Link
-            href="/contents"
+            href="/products"
             className="text-sm text-mute hover:text-ink underline underline-offset-4"
           >
-            고민별 콘텐츠 먼저 보기 →
+            카테고리 먼저 둘러보기 →
           </Link>
         </div>
       </div>

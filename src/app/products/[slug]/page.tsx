@@ -6,16 +6,30 @@ import { formatKRW, formatDate } from "@/lib/utils";
 import { isSupabaseConfigured } from "@/lib/env";
 import { productsSeed } from "@/config/products.seed";
 import { PRODUCT_COPY } from "@/config/product-copy";
+import { ProductGallery } from "@/components/products/ProductGallery";
+import { findMockProduct } from "@/config/products.mock";
+import { MockProductDetail } from "@/components/products/MockProductDetail";
 
 type Product = { id: string; slug: string; name: string; description: string; price: number };
 type Review = { id: string; rating: number; content: string; created_at: string };
 
 export default async function ProductDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ source?: string }>;
 }) {
   const { slug } = await params;
+  // 무료 결과 페이지에서 이어 온 경우 ?source={resultId} carry — 결제 payload 에 echo.
+  const { source } = (await searchParams) ?? {};
+  const sourceResultId = typeof source === "string" && source.length > 0 ? source : undefined;
+
+  // BrandG mock 상품 — DB 무관, 데모 전용. 결제 흐름 (SajuForm) 분기 없음.
+  const mockProduct = findMockProduct(slug);
+  if (mockProduct) {
+    return <MockProductDetail product={mockProduct} />;
+  }
 
   let product: Product | null;
   let reviews: Review[] | null = null;
@@ -53,18 +67,13 @@ export default async function ProductDetailPage({
 
   return (
     <div className="container py-12 max-w-2xl">
-      {/* ── 헤더 ── */}
-      <header className="mb-10">
-        <div className="flex items-center gap-2 mb-2">
-          <p className="text-xs font-mono text-mute">PROGRAM / {product.slug}</p>
-          {copy?.badge ? (
-            <span className="text-[11px] font-semibold rounded-full bg-ink text-canvas px-2 py-0.5">{copy.badge}</span>
-          ) : null}
-        </div>
+      {/* ── 이미지 갤러리 (Phase 2c 후 DB images 자동 반영) ── */}
+      <ProductGallery alt={product.name} />
 
+      {/* ── 헤더 (고객 언어만: 제목 / 짧은 설명 / 가격) ── */}
+      <header className="mb-10">
         {copy ? (
           <>
-            <p className="text-xs text-body mb-1">{copy.positioning}</p>
             <h1 className="text-3xl font-semibold tracking-tight leading-snug">
               {copy.headline}
             </h1>
@@ -138,7 +147,13 @@ export default async function ProductDetailPage({
           </span>
         </div>
         <p className="text-xs text-body mb-4">정확할수록 더 정밀한 결과가 나옵니다.</p>
-        <SajuForm productId={product.id} productSlug={product.slug} isLoggedIn={!!user} isFree={product.price === 0} />
+        <SajuForm
+          productId={product.id}
+          productSlug={product.slug}
+          isLoggedIn={!!user}
+          isFree={product.price === 0}
+          sourceResultId={sourceResultId}
+        />
       </section>
 
       {/* ── 후기 ── */}

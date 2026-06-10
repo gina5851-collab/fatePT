@@ -2,7 +2,9 @@ import { z } from "zod";
 
 const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
-  TOSS_SECRET_KEY: z.string().min(1),
+  // Toss 키는 결제 라우트에서만 필요 — 무료 흐름 차단 방지 위해 optional.
+  // 결제 시점에 serverEnv().TOSS_SECRET_KEY 가 비어있으면 confirm 측에서 throw.
+  TOSS_SECRET_KEY: z.string().optional().default(""),
   MANSERYEOK_API_URL: z.string().url().optional().or(z.literal("")),
   MANSERYEOK_API_KEY: z.string().optional(),
   SAJU_API_URL: z.string().url().optional().or(z.literal("")),
@@ -15,17 +17,16 @@ const serverSchema = z.object({
   ADMIN_PASSWORD: z.string().optional().default(""),
 });
 
+// 핵심(Supabase) 만 strict, 나머지는 라우트별 점진 검증.
+// 무료 결과 흐름은 SITE_URL/TOSS 없이도 동작해야 한다.
 const publicSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z.string().url(),
+  NEXT_PUBLIC_SITE_URL: z.string().url().optional().or(z.literal("")).default(""),
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-  NEXT_PUBLIC_TOSS_CLIENT_KEY: z.string().min(1),
+  NEXT_PUBLIC_TOSS_CLIENT_KEY: z.string().optional().default("test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"),
 });
 
-// NEXT_PUBLIC_* 가 없는 환경(예: 환경변수 미설정 프리뷰 배포)에서도 빌드가
-// 깨지지 않도록 safeParse 후 .env.example 과 동일한 placeholder 로 폴백한다.
-// 폴백 시 NEXT_PUBLIC_SUPABASE_URL 이 'YOUR_PROJECT' 라 isSupabaseConfigured()
-// 가 false → 데모 모드로 동작. 운영에는 실제 값이 있으므로 동작은 동일하다.
+// Supabase 누락(예: 데모 모드)은 isSupabaseConfigured() 로 분기. 빌드는 폴백으로 통과.
 const _publicParsed = publicSchema.safeParse({
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,

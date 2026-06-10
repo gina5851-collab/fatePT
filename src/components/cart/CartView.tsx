@@ -1,0 +1,88 @@
+"use client";
+
+import Link from "next/link";
+import { useCart } from "@/lib/cart/useCart";
+import { cartTotal, cartCount, clearCart } from "@/lib/cart/storage";
+import { formatKRW } from "@/lib/utils";
+import { CartItemRow } from "./CartItemRow";
+
+// /cart 페이지 본문 — localStorage 구독, SSR 빈 상태 → mount 후 동기.
+export function CartView() {
+  const { items, mounted } = useCart();
+
+  if (!mounted) {
+    return (
+      <div className="py-20 text-center text-mute text-sm">장바구니 불러오는 중...</div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="py-20 text-center">
+        <p className="text-[14px] text-body mb-1">아직 담은 G가 없어요.</p>
+        <p className="text-[12px] text-mute mb-6">먼저 둘러보고 마음에 드는 걸 담아보세요.</p>
+        <Link
+          href="/products"
+          className="inline-flex rounded-xl bg-amber-500 text-white px-5 py-3 text-[13px] font-bold hover:bg-amber-600 transition-colors shadow-sm"
+        >
+          상품 둘러보기 →
+        </Link>
+      </div>
+    );
+  }
+
+  const total = cartTotal(items);
+  const count = cartCount(items);
+
+  return (
+    <div className="pb-24 sm:pb-0">
+      <div className="rounded-2xl border border-hairline bg-canvas">
+        {items.map((it) => (
+          <CartItemRow key={it.slug} item={it} />
+        ))}
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-hairline bg-surface-soft p-5">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[12px] text-mute">담은 상품 ({count}개)</span>
+          <span className="text-[13px] font-mono text-ink">{formatKRW(total)}</span>
+        </div>
+        <div className="flex items-center justify-between mb-4 pt-2 border-t border-hairline">
+          <span className="text-[14px] font-semibold text-ink">예상 결제 금액</span>
+          <span className="text-[20px] font-mono font-bold text-ink">{formatKRW(total)}</span>
+        </div>
+
+        {/* 데스크톱 메인 CTA (모바일은 sticky 하단 사용) */}
+        <Link
+          href="/checkout-demo"
+          className="hidden sm:flex w-full rounded-xl bg-amber-500 text-white py-4 text-center text-[15px] font-bold hover:bg-amber-600 transition-colors items-center justify-center gap-2 shadow-sm"
+        >
+          주문서 작성하기
+          <span className="font-mono opacity-90">· {formatKRW(total)}</span>
+        </Link>
+        <p className="hidden sm:block mt-2 text-center text-[11px] text-mute">
+          결제 연결은 추후. 지금은 주문 흐름까지 미리 보여드려요.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => clearCart()}
+          className="mt-4 w-full text-[12px] text-mute hover:text-ink underline underline-offset-2"
+        >
+          장바구니 비우기
+        </button>
+      </div>
+
+      {/* 모바일 sticky 하단 CTA */}
+      <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 border-t border-hairline bg-canvas/95 backdrop-blur px-4 pt-3 pb-4">
+        <Link
+          href="/checkout-demo"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 text-white py-3.5 text-center text-[14px] font-bold hover:bg-amber-600 transition-colors shadow-md"
+        >
+          주문서 작성하기
+          <span className="font-mono opacity-90">· {formatKRW(total)}</span>
+        </Link>
+      </div>
+    </div>
+  );
+}

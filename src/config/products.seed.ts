@@ -25,6 +25,16 @@ export const productsSeed: ProductSeed[] = [
     is_active: true,
   },
   {
+    // 외부(/contents) → "오늘의 선택 리포트" 라벨로 유입되는 경량 리포트.
+    // DB 마이그레이션 0003 과 동기화. product-copy.ts / prompt.ts 의 today-fortune 항목과 톤 일치.
+    slug: "today-fortune",
+    name: "오늘의 선택 리포트",
+    description: "아침에 가볍게 확인하는 오늘 하루의 선택 흐름 — 점괘가 아니라 오늘 의식할 패턴",
+    price: 4900,
+    display_order: 8,
+    is_active: true,
+  },
+  {
     slug: "inbody",
     name: "운명 인바디",
     description: "내 운명 체성분 측정 — 타고난 기질·강점·약점을 한 장으로 진단",
@@ -62,6 +72,17 @@ export const productsSeed: ProductSeed[] = [
     description: "헤어진 관계를 다시 세우는 8주 집중 회복 프로그램",
     price: 99000,
     display_order: 30,
+    is_active: true,
+  },
+  {
+    // 본상품 (39,000원) — 첫 결제 기본 진단 리포트.
+    // 운영 DB 0003 마이그레이션의 premium-saju slug 를 본상품으로 재정의.
+    // 운영 DB price UPDATE 필요 (콘솔에서 직접 실행).
+    slug: "premium-saju",
+    name: "나의 전체 흐름 리포트",
+    description: "타고난 기질, 관계, 돈과 일, 현재 선택 흐름까지 한 번에 확인하는 기본 진단 리포트입니다.",
+    price: 39000,
+    display_order: 35,
     is_active: true,
   },
   {

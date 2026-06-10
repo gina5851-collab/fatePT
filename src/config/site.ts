@@ -3,9 +3,9 @@
 // =====================================================
 
 export const siteConfig = {
-  name: "운명PT",
-  tagline: "운명도, 단련됩니다.",
-  description: "운명PT는 인생을 트레이닝하는 곳입니다. 생년월일로 내 '운명 체성분(명식)'을 진단하고, 관계·돈·선택의 반복되는 패턴을 바로잡을 맞춤 루틴을 처방합니다. 단정적인 운세가 아니라, 오늘부터 더 나은 선택을 단련하는 자기이해 트레이닝입니다.",
+  name: "BrandG",
+  tagline: "뭐가 필요하G?",
+  description: "BrandG는 40+ 자기관리 편집샵입니다. Good Life를 위한 동안이G·건강이G·힐링이G·가벼워지G·편안하G 5개 카테고리 큐레이션과 내 G 찾기 진단 + 심층 G 리포트를 함께 제공합니다.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   email: "gina5851@gmail.com",
 };
@@ -30,8 +30,8 @@ export const businessInfo = {
   representative: "장진아",
   businessNumber: "309-47-01110",
   mailOrderNumber: "2026-경기김포-0764", // 통신판매업 신고번호
-  address: "경기도 김포시 김포한강9로75번길22, 804-C038",
-  phone: "", // 미표기 (이메일 고객센터로 대체). 필요 시 안심번호(050)/카카오채널 권장
+  address: "경기도 김포시 김포한강9로75번길 22, 804-C038호",
+  phone: "010-4868-8244",
   phoneNote: "",
   email: "gina5851@gmail.com",
   privacyOfficer: "장진아",
