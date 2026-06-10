@@ -82,7 +82,7 @@ function SiteFooter() {
   ].filter(Boolean).join(" | ");
 
   const contactLine = [
-    `고객센터: ${businessInfo.email}`,
+    `고객센터: 010-4868-8244`,
     businessInfo.phone
       ? `전화${businessInfo.phoneNote ? `(${businessInfo.phoneNote})` : ""}: ${businessInfo.phone}`
       : null,
