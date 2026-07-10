@@ -16,12 +16,13 @@ import { ReportView } from "@/components/report/ReportView";
 export const metadata = { title: "결과지" };
 
 // 무료 맛보기 → 고른 고민에 맞는 단 하나의 프로그램 추천 (가격은 여기서 처음 노출)
+// 숨김 상품(love-session/life-master)은 추천하지 않는다 — 공개 상품으로만 연결.
 const RECO_BY_CONCERN: Record<string, string> = {
   "짝사랑": "crush-kit",
-  "연애·관계": "love-session",
+  "연애·관계": "crush-kit",
   "재회": "reunion-check",
-  "돈·일": "inbody",
-  "인생 전체": "life-master",
+  "돈·일": "premium-saju",
+  "인생 전체": "premium-saju",
 };
 
 // PAS 업셀 카피: 무료 결과의 신호(problem) → 이대로 두면(risk) → 프로그램으로 해결

@@ -18,8 +18,8 @@ const CATEGORIES = [
       "나를 흔드는 사람에게 끌리는 이유",
       "관계에서 계속 같은 실수를 반복하는 이유",
     ],
-    productSlug: "love-saju",
-    productLabel: "관계 패턴 리포트 →",
+    productSlug: "crush-kit",
+    productLabel: "짝사랑 키트 →",
   },
   {
     slug: "money-career",
@@ -33,8 +33,8 @@ const CATEGORIES = [
       "돈이 새는 사람들의 선택 습관",
       "올해 버틸까, 바꿔야 할까?",
     ],
-    productSlug: "basic-saju",
-    productLabel: "올해 흐름 리포트 →",
+    productSlug: "premium-saju",
+    productLabel: "전체 사주 리포트 →",
   },
   {
     slug: "self-understanding",
@@ -48,8 +48,8 @@ const CATEGORIES = [
       "감정 기복이 큰 사람이 놓치기 쉬운 것",
       "내가 나를 잘 모른다는 신호",
     ],
-    productSlug: "basic-saju",
-    productLabel: "자기이해 리포트 →",
+    productSlug: "inbody",
+    productLabel: "운명 인바디 →",
   },
   {
     slug: "choice",
@@ -63,8 +63,8 @@ const CATEGORIES = [
       "새로운 일을 시작하기 전 점검할 것",
       "지금은 확장보다 정리가 필요한 시기일까?",
     ],
-    productSlug: "today-fortune",
-    productLabel: "오늘의 선택 리포트 →",
+    productSlug: "tarot-daily",
+    productLabel: "오늘의 타로 →",
   },
   {
     slug: "tests",
@@ -78,8 +78,8 @@ const CATEGORIES = [
       "내가 반복하는 선택 패턴",
       "관계 소진 위험 신호 체크리스트",
     ],
-    productSlug: "basic-saju",
-    productLabel: "종합 자기이해 리포트 →",
+    productSlug: "premium-saju",
+    productLabel: "전체 사주 리포트 →",
   },
 ];
 

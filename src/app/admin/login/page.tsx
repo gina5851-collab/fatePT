@@ -36,10 +36,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: S
       <header className="mb-8">
         <p className="text-xs font-mono text-mute mb-2">ADMIN</p>
         <h1 className="text-2xl font-semibold tracking-tight">관리자 로그인</h1>
-        <p className="mt-2 text-sm text-body">
-          <code className="font-mono text-ink">.env.local</code> 에 설정한{" "}
-          <code className="font-mono text-ink">ADMIN_PASSWORD</code> 를 입력하세요.
-        </p>
+        <p className="mt-2 text-sm text-body">관리자 전용 페이지입니다.</p>
       </header>
 
       {unconfigured === "1" || !configured ? (

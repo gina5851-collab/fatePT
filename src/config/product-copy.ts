@@ -92,15 +92,51 @@ export const PRODUCT_COPY: Record<string, ProductCopy> = {
     upsell: [
       {
         trigger: "관계 패턴이 특히 마음에 걸렸다면",
-        suggestion: "그 사람 속마음과 우리 궁합을 집중적으로 트레이닝하는 세션이 있어요.",
-        slug: "love-session",
-        label: "연애 집중 세션 보기",
+        suggestion: "짝사랑·관계의 현재 좌표와 다가갈 타이밍을 집중 진단할 수 있어요.",
+        slug: "crush-kit",
+        label: "짝사랑 키트 보기",
       },
       {
-        trigger: "인생 전체를 제대로 재설계하고 싶다면",
-        suggestion: "직업·재물·관계·건강·대운까지 한 번에 다루는 마스터 프로그램으로 이어집니다.",
-        slug: "life-master",
-        label: "인생 리디자인 마스터 보기",
+        trigger: "관계·돈·일·감정을 한 번에 보고 싶다면",
+        suggestion: "잠긴 전체 패턴을 모두 여는 전체 사주 리포트로 이어집니다.",
+        slug: "premium-saju",
+        label: "전체 사주 리포트 보기",
+      },
+    ],
+  },
+
+  // 전체 사주 리포트 (DB slug: premium-saju) — 결과지 추천 카드·업셀 표시용.
+  // DB 상품명·가격은 변경하지 않는다 (표시 전용 카피).
+  "premium-saju": {
+    headline: "잠긴 내 패턴 전부, 한 번에 열어봅니다",
+    positioning: "운명PT 핵심 — 관계·돈·일·감정 전체 패턴 해금",
+    badge: "BEST",
+    body: `무료 결과에서 본 건 요약 두 가지뿐.\n관계에서 반복되는 자세, 돈이 새는 지점, 일에서 막히는 타이밍, 감정이 무너지는 순간까지 —\n잠겨 있던 전체 분석을 한 번에 엽니다.`,
+    deliverables: [
+      "운명 명식 (년·월·일·시 4기둥)",
+      "종합 기질 심층 진단",
+      "관계·돈·일·감정 패턴 분석",
+      "올해 흐름 — 밀 때와 멈출 때",
+      "행동 루틴 처방",
+    ],
+    resultSections: [
+      "한 줄 진단",
+      "종합 기질",
+      "관계 패턴",
+      "돈 패턴",
+      "일·커리어 패턴",
+      "감정 리듬",
+      "올해 흐름",
+      "행동 처방",
+    ],
+    priceJustification: `무료 결과에서 잠겨 있던 분석 전체가 열립니다.\n결제 후 바로 확인, 링크로 영구 소장.`,
+    disclaimer: "결과는 결정을 대신하지 않습니다. 반복 패턴을 읽고 선택을 돕는 참고 자료입니다.",
+    upsell: [
+      {
+        trigger: "끝난 관계가 계속 마음에 걸린다면",
+        suggestion: "재회 가능성과 타이밍을 집중적으로 진단할 수 있어요.",
+        slug: "reunion-check",
+        label: "재회 가능성 리포트 보기",
       },
     ],
   },
@@ -129,10 +165,16 @@ export const PRODUCT_COPY: Record<string, ProductCopy> = {
     disclaimer: "상대의 마음을 단정하거나 성공 확률을 수치로 주지 않습니다. 내가 어떻게 다가갈지 방향을 잡는 데 초점을 둔 키트입니다.",
     upsell: [
       {
-        trigger: "썸을 넘어 제대로 사귀고 싶다면",
-        suggestion: "그 사람 속마음과 우리 궁합·타이밍을 더 깊게 보는 연애 집중 세션이 있어요.",
-        slug: "love-session",
-        label: "연애 집중 세션 보기",
+        trigger: "그 사람의 지금 마음이 궁금하다면",
+        suggestion: "카드 3장으로 그 사람의 현재 속마음을 가볍게 짚어볼 수 있어요.",
+        slug: "tarot-inner-mind",
+        label: "그 사람의 속마음 타로 보기",
+      },
+      {
+        trigger: "관계를 넘어 내 패턴 전체가 궁금하다면",
+        suggestion: "관계·돈·일·감정의 잠긴 패턴을 모두 여는 전체 사주 리포트가 있어요.",
+        slug: "premium-saju",
+        label: "전체 사주 리포트 보기",
       },
     ],
   },
@@ -193,10 +235,10 @@ export const PRODUCT_COPY: Record<string, ProductCopy> = {
     disclaimer: "재회를 보장하거나 상대 마음을 단정하지 않습니다. 가능성과 방향을 진단하는 리포트입니다.",
     upsell: [
       {
-        trigger: "가능성을 확인했고, 진짜로 다시 시작하고 싶다면",
-        suggestion: "타이밍·상대 마음변화·궁합 심층·8주 회복 루틴까지 담은 풀코스로 이어집니다.",
-        slug: "reunion-program",
-        label: "재회 회복 프로그램 보기",
+        trigger: "관계의 지금 흐름을 한 번 더 확인하고 싶다면",
+        suggestion: "카드 5장으로 두 사람 관계의 현재 좌표와 방향을 짚어볼 수 있어요.",
+        slug: "tarot-relationship",
+        label: "우리 관계의 흐름 타로 보기",
       },
     ],
   },

@@ -48,8 +48,8 @@ const CATEGORY_DATA: Record<
         body: "말하지 않아서, 너무 맞춰줘서, 먼저 차단해서 — 관계가 끝날 때마다 후회하는 패턴이 비슷하다면, 그 반복에는 구조적인 이유가 있습니다. 실수를 탓하는 것보다 왜 그 선택이 반복되는지를 이해하는 것이 먼저입니다.",
       },
     ],
-    productSlug: "love-saju",
-    productName: "관계 패턴 리포트",
+    productSlug: "crush-kit",
+    productName: "짝사랑 키트",
     productCta: "내 연애 패턴을 리포트로 확인하기 →",
   },
 
@@ -81,8 +81,8 @@ const CATEGORY_DATA: Record<
         body: "지금 상황을 버티는 게 맞는지, 아니면 새로운 선택을 해야 하는 시기인지 — 이 질문 앞에서 흔들린다면, 지금 내가 어떤 흐름 안에 있는지를 먼저 파악하는 것이 도움이 됩니다. 버텨야 하는 시기와 움직여야 하는 시기는 다릅니다.",
       },
     ],
-    productSlug: "basic-saju",
-    productName: "올해 흐름 리포트",
+    productSlug: "premium-saju",
+    productName: "전체 사주 리포트",
     productCta: "올해 돈과 일의 흐름을 리포트로 확인하기 →",
   },
 
@@ -114,8 +114,8 @@ const CATEGORY_DATA: Record<
         body: "다른 사람들은 나에 대해 뭔가를 잘 아는 것 같은데 정작 나는 모르겠다는 느낌, 혹은 오랫동안 내가 원하는 게 뭔지 생각하지 못했다는 느낌이 든다면 — 자기이해가 필요한 시기입니다.",
       },
     ],
-    productSlug: "basic-saju",
-    productName: "자기이해 리포트",
+    productSlug: "inbody",
+    productName: "운명 인바디",
     productCta: "나의 패턴과 성향을 리포트로 확인하기 →",
   },
 
@@ -147,9 +147,9 @@ const CATEGORY_DATA: Record<
         body: "새로운 것을 추가하고 싶은데 기존 것들이 정리되지 않은 느낌이 있다면 — 모든 시기가 확장의 시기는 아닙니다. 지금이 정리의 시기인지 확장의 시기인지를 이해하면 에너지를 더 잘 쓸 수 있습니다.",
       },
     ],
-    productSlug: "today-fortune",
-    productName: "오늘의 선택 리포트",
-    productCta: "오늘의 선택 흐름을 리포트로 확인하기 →",
+    productSlug: "tarot-daily",
+    productName: "오늘의 타로",
+    productCta: "오늘의 선택, 카드 한 장으로 확인하기 →",
   },
 
   tests: {
@@ -180,8 +180,8 @@ const CATEGORY_DATA: Record<
         body: "□ 사람을 만나고 나면 피곤함이 크다\n□ 맞춰주는 것이 익숙한데 가끔 억울하다\n□ 거절하는 것이 어렵다\n□ 내가 더 많이 연락하는 편이다\n□ 관계가 끝날까 봐 두려운 마음이 있다\n\n3개 이상 해당된다면, 관계 패턴 리포트에서 내가 관계에서 소진되는 구조를 살펴볼 수 있습니다.",
       },
     ],
-    productSlug: "basic-saju",
-    productName: "자기이해 종합 리포트",
+    productSlug: "premium-saju",
+    productName: "전체 사주 리포트",
     productCta: "내 패턴을 리포트로 더 자세히 확인하기 →",
   },
 };

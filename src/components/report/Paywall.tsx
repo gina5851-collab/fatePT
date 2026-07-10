@@ -84,7 +84,7 @@ export function Paywall({ displayName, cta }: { displayName: string; cta: CtaCop
         <Link href={`/products/${bestSlug}`} className="text-center text-[12px] text-body hover:text-ink underline underline-offset-4">
           {cta.secondary}
         </Link>
-        <Link href="/products/life-master" className="text-center text-[12px] text-body hover:text-ink underline underline-offset-4">
+        <Link href="/products" className="text-center text-[12px] text-body hover:text-ink underline underline-offset-4">
           {cta.tertiary}
         </Link>
       </div>

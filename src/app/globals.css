@@ -105,6 +105,61 @@
   }
 }
 
+/* ── 스토어프런트 전용 유틸 (기존 다크 화면에는 영향 없음) ── */
+@layer utilities {
+  /* 골드 텍스트 그라데이션 */
+  .sf-gold-text {
+    background: linear-gradient(105deg, #f6d489 0%, #e8a11c 45%, #f3c76b 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* 골드 은은한 발광 */
+  .sf-glow {
+    box-shadow: 0 0 40px rgba(232, 161, 28, 0.18), 0 0 120px rgba(232, 161, 28, 0.08);
+  }
+  /* 종이 질감 (아이보리 섹션) */
+  .sf-paper {
+    background-color: #f6f3ea;
+    background-image:
+      radial-gradient(rgba(20, 35, 63, 0.045) 1px, transparent 1px),
+      radial-gradient(rgba(20, 35, 63, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px, 34px 34px;
+    background-position: 0 0, 11px 11px;
+  }
+  /* 밤하늘 그라데이션 (히어로/타로) */
+  .sf-night-sky {
+    background:
+      radial-gradient(90% 70% at 50% 0%, #1e2f57 0%, transparent 60%),
+      radial-gradient(60% 50% at 85% 20%, rgba(232, 161, 28, 0.12) 0%, transparent 55%),
+      linear-gradient(180deg, #0d1730 0%, #0a1226 55%, #070d1c 100%);
+  }
+  /* 와인 그라데이션 (연애·재회) */
+  .sf-wine-sky {
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(120, 40, 90, 0.35) 0%, transparent 60%),
+      linear-gradient(180deg, #2a1024 0%, #230d1e 60%, #180a15 100%);
+  }
+  /* 스크롤바 숨김 (가로 슬라이더) */
+  .sf-no-scrollbar {
+    scrollbar-width: none;
+  }
+  .sf-no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* FAQ 아코디언 열림 애니메이션 */
+@layer components {
+  .sf-faq-body {
+    animation: sf-faq-open 0.28s ease-out both;
+  }
+  @keyframes sf-faq-open {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
 /* 컨테이너 모바일 패딩 보정 */
 @layer base {
   .container {
