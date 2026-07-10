@@ -17,19 +17,19 @@ export type CrossSellItem = {
 export const TAROT_TO_SAJU: Record<string, CrossSellItem[]> = {
   "tarot-inner-mind": [
     {
-      slug: "love-session",
-      href: "/products/love-session",
-      label: "연애 집중 세션 보기",
-      blurb: "그 사람 속마음과 우리 궁합을 사주로 더 깊이 진단해보세요.",
+      slug: "crush-kit",
+      href: "/products/crush-kit",
+      label: "짝사랑 키트 보기",
+      blurb: "그 사람 마음과 다가갈 타이밍을 사주로 더 깊이 진단해보세요.",
       source: "xsell_tarot-inner-mind",
     },
   ],
   "tarot-relationship": [
     {
-      slug: "love-session",
-      href: "/products/love-session",
-      label: "연애·궁합 세션 보기",
-      blurb: "관계의 흐름을 사주 궁합으로 더 길게 내다볼 수 있어요.",
+      slug: "premium-saju",
+      href: "/products/premium-saju",
+      label: "전체 사주 리포트 보기",
+      blurb: "관계를 포함한 내 반복 패턴 전체를 사주로 길게 내다볼 수 있어요.",
       source: "xsell_tarot-relationship",
     },
     {
@@ -56,7 +56,7 @@ export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
   "love-session": [
     {
       slug: "tarot-inner-mind",
-      href: "/tarot/tarot-inner-mind",
+      href: "/products/tarot-inner-mind",
       label: "그 사람의 속마음 타로",
       blurb: "지금 이 순간 그 사람의 마음이 궁금하다면, 타로 3장으로 짚어보세요.",
       source: "xsell_love-session",
@@ -65,7 +65,7 @@ export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
   "crush-kit": [
     {
       slug: "tarot-inner-mind",
-      href: "/tarot/tarot-inner-mind",
+      href: "/products/tarot-inner-mind",
       label: "그 사람의 속마음 타로",
       blurb: "짝사랑 상대의 지금 마음을 타로로 가볍게 들여다볼 수 있어요.",
       source: "xsell_crush-kit",
@@ -74,7 +74,7 @@ export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
   "reunion-check": [
     {
       slug: "tarot-relationship",
-      href: "/tarot/tarot-relationship",
+      href: "/products/tarot-relationship",
       label: "우리 관계의 흐름 타로",
       blurb: "재회 흐름이 궁금하다면, 관계의 현재 좌표를 타로 5장으로 확인해보세요.",
       source: "xsell_reunion-check",

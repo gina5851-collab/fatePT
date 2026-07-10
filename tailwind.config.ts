@@ -50,6 +50,20 @@ const config: Config = {
         mute: "#6f7c97",
         hairline: "#2c3c5b",     // 테두리: 네이비
         "hairline-strong": "#42547a",
+        // ── 스토어프런트(라이트) 팔레트 — 새 쇼핑몰 프런트 전용 ──
+        // 기존 다크 토큰(결과지/체크아웃/관리자)은 건드리지 않는다.
+        "sf-bg": "#f8f6f0",          // 밝은 아이보리 배경
+        "sf-panel": "#ffffff",       // 카드 표면
+        "sf-panel-soft": "#f1eee5",  // 살짝 가라앉은 표면
+        "sf-ink": "#14233f",         // 짙은 네이비 텍스트
+        "sf-body": "#4c5a74",        // 본문 네이비 그레이
+        "sf-mute": "#8a93a7",        // 보조 텍스트
+        "sf-line": "#e6e1d3",        // 웜 헤어라인
+        "sf-line-strong": "#d3ccba",
+        "sf-amber": "#e8a11c",       // 앰버 골드 포인트
+        "sf-amber-deep": "#b97f0a",
+        "sf-navy": "#11203c",        // 네이비 섹션 배경(기존 canvas와 동일)
+        "sf-navy-soft": "#1c2c4c",
       },
       borderRadius: {
         lg: "var(--radius)",
