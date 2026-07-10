@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import type { Myeongsik } from "@/lib/saju/manseryeok";
 import { formatDate, formatKRW, cn } from "@/lib/utils";
 import { PRODUCT_COPY } from "@/config/product-copy";
+import { tarotCrossSellForSaju } from "@/config/cross-sell";
 import { getDisplayName, resolveName } from "@/lib/saju/report/name";
 import { isMbti, type MbtiType } from "@/lib/saju/report/mbti";
 import { buildDunmyeongReport } from "@/lib/saju/report";
@@ -199,6 +200,27 @@ export default async function ResultPage({
               </Link>
             </div>
           ))}
+        </section>
+      )}
+
+      {/* ── 관련 타로 추천 (교차추천: 사주 결과 → 타로) ── */}
+      {productSlug && productSlug !== "free-taste" && (
+        <section className="mt-14 pt-10 border-t border-hairline">
+          <p className="text-xs font-mono mb-3" style={{ color: "#c9a24b" }}>
+            TAROT
+          </p>
+          <div className="space-y-3">
+            {tarotCrossSellForSaju(productSlug).map((item) => (
+              <Link
+                key={item.slug}
+                href={`${item.href}?source=${encodeURIComponent(item.source)}`}
+                className="block rounded-lg border border-hairline p-5 hover:border-ink transition-colors"
+              >
+                <p className="text-sm font-semibold text-ink">{item.label} →</p>
+                <p className="mt-1 text-sm text-body leading-relaxed">{item.blurb}</p>
+              </Link>
+            ))}
+          </div>
         </section>
       )}
 

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { SajuForm } from "@/components/saju/SajuForm";
@@ -6,8 +6,9 @@ import { formatKRW, formatDate } from "@/lib/utils";
 import { isSupabaseConfigured } from "@/lib/env";
 import { productsSeed } from "@/config/products.seed";
 import { PRODUCT_COPY } from "@/config/product-copy";
+import type { ServiceType } from "@/types/database";
 
-type Product = { id: string; slug: string; name: string; description: string; price: number };
+type Product = { id: string; slug: string; name: string; description: string; price: number; service_type?: ServiceType };
 type Review = { id: string; rating: number; content: string; created_at: string };
 
 export default async function ProductDetailPage({
@@ -25,7 +26,7 @@ export default async function ProductDetailPage({
     const supabase = await createClient();
     const { data } = await supabase
       .from("products")
-      .select("id, slug, name, description, price")
+      .select("id, slug, name, description, price, service_type")
       .eq("slug", slug)
       .eq("is_active", true)
       .maybeSingle();
@@ -48,6 +49,12 @@ export default async function ProductDetailPage({
   }
 
   if (!product) notFound();
+
+  // 타로 상품이 이 사주 상세(SajuForm)로 진입하면 타로관으로 임시 리다이렉트(307).
+  // 사주 상품(service_type 없음/‘saju’)은 그대로 진행.
+  if (product.service_type === "tarot") {
+    redirect(`/tarot/${product.slug}`);
+  }
 
   const copy = PRODUCT_COPY[slug];
 

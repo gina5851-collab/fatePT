@@ -29,7 +29,16 @@ export default async function AdminHome() {
             href="/admin/orders"
             className="flex items-center justify-between py-4 text-[15px] font-medium text-ink hover:text-body"
           >
-            <span>결제 내역</span>
+            <span>결제 내역 (사주)</span>
+            <span className="text-mute">→</span>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/admin/readings?service=tarot"
+            className="flex items-center justify-between py-4 text-[15px] font-medium text-ink hover:text-body"
+          >
+            <span>타로 주문 · 검수</span>
             <span className="text-mute">→</span>
           </Link>
         </li>

@@ -36,12 +36,17 @@ export async function POST(request: NextRequest) {
   const service = createServiceClient();
   const { data: product, error: productErr } = await service
     .from("products")
-    .select("id, price, is_active")
+    .select("id, price, is_active, service_type")
     .eq("id", body.productId)
     .maybeSingle();
 
   if (productErr || !product || !product.is_active) {
     return NextResponse.json({ error: "상품을 찾을 수 없습니다" }, { status: 404 });
+  }
+  // 서버측 방어 — 이 라우트는 사주 상품만 처리(URL/요청 조작으로 타로 상품이
+  // 사주 주문·SajuForm 플로우로 넘어오는 것을 차단). 타로는 /api/readings/tarot/orders 사용.
+  if (product.service_type !== "saju") {
+    return NextResponse.json({ error: "이 상품은 여기서 주문할 수 없습니다" }, { status: 400 });
   }
 
   const orderId = `ord_${nanoid(20)}`;

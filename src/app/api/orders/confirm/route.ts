@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/server";
 import { confirmTossPayment } from "@/lib/toss/confirm";
 import { generateSajuResult } from "@/lib/saju/generate-result";
+import { runPaidReading } from "@/lib/readings/engine";
 
 // Vercel function timeout 60초 (Pro 플랜 한도). Hobby 플랜이면 10초로 강제됨.
 // generateSajuResult (LLM + 만세력 외부 호출) 이 기본 10초보다 길어 timeout 빈발 → 60초로 확장.
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
   // 1. DB의 주문과 amount 일치 검증 (위변조 차단)
   const { data: order, error: orderErr } = await service
     .from("orders")
-    .select("id, amount, status, product_id, user_id, guest_email")
+    .select("id, amount, status, product_id, user_id, guest_email, service_type, public_token")
     .eq("order_id", orderId)
     .maybeSingle();
 
@@ -36,6 +37,10 @@ export async function POST(request: NextRequest) {
   }
   if (order.status === "paid") {
     // idempotent: 이미 결제된 주문 — 결과 페이지로 안내
+    // 타로(및 그 외 리딩 서비스)는 publicToken 으로, 사주는 기존 resultId 로 안내.
+    if (order.service_type === "tarot") {
+      return NextResponse.json({ publicToken: order.public_token, service: order.service_type, alreadyPaid: true });
+    }
     const { data: result } = await service
       .from("saju_results")
       .select("id")
@@ -67,7 +72,28 @@ export async function POST(request: NextRequest) {
     })
     .eq("id", order.id);
 
-  // 3. 사주 생성 (명식 + LLM 해석)
+  // 3. 결과 생성 — 결제 승인 완료 후 service_type 으로만 분기.
+  //    (Toss 승인/orderId/금액/중복방지 로직은 위에서 서비스 무관하게 공통 처리됨)
+
+  // ── tarot(및 그 외 리딩 서비스): 공통 Reading 엔진 ──
+  //    드로우 → (auto 상품)초안생성+발행 / (review 상품)드로우만.
+  //    LLM 실패가 결제 흐름을 깨지 않도록, 실패해도 publicToken 을 반환한다.
+  if (order.service_type === "tarot") {
+    try {
+      const { publicToken, status } = await runPaidReading(order.id);
+      return NextResponse.json({ publicToken, service: order.service_type, readingStatus: status });
+    } catch (err) {
+      return NextResponse.json({
+        publicToken: order.public_token,
+        service: order.service_type,
+        readingStatus: "failed",
+        detail: err instanceof Error ? err.message : String(err),
+        hint: "결제는 정상 승인되었습니다. /admin/readings 에서 재생성할 수 있습니다.",
+      });
+    }
+  }
+
+  // ── saju: 기존 경로 그대로 (동작·응답형식·결과 URL 변경 없음) ──
   try {
     const resultId = await generateSajuResult(order.id, order.product_id);
     return NextResponse.json({ resultId });

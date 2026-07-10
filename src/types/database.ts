@@ -14,6 +14,17 @@ export type CalendarKind = "solar" | "lunar";
 export type GenderKind = "male" | "female";
 export type PaymentMethod = "toss" | "bank_transfer" | "free";
 
+// 확장형 리딩 서비스 구분자. 현재 구현: saju(기존) · tarot.
+// 향후 oracle / runes / astrology / mbti / physiognomy / palmistry 값만 추가하면 됨.
+export type ServiceType = "saju" | "tarot";
+// readings.status — 드로우/생성/검수/발행 진행 상태
+export type ReadingStatus =
+  | "drawn"
+  | "generating"
+  | "draft"
+  | "published"
+  | "failed";
+
 type ProfileRow = {
   id: string;
   email: string;
@@ -31,6 +42,7 @@ type ProductRow = {
   price: number;
   display_order: number;
   is_active: boolean;
+  service_type: ServiceType;
   created_at: string;
 };
 
@@ -46,7 +58,38 @@ type OrderRow = {
   depositor_name: string | null;
   toss_payment_key: string | null;
   paid_at: string | null;
+  service_type: ServiceType;
+  public_token: string | null;
+  source: string | null;
+  reading_status: ReadingStatus | null;
   created_at: string;
+};
+
+// 범용 리딩 입력. payload 는 서비스별(타로: { question, spread }).
+type ReadingInputRow = {
+  id: string;
+  order_id: string;
+  service_type: ServiceType;
+  payload: Json;
+  created_at: string;
+};
+
+// 범용 리딩 결과. 사주는 기존 saju_results 를 그대로 쓰고, 신규 서비스만 이 테이블 사용.
+type ReadingRow = {
+  id: string;
+  order_id: string;
+  service_type: ServiceType;
+  draw_record: Json | null;
+  prompt_version: string | null;
+  model: string | null;
+  raw_response: Json | null;
+  draft_result: Json | null;
+  final_result: Json | null;
+  status: ReadingStatus;
+  error_log: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 type SajuInputRow = {
@@ -111,6 +154,7 @@ export type Database = {
           price: number;
           display_order?: number;
           is_active?: boolean;
+          service_type?: ServiceType;
           created_at?: string;
         };
         Update: Partial<ProductRow>;
@@ -130,6 +174,10 @@ export type Database = {
           depositor_name?: string | null;
           toss_payment_key?: string | null;
           paid_at?: string | null;
+          service_type?: ServiceType;
+          public_token?: string | null;
+          source?: string | null;
+          reading_status?: ReadingStatus | null;
           created_at?: string;
         };
         Update: Partial<OrderRow>;
@@ -181,6 +229,39 @@ export type Database = {
           created_at?: string;
         };
         Update: Partial<ReviewRow>;
+        Relationships: [];
+      };
+      reading_inputs: {
+        Row: ReadingInputRow;
+        Insert: {
+          id?: string;
+          order_id: string;
+          service_type: ServiceType;
+          payload?: Json;
+          created_at?: string;
+        };
+        Update: Partial<ReadingInputRow>;
+        Relationships: [];
+      };
+      readings: {
+        Row: ReadingRow;
+        Insert: {
+          id?: string;
+          order_id: string;
+          service_type: ServiceType;
+          draw_record?: Json | null;
+          prompt_version?: string | null;
+          model?: string | null;
+          raw_response?: Json | null;
+          draft_result?: Json | null;
+          final_result?: Json | null;
+          status?: ReadingStatus;
+          error_log?: string | null;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<ReadingRow>;
         Relationships: [];
       };
     };
