@@ -4,11 +4,13 @@ import { nanoid } from "nanoid";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { isReadingService } from "@/lib/readings/registry";
 import { generatePublicToken } from "@/lib/readings/status";
-import { getTarotProduct } from "@/lib/readings/services/tarot/config";
+import { getTarotProduct, allowedSpreads } from "@/lib/readings/services/tarot/config";
 
 const bodySchema = z.object({
   productSlug: z.string().min(1),
   question: z.string().max(300).optional(),
+  // 3 카드 타로의 구성 선택(과거/현재/미래 등). 서버가 상품 설정의 허용 목록으로 검증한다.
+  spreadKind: z.string().max(40).optional(),
   paymentMethod: z.enum(["toss", "bank_transfer"]).default("toss"),
   depositorName: z.string().max(50).optional(),
   source: z.string().max(200).optional(), // UTM/광고 유입
@@ -48,12 +50,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: "상품을 찾을 수 없습니다" }, { status: 404 });
   }
 
-  // 스프레드는 서버가 상품 설정에서 결정(타로)
+  // 스프레드는 서버가 상품 설정에서 결정(타로).
+  // 고객 선택(spreadKind)은 해당 상품의 허용 목록 안에서만 반영 — 그 외에는 기본값.
   let spread: string | null = null;
   if (serviceType === "tarot") {
     const tp = getTarotProduct(product.slug);
     if (!tp) return NextResponse.json({ error: "상품 설정을 찾을 수 없습니다" }, { status: 404 });
-    spread = tp.spread;
+    const allowed = allowedSpreads(tp);
+    spread =
+      body.spreadKind && (allowed as string[]).includes(body.spreadKind) ? body.spreadKind : tp.spread;
   }
 
   const orderId = `ord_${nanoid(20)}`;

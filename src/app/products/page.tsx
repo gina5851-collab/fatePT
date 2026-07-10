@@ -56,7 +56,7 @@ export default async function ProductsPage({
           <p className="text-[12px] font-bold tracking-[0.25em] text-sf-gold mb-2.5">ALL PRODUCTS</p>
           <h1 className="text-[30px] md:text-[40px] font-extrabold tracking-tight text-white">전체 상품</h1>
           <p className="mt-3 text-[15px] md:text-[16px] text-[#aab6cf]">
-            가볍게는 990원 타로 한 장부터, 깊게는 전체 사주 리포트까지. 지금 고민에 맞게 고르세요.
+            가볍게는 1,000원 타로 한 장부터, 깊게는 전체 사주 리포트까지. 지금 고민에 맞게 고르세요.
           </p>
         </div>
       </div>

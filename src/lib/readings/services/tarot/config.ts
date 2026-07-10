@@ -1,22 +1,32 @@
 // =====================================================
 // 타로 상품 설정 — 단일 소스 (가격/스프레드/발행정책)
 // =====================================================
-// 상품·가격·스프레드·발행방식은 전부 여기서만 수정한다.
-// 상품 시드(products.seed.ts)와 랜딩/결제/드로우가 이 설정을 참조한다.
-// ⚠️ 가격은 초기 임시값(승인된 값). 정식 확정 시 이 파일만 바꾸면 된다.
+// 기준: docs/TAROT_PRODUCT_STANDARD.md (타로 상품 기준 v1 — 사장님 승인 없이 변경 금지)
+// 상품·가격·정상가·카드 수·스프레드·발행방식은 전부 여기서만 수정한다.
+// 상품 시드(products.seed.ts)와 랜딩/상세/결제/드로우가 이 설정을 참조한다.
 
 import type { PublishPolicy } from "../../types";
 
-export type TarotSpreadKind = "daily" | "inner-mind" | "relationship";
+export type TarotSpreadKind =
+  | "daily"              // 1장 — 핵심 메시지
+  | "three-card-time"    // 3장 — 과거/현재/미래
+  | "three-card-relation"// 3장 — 나/상대방/관계
+  | "three-card-flow"    // 3장 — 원인/과정/결과
+  | "celtic-cross";      // 10장 — 켈틱 크로스
+
+/** 3 카드처럼 고객이 구성을 고를 수 있는 상품의 선택지 */
+export type SpreadOption = { kind: TarotSpreadKind; label: string };
 
 export type TarotProduct = {
   slug: string; // products.slug (DB) 와 동일
   name: string;
   description: string;
-  price: number; // 원(KRW), 임시값
-  spread: TarotSpreadKind;
-  cardCount: 1 | 3 | 5;
-  publish: PublishPolicy; // auto = 자동발행, review = 관리자 검수 후 발행
+  price: number; // 원(KRW) — 실제 결제가. DB products.price 와 동일해야 한다.
+  originalPrice?: number; // 정상가(취소선 표기 전용) — DB에는 저장하지 않는다.
+  spread: TarotSpreadKind; // 기본 스프레드
+  spreadOptions?: SpreadOption[]; // 고객 선택 가능 구성 (미지정 시 기본 스프레드 고정)
+  cardCount: 1 | 3 | 10;
+  publish: PublishPolicy; // 기준 v1: 전 상품 auto(자동 발행)
   display_order: number;
   headline: string; // 랜딩 후크
   intro: string; // 랜딩 설명
@@ -25,39 +35,45 @@ export type TarotProduct = {
 export const TAROT_PRODUCTS: TarotProduct[] = [
   {
     slug: "tarot-daily",
-    name: "오늘의 타로",
-    description: "지금 나에게 필요한 한 장의 메시지",
-    price: 990,
+    name: "원 카드 타로",
+    description: "한 장으로 받는 핵심 메시지와 오늘의 조언",
+    price: 1000,
     spread: "daily",
     cardCount: 1,
     publish: "auto",
     display_order: 110,
     headline: "오늘, 나에게 필요한 한 마디",
-    intro: "카드 한 장이 지금 흐름에서 당신이 붙잡아야 할 메시지를 짚어줍니다. 결제 후 바로 확인할 수 있어요.",
+    intro: "카드 한 장이 지금 흐름의 핵심 메시지와 오늘의 조언을 짚어줍니다. 결제 후 바로 확인할 수 있어요.",
   },
   {
     slug: "tarot-inner-mind",
-    name: "그 사람의 속마음",
-    description: "3장으로 읽는 그 사람의 진짜 마음",
-    price: 2970,
-    spread: "inner-mind",
+    name: "3 카드 타로",
+    description: "세 장으로 읽는 상황의 앞뒤 — 구성은 내가 선택",
+    price: 3800,
+    spread: "three-card-time",
+    spreadOptions: [
+      { kind: "three-card-time", label: "과거 / 현재 / 미래" },
+      { kind: "three-card-relation", label: "나 / 상대방 / 관계" },
+      { kind: "three-card-flow", label: "원인 / 과정 / 결과" },
+    ],
     cardCount: 3,
-    publish: "review",
+    publish: "auto",
     display_order: 120,
-    headline: "그 사람, 지금 무슨 생각일까?",
-    intro: "현재 상황 · 상대의 속마음 · 앞으로의 흐름을 3장으로 짚어봅니다. 검수를 거쳐 정성껏 발행해 드려요.",
+    headline: "세 장이면, 상황의 앞뒤가 보입니다",
+    intro: "시간의 흐름, 두 사람의 마음, 일의 인과 — 원하는 구성을 골라 세 장으로 짚어봅니다. 결제 후 바로 확인할 수 있어요.",
   },
   {
-    slug: "tarot-relationship",
-    name: "우리 관계의 흐름",
-    description: "5장으로 보는 두 사람의 관계 흐름",
-    price: 4950,
-    spread: "relationship",
-    cardCount: 5,
-    publish: "review",
+    slug: "tarot-celtic-cross",
+    name: "켈틱 크로스 타로",
+    description: "10장으로 펼치는 가장 깊은 정통 리딩",
+    price: 5800,
+    originalPrice: 8700,
+    spread: "celtic-cross",
+    cardCount: 10,
+    publish: "auto",
     display_order: 130,
-    headline: "우리 관계, 지금 어디로 가고 있을까?",
-    intro: "현재 관계 · 상대의 감정 · 숨은 장애물 · 가까운 미래 · 조언까지 5장으로 깊이 있게 읽어드립니다. 검수 후 발행돼요.",
+    headline: "10장이 펼치는, 문제의 전체 지도",
+    intro: "현재 상황부터 최종 결과까지 — 정통 켈틱 크로스 10장으로 문제의 구조 전체를 펼쳐 읽습니다. 결제 후 바로 확인할 수 있어요.",
   },
 ];
 
@@ -67,4 +83,10 @@ export function getTarotProduct(slug: string): TarotProduct | undefined {
 
 export function isTarotSlug(slug: string): boolean {
   return TAROT_PRODUCTS.some((p) => p.slug === slug);
+}
+
+/** 해당 상품에서 허용되는 스프레드 목록 (기본 + 선택지) */
+export function allowedSpreads(product: TarotProduct): TarotSpreadKind[] {
+  const opts = product.spreadOptions?.map((o) => o.kind) ?? [];
+  return Array.from(new Set([product.spread, ...opts]));
 }

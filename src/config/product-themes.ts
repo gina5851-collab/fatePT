@@ -3,7 +3,7 @@
 // =====================================================
 // Tailwind JIT 특성상 클래스 문자열은 전부 리터럴로 둔다 (동적 조립 금지).
 
-export type ArtKind = "wheel" | "tarot-1" | "tarot-3" | "tarot-5" | "reunion" | "crush" | "measure" | "gate";
+export type ArtKind = "wheel" | "tarot-1" | "tarot-3" | "tarot-10" | "reunion" | "crush" | "measure" | "gate";
 
 export type ProductTheme = {
   /** 카드·상세 히어로 배경 그라데이션 (리터럴 클래스) */
@@ -64,11 +64,11 @@ export const PRODUCT_THEMES: Record<string, ProductTheme> = {
     art: "tarot-3",
     categoryLabel: "타로 · 3장",
   },
-  "tarot-relationship": {
+  "tarot-celtic-cross": {
     bg: "bg-gradient-to-b from-[#1a1a46] via-[#141238] to-[#0a0922]",
     accentText: "text-sf-gold",
-    art: "tarot-5",
-    categoryLabel: "타로 · 5장",
+    art: "tarot-10",
+    categoryLabel: "타로 · 10장",
   },
 };
 

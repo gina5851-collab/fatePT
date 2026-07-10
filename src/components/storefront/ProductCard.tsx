@@ -27,8 +27,8 @@ function Art({ kind, className }: { kind: ArtKind; className: string }) {
       return <TarotFan count={1} className={className} />;
     case "tarot-3":
       return <TarotFan count={3} className={className} />;
-    case "tarot-5":
-      return <TarotFan count={5} className={className} />;
+    case "tarot-10":
+      return <TarotFan count={10} className={className} />;
     case "reunion":
       return <ReunionLines className={className} />;
     case "crush":

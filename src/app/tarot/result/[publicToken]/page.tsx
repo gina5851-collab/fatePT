@@ -52,12 +52,12 @@ export default async function TarotResultPage({ params }: { params: Promise<{ pu
     );
   }
 
-  // 미발행(검수 대기/생성 중/실패) → 준비 중 안내 (고객에게 결과 노출 안 함)
+  // 미발행(생성 중/실패 등 예외 상태) → 준비 중 안내 (기준 v1: 전 상품 자동 발행)
   if (!reading || reading.status !== "published" || !reading.final_result) {
     return (
       <StatusScreen
         title="결과 준비 중"
-        message="카드를 뽑아두었어요. 리더가 정성껏 검수해 곧 결과를 발행해 드립니다. 발행되면 이 링크에서 바로 확인할 수 있어요. (보통 24시간 이내)"
+        message="카드를 뽑아두었어요. 결과를 정리하는 중입니다 — 잠시 후 새로고침하면 이 링크에서 바로 확인할 수 있어요. 문제가 지속되면 고객센터로 문의해 주세요."
       />
     );
   }

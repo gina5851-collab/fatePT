@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isBankTransferEnabled, bankTransfer } from "@/config/site";
+import { getTarotProduct } from "@/lib/readings/services/tarot/config";
 
 type Props = {
   productSlug: string;
@@ -16,6 +17,10 @@ type Props = {
 
 export function TarotOrderForm({ productSlug, source }: Props) {
   const router = useRouter();
+  // 스프레드 구성 선택 — 상품 설정(단일 소스)에 선택지가 있을 때만 노출 (3 카드 타로)
+  const product = getTarotProduct(productSlug);
+  const spreadOptions = product?.spreadOptions ?? [];
+  const [spreadKind, setSpreadKind] = useState<string>(product?.spread ?? "");
   const [question, setQuestion] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"toss" | "bank_transfer">("toss");
   const [depositorName, setDepositorName] = useState("");
@@ -36,6 +41,7 @@ export function TarotOrderForm({ productSlug, source }: Props) {
         body: JSON.stringify({
           productSlug,
           question: question.trim() || undefined,
+          spreadKind: spreadOptions.length > 0 ? spreadKind : undefined,
           paymentMethod,
           depositorName: paymentMethod === "bank_transfer" ? depositorName.trim() : undefined,
           source: source ?? undefined,
@@ -52,6 +58,30 @@ export function TarotOrderForm({ productSlug, source }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {/* 3 카드 타로 — 구성 선택 (기준 v1: 과거/현재/미래 · 나/상대방/관계 · 원인/과정/결과) */}
+      {spreadOptions.length > 0 && (
+        <div className="space-y-2">
+          <Label>카드 구성 선택</Label>
+          <div className="grid grid-cols-1 gap-2">
+            {spreadOptions.map((opt) => (
+              <button
+                type="button"
+                key={opt.kind}
+                onClick={() => setSpreadKind(opt.kind)}
+                className={`h-11 rounded-xl border text-sm transition-colors ${
+                  spreadKind === opt.kind
+                    ? "border-ink bg-ink text-canvas font-semibold"
+                    : "border-hairline text-ink hover:border-ink"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-body">지금 고민에 맞는 구성을 골라주세요. 세 장의 자리 의미가 달라져요.</p>
+        </div>
+      )}
+
       <div className="space-y-2">
         <Label htmlFor="question">질문 (선택)</Label>
         <Textarea

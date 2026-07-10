@@ -13,6 +13,8 @@ const config: NextConfig = {
       { source: "/products/basic-saju", destination: "/products/inbody", permanent: true },
       { source: "/products/love-saju", destination: "/products/crush-kit", permanent: true },
       { source: "/products/today-fortune", destination: "/products/tarot-daily", permanent: true },
+      // 구 5장 관계 스프레드 → 켈틱 크로스(기준 v1)로 대체
+      { source: "/products/tarot-relationship", destination: "/products/tarot-celtic-cross", permanent: true },
     ];
   },
 };
