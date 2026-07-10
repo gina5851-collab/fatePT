@@ -50,6 +50,7 @@ function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
         <nav className="hidden md:flex items-center gap-6 text-[13px] font-medium">
           <Link href="/contents" className="text-ink hover:text-body">콘텐츠</Link>
           <Link href="/products" className="text-ink hover:text-body">프로그램</Link>
+          <Link href="/tarot" className="text-ink hover:text-body">타로</Link>
           {isLoggedIn ? (
             <>
               <Link href="/mypage" className="text-ink hover:text-body">마이페이지</Link>

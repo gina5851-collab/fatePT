@@ -6,6 +6,10 @@
 // '트레이닝 프로그램'. 한 프로그램 = 한 결제(현재 단일상품 결제 모델에 그대로 맞음).
 // 가격/구성 수정 후 pnpm seed:products 로 DB 반영.
 
+// 상대경로 — tsx(pnpm seed:products)는 tsconfig 의 @/ 별칭을 해석하지 않으므로.
+import { TAROT_PRODUCTS } from "../lib/readings/services/tarot/config";
+import type { ServiceType } from "../types/database";
+
 export type ProductSeed = {
   slug: string;
   name: string;
@@ -13,9 +17,11 @@ export type ProductSeed = {
   price: number;
   display_order: number;
   is_active: boolean;
+  service_type?: ServiceType; // 미지정 시 DB 기본값 'saju'
 };
 
-export const productsSeed: ProductSeed[] = [
+// 사주 상품(기존) — service_type 미지정 → DB 기본값 'saju'
+const sajuProductsSeed: ProductSeed[] = [
   {
     slug: "free-taste",
     name: "무료 운명 맛보기",
@@ -73,3 +79,16 @@ export const productsSeed: ProductSeed[] = [
     is_active: true,
   },
 ];
+
+// 타로 상품 — tarot config(단일 소스)에서 파생. 가격은 그쪽에서만 수정한다.
+const tarotProductsSeed: ProductSeed[] = TAROT_PRODUCTS.map((p) => ({
+  slug: p.slug,
+  name: p.name,
+  description: p.description,
+  price: p.price,
+  display_order: p.display_order,
+  is_active: true,
+  service_type: "tarot" as const,
+}));
+
+export const productsSeed: ProductSeed[] = [...sajuProductsSeed, ...tarotProductsSeed];
