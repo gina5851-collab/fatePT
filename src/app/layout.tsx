@@ -37,31 +37,47 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   );
 }
 
-// 카테고리형 헤더 — 스토어프런트 라이트(아이보리) 톤.
+// 카테고리형 헤더 — 스토어프런트 라이트(아이보리) 톤, sticky.
 // 아직 독립 페이지가 없는 카테고리는 /products 필터 또는 실제 상품으로 연결 (빈 페이지·404 금지).
-const CATEGORY_NAV: { label: string; href: string }[] = [
+const PRIMARY_NAV: { label: string; href: string }[] = [
   { label: "사주풀이", href: "/saju" },
+  { label: "타로", href: "/tarot" },
   { label: "연애·궁합", href: "/products?tab=love" },
   { label: "재회", href: "/products?tab=reunion" },
-  { label: "돈·직장", href: "/products?tab=money" },
-  { label: "종합운세", href: "/products/premium-saju" },
-  { label: "타로", href: "/tarot" },
-  { label: "오늘의 운세", href: "/products/tarot-daily" },
   { label: "전체 상품", href: "/products" },
+];
+
+const SECONDARY_NAV: { label: string; href: string }[] = [
+  { label: "종합운세", href: "/products/premium-saju" },
+  { label: "돈·직장", href: "/products?tab=money" },
+  { label: "오늘의 운세", href: "/products/tarot-daily" },
+  { label: "자기이해", href: "/products?tab=self" },
+  { label: "콘텐츠", href: "/contents" },
 ];
 
 function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
     <header className="sticky top-0 z-30 bg-sf-bg/95 backdrop-blur border-b border-sf-line">
-      {/* 유틸리티 줄 */}
-      <div className="container flex h-14 items-center justify-between">
-        <Link href="/" className="flex items-baseline gap-1.5">
-          <span className="font-extrabold text-[17px] text-sf-ink tracking-tight">{siteConfig.name}</span>
-          <span className="hidden sm:inline text-[11px] text-sf-mute">{siteConfig.tagline}</span>
+      {/* 메인 줄 — 로고 · 주요 카테고리 · 로그인 · 무료 진단 */}
+      <div className="container flex h-16 md:h-[72px] items-center justify-between gap-4">
+        <Link href="/" className="flex flex-col leading-none shrink-0">
+          <span className="font-extrabold text-[21px] md:text-[24px] text-sf-ink tracking-tight">
+            {siteConfig.name}
+          </span>
+          <span className="mt-1 hidden md:block text-[11px] font-medium tracking-[0.14em] text-sf-amber-deep">
+            {siteConfig.tagline}
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-5 text-[13px] font-medium">
-          <Link href="/contents" className="text-sf-body hover:text-sf-ink">콘텐츠</Link>
+        <nav className="hidden md:flex items-center gap-7 text-[15px] font-bold text-sf-ink">
+          {PRIMARY_NAV.map((c) => (
+            <Link key={c.label} href={c.href} className="hover:text-sf-amber-deep transition-colors">
+              {c.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="hidden md:flex items-center gap-5 text-[13.5px] font-medium shrink-0">
           {isLoggedIn ? (
             <>
               <Link href="/mypage" className="text-sf-body hover:text-sf-ink">마이페이지</Link>
@@ -74,30 +90,33 @@ function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           )}
           <Link
             href="/start"
-            className="rounded-full bg-sf-amber text-sf-navy font-bold px-4 py-1.5 hover:opacity-90 transition-opacity"
+            className="rounded-full bg-sf-amber text-sf-navy font-bold text-[14px] px-5 py-2.5 hover:opacity-90 transition-opacity"
           >
             무료 진단
           </Link>
-        </nav>
+        </div>
 
-        {/* 모바일 햄버거 (클라이언트 컴포넌트) */}
-        <MobileMenu isLoggedIn={isLoggedIn} />
+        {/* 모바일 — 무료 진단 + 햄버거 */}
+        <div className="flex md:hidden items-center gap-2">
+          <Link
+            href="/start"
+            className="rounded-full bg-sf-amber text-sf-navy font-bold text-[12.5px] px-3.5 py-1.5"
+          >
+            무료 진단
+          </Link>
+          <MobileMenu isLoggedIn={isLoggedIn} />
+        </div>
       </div>
 
-      {/* 카테고리 줄 — 데스크톱은 정렬, 모바일은 가로 스크롤 */}
-      <nav
-        aria-label="상품 카테고리"
-        className="container flex items-center gap-1 overflow-x-auto pb-2 -mt-1 md:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {CATEGORY_NAV.map((c) => (
-          <Link
-            key={c.label}
-            href={c.href}
-            className="shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium text-sf-body hover:text-sf-ink hover:bg-sf-panel-soft transition-colors"
-          >
-            {c.label}
-          </Link>
-        ))}
+      {/* 보조 줄 — PC 전용 얇은 카테고리 */}
+      <nav aria-label="보조 카테고리" className="hidden md:block border-t border-sf-line/70">
+        <div className="container flex items-center gap-6 h-10 text-[13px] font-medium text-sf-body">
+          {SECONDARY_NAV.map((c) => (
+            <Link key={c.label} href={c.href} className="hover:text-sf-ink transition-colors">
+              {c.label}
+            </Link>
+          ))}
+        </div>
       </nav>
     </header>
   );

@@ -50,26 +50,29 @@ export default async function ProductsPage({
 
   return (
     <div className="bg-sf-bg min-h-screen">
-      <div className="container py-10 md:py-14">
-        <header className="mb-8">
-          <p className="text-xs font-mono text-sf-amber-deep mb-2">ALL PRODUCTS</p>
-          <h1 className="text-[26px] md:text-[32px] font-extrabold tracking-tight text-sf-ink">전체 상품</h1>
-          <p className="mt-2 text-sm text-sf-body">
+      {/* 헤더 밴드 */}
+      <div className="bg-sf-navy border-b border-white/5">
+        <div className="container py-12 md:py-16">
+          <p className="text-[12px] font-bold tracking-[0.25em] text-sf-gold mb-2.5">ALL PRODUCTS</p>
+          <h1 className="text-[30px] md:text-[40px] font-extrabold tracking-tight text-white">전체 상품</h1>
+          <p className="mt-3 text-[15px] md:text-[16px] text-[#aab6cf]">
             가볍게는 990원 타로 한 장부터, 깊게는 전체 사주 리포트까지. 지금 고민에 맞게 고르세요.
           </p>
-        </header>
+        </div>
+      </div>
 
+      <div className="container py-10 md:py-14">
         {/* 고민별 탭 */}
-        <nav className="flex flex-wrap gap-2 mb-8" aria-label="상품 분류">
+        <nav className="flex flex-wrap gap-2 mb-10" aria-label="상품 분류">
           {TABS.map((t) => {
             const active = t.key === tab;
             return (
               <Link
                 key={t.key}
                 href={t.key === "all" ? "/products" : `/products?tab=${t.key}`}
-                className={`px-4 h-9 inline-flex items-center rounded-full text-[13px] font-medium border transition-colors ${
+                className={`px-5 h-11 inline-flex items-center rounded-full text-[14px] font-bold border transition-colors ${
                   active
-                    ? "bg-sf-navy text-sf-amber border-sf-navy"
+                    ? "bg-sf-navy text-sf-gold border-sf-navy"
                     : "bg-sf-panel text-sf-ink border-sf-line hover:border-sf-navy"
                 }`}
               >
@@ -80,9 +83,9 @@ export default async function ProductsPage({
         </nav>
 
         {visible.length === 0 ? (
-          <p className="py-16 text-center text-sm text-sf-body">이 분류의 상품을 준비 중이에요.</p>
+          <p className="py-20 text-center text-[15px] text-sf-body">이 분류의 상품을 준비 중이에요.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {visible.map((p) => (
               <ProductCard key={p.slug} product={p} price={resolvePrice(dbMap.get(p.slug), p.priceHint)} />
             ))}
@@ -90,12 +93,14 @@ export default async function ProductsPage({
         )}
 
         {/* 하단 무료 진입 */}
-        <div className="mt-14 rounded-2xl bg-sf-navy p-7 text-center">
-          <p className="text-[15px] font-semibold text-ink mb-1">뭘 골라야 할지 모르겠다면</p>
-          <p className="text-[13px] text-body mb-5">1분 무료 진단으로 내 패턴의 큰 그림부터 확인해 보세요.</p>
+        <div className="mt-16 md:mt-24 rounded-3xl bg-sf-navy p-9 md:p-12 text-center">
+          <p className="text-[19px] md:text-[24px] font-extrabold text-white mb-2">뭘 골라야 할지 모르겠다면</p>
+          <p className="text-[14px] md:text-[15px] text-[#aab6cf] mb-7">
+            1분 무료 진단으로 내 패턴의 큰 그림부터 확인해 보세요.
+          </p>
           <Link
             href="/start"
-            className="inline-block rounded-xl bg-sf-amber px-8 py-3 text-[14px] font-bold text-sf-navy hover:opacity-90 transition-opacity"
+            className="inline-block rounded-2xl bg-sf-amber px-10 py-4 text-[15px] font-extrabold text-sf-navy hover:opacity-90 transition-opacity"
           >
             무료로 먼저 보기 →
           </Link>

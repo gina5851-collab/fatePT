@@ -6,8 +6,8 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
-      screens: { "2xl": "1100px" },
+      padding: "1.25rem",
+      screens: { "2xl": "1220px" },
     },
     extend: {
       colors: {
@@ -62,8 +62,31 @@ const config: Config = {
         "sf-line-strong": "#d3ccba",
         "sf-amber": "#e8a11c",       // 앰버 골드 포인트
         "sf-amber-deep": "#b97f0a",
+        "sf-gold": "#f3c76b",        // 밝은 골드 (다크 배경 위 포인트)
         "sf-navy": "#11203c",        // 네이비 섹션 배경(기존 canvas와 동일)
         "sf-navy-soft": "#1c2c4c",
+        "sf-night": "#0a1226",       // 타로/히어로용 짙은 밤하늘
+        "sf-wine": "#2a1024",        // 연애·재회 섹션 배경
+        "sf-wine-soft": "#3d1a33",
+      },
+      keyframes: {
+        "sf-fade-up": {
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "sf-twinkle": {
+          "0%, 100%": { opacity: "0.25" },
+          "50%": { opacity: "0.9" },
+        },
+        "sf-spin-slow": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
+      },
+      animation: {
+        "sf-fade-up": "sf-fade-up 0.5s ease-out both",
+        "sf-twinkle": "sf-twinkle 3.5s ease-in-out infinite",
+        "sf-spin-slow": "sf-spin-slow 90s linear infinite",
       },
       borderRadius: {
         lg: "var(--radius)",

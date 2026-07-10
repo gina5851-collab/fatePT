@@ -4,7 +4,7 @@ import type { SampleBlock } from "@/config/catalog";
 // 모든 샘플에 "결과 예시" 라벨을 명시한다 (실제 고객 데이터 아님).
 export function SampleViewer({ sample }: { sample: SampleBlock }) {
   return (
-    <figure className="rounded-2xl border border-sf-line bg-sf-navy p-5 md:p-6 overflow-hidden relative">
+    <figure className="rounded-2xl border border-white/10 bg-sf-navy p-5 md:p-6 overflow-hidden relative">
       {/* 라벨 */}
       <figcaption className="flex items-center justify-between mb-4">
         <span className="text-[11px] font-semibold text-sf-amber tracking-wide">📄 {sample.title || "결과 예시"}</span>
