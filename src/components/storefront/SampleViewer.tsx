@@ -59,18 +59,23 @@ function TarotSample({ sample }: { sample: Extract<SampleBlock, { kind: "tarot" 
         <span className="text-mute">질문 예시 —</span> “{sample.question}”
       </p>
 
-      {/* 카드 배열 */}
+      {/* 카드 배열 — 모바일: 가로 스크롤 / sm 이상: 그리드 */}
       <div
-        className={`grid gap-3 ${
+        className={`flex gap-3 overflow-x-auto snap-x sf-no-scrollbar -mx-1 px-1 pb-1 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:overflow-visible ${
           sample.cards.length >= 4
-            ? "grid-cols-2 sm:grid-cols-3"
+            ? "sm:grid-cols-3"
             : sample.cards.length === 3
-              ? "grid-cols-1 sm:grid-cols-3"
-              : "grid-cols-1"
+              ? "sm:grid-cols-3"
+              : "sm:grid-cols-1"
         }`}
       >
         {sample.cards.map((c, i) => (
-          <div key={i} className="rounded-xl border border-hairline bg-sf-navy-soft p-3.5">
+          <div
+            key={i}
+            className={`rounded-xl border border-hairline bg-sf-navy-soft p-3.5 snap-start ${
+              sample.cards.length > 1 ? "min-w-[210px] sm:min-w-0" : "w-full"
+            }`}
+          >
             <TarotCardArt index={i} />
             <p className="mt-2.5 text-[10px] font-mono text-mute">{c.position}</p>
             <p className="text-[13px] font-semibold text-ink">{c.card}</p>

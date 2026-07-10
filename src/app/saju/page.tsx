@@ -25,7 +25,7 @@ export default async function SajuPage() {
       {/* 히어로 밴드 — 네이비 + 명식 차트 */}
       <div className="relative overflow-hidden sf-night-sky">
         <StarField className="absolute inset-0 w-full h-full opacity-50" />
-        <SajuWheel className="absolute -right-16 top-1/2 -translate-y-1/2 w-[340px] md:w-[480px] opacity-60 animate-sf-spin-slow" />
+        <SajuWheel className="absolute -right-20 top-1/2 -translate-y-1/2 w-[250px] md:w-[480px] opacity-40 md:opacity-60 animate-sf-spin-slow" />
         <div className="container relative py-14 md:py-20">
           <p className="text-[12px] font-bold tracking-[0.25em] text-sf-gold mb-3">SAJU</p>
           <h1 className="text-[30px] md:text-[44px] font-extrabold tracking-tight text-white leading-[1.25] max-w-xl">

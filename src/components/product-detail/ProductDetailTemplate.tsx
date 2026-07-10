@@ -33,19 +33,19 @@ function HeroArt({ kind }: { kind: ArtKind }) {
     case "wheel":
       return <SajuWheel className="absolute -right-20 top-1/2 -translate-y-1/2 w-[380px] md:w-[520px] opacity-60 animate-sf-spin-slow" />;
     case "tarot-1":
-      return <TarotFan count={1} className="absolute right-2 md:right-14 bottom-0 w-[150px] md:w-[220px] opacity-90" />;
+      return <TarotFan count={1} className="absolute right-2 md:right-14 bottom-0 w-[110px] md:w-[220px] opacity-40 md:opacity-90" />;
     case "tarot-3":
-      return <TarotFan count={3} className="absolute -right-4 md:right-8 bottom-0 w-[210px] md:w-[320px] opacity-90" />;
+      return <TarotFan count={3} className="absolute -right-6 md:right-8 bottom-0 w-[160px] md:w-[320px] opacity-40 md:opacity-90" />;
     case "tarot-5":
-      return <TarotFan count={5} className="absolute -right-8 md:right-2 bottom-0 w-[250px] md:w-[380px] opacity-90" />;
+      return <TarotFan count={5} className="absolute -right-10 md:right-2 bottom-0 w-[190px] md:w-[380px] opacity-40 md:opacity-90" />;
     case "reunion":
-      return <ReunionLines className="absolute right-0 bottom-4 w-[70%] md:w-[520px] opacity-80" />;
+      return <ReunionLines className="absolute right-0 bottom-4 w-[70%] md:w-[520px] opacity-50 md:opacity-80" />;
     case "crush":
-      return <CrushOrbit className="absolute right-0 bottom-2 w-[72%] md:w-[520px] opacity-80" />;
+      return <CrushOrbit className="absolute right-0 bottom-2 w-[72%] md:w-[520px] opacity-50 md:opacity-80" />;
     case "measure":
-      return <MeasureGrid className="absolute right-0 bottom-2 w-[70%] md:w-[500px] opacity-80" />;
+      return <MeasureGrid className="absolute right-0 bottom-2 w-[70%] md:w-[500px] opacity-50 md:opacity-80" />;
     case "gate":
-      return <GateArch className="absolute right-0 md:right-10 bottom-0 w-[220px] md:w-[360px] opacity-80" />;
+      return <GateArch className="absolute right-0 md:right-10 bottom-0 w-[160px] md:w-[360px] opacity-50 md:opacity-80" />;
   }
 }
 
@@ -67,7 +67,7 @@ export function ProductDetailTemplate({ product: p, price, related, reviews = []
         <HeroArt kind={t.art} />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/40 to-transparent" />
 
-        <div className="container relative py-14 md:py-20 min-h-[380px] md:min-h-[440px] flex flex-col justify-center">
+        <div className="container relative py-10 md:py-20 min-h-[330px] md:min-h-[440px] flex flex-col justify-center">
           <nav className="flex items-center gap-1.5 text-[12.5px] text-white/50 mb-5">
             <Link href="/products" className="hover:text-white">전체 상품</Link>
             <span>/</span>

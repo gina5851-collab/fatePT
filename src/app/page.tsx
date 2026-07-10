@@ -95,7 +95,7 @@ export default async function HomePage() {
         {/* 지평선 골드 글로우 */}
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[radial-gradient(60%_100%_at_50%_100%,rgba(232,161,28,0.22),transparent_70%)]" />
 
-        <div className="container relative min-h-[560px] md:min-h-[640px] flex flex-col items-center justify-center text-center pt-20 pb-28 md:pt-24 md:pb-36">
+        <div className="container relative min-h-[500px] md:min-h-[640px] flex flex-col items-center justify-center text-center pt-14 pb-24 md:pt-24 md:pb-36">
           <p className="mb-5 text-[12px] md:text-[13px] font-bold tracking-[0.3em] text-sf-gold">
             운명PT — 사주 · 타로 자기이해 트레이닝
           </p>
@@ -128,18 +128,21 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ══ 대표 상품 — 히어로 하단에 걸쳐 스크롤 유도 ══ */}
-      <section className="container relative z-10 -mt-16 md:-mt-24 pb-16 md:pb-24">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-7">
+      {/* ══ 대표 상품 — 히어로 하단에 걸쳐 스크롤 유도 (모바일: 가로 스냅 슬라이더) ══ */}
+      <section className="container relative z-10 -mt-14 md:-mt-24 pb-12 md:pb-24">
+        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory sf-no-scrollbar -mx-5 px-5 pb-1 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-3 sm:gap-7 sm:overflow-visible">
           {featured.map((p) => (
-            <ProductCard key={p.slug} product={p} price={price(p.slug)} variant="featured" />
+            <div key={p.slug} className="min-w-[80%] snap-center sm:min-w-0">
+              <ProductCard product={p} price={price(p.slug)} variant="featured" />
+            </div>
           ))}
         </div>
+        <p className="mt-3 text-center text-[11px] text-sf-mute sm:hidden">← 옆으로 넘겨보세요 →</p>
       </section>
 
       {/* ══ 신뢰 영역 — 짙은 네이비, 사실만 ══ */}
       <section className="bg-sf-navy">
-        <div className="container py-16 md:py-24">
+        <div className="container py-12 md:py-24">
           <SectionHead
             dark
             eyebrow="WHY 운명PT"
@@ -159,7 +162,7 @@ export default async function HomePage() {
       </section>
 
       {/* ══ 고민별 탐색 — 대형 2×2 타일 ══ */}
-      <section className="container py-16 md:py-28">
+      <section className="container py-12 md:py-28">
         <SectionHead
           eyebrow="CONCERN"
           title="지금, 어떤 고민인가요?"
@@ -225,7 +228,7 @@ export default async function HomePage() {
 
       {/* ══ 사주 섹션 — 종이 질감 + 코스맵 ══ */}
       <section className="sf-paper border-y border-sf-line">
-        <div className="container py-16 md:py-28">
+        <div className="container py-12 md:py-28">
           <SectionHead
             eyebrow="SAJU"
             title="사주 — 반복 패턴의 측정"
@@ -250,17 +253,19 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <MobileRow>
             {sajuRow.map((p) => (
-              <ProductCard key={p.slug} product={p} price={price(p.slug)} variant="standard" />
+              <div key={p.slug} className="min-w-[74%] snap-center sm:min-w-0">
+                <ProductCard product={p} price={price(p.slug)} variant="standard" />
+              </div>
             ))}
-          </div>
+          </MobileRow>
         </div>
       </section>
 
       {/* ══ 연애·재회 — 와인빛 다크 섹션 ══ */}
       <section className="sf-wine-sky">
-        <div className="container py-16 md:py-28">
+        <div className="container py-12 md:py-28">
           <SectionHead
             dark
             eyebrow="LOVE & REUNION"
@@ -270,11 +275,13 @@ export default async function HomePage() {
             linkLabel="연애·궁합 전체"
             darkLink
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <MobileRow>
             {loveRow.map((p) => (
-              <ProductCard key={p.slug} product={p} price={price(p.slug)} variant="standard" />
+              <div key={p.slug} className="min-w-[74%] snap-center sm:min-w-0">
+                <ProductCard product={p} price={price(p.slug)} variant="standard" />
+              </div>
             ))}
-          </div>
+          </MobileRow>
         </div>
       </section>
 
@@ -291,14 +298,14 @@ export default async function HomePage() {
             linkLabel="타로 전체 보기"
             darkLink
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory sf-no-scrollbar -mx-5 px-5 pb-1 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible">
             {tarotRow.map((p) => {
               const n = p.slug === "tarot-daily" ? 1 : p.slug === "tarot-inner-mind" ? 3 : 5;
               return (
                 <Link
                   key={p.slug}
                   href={`/products/${p.slug}`}
-                  className="group relative overflow-hidden rounded-3xl border border-sf-gold/25 bg-white/[0.04] p-7 md:p-8 text-center transition-all duration-300 hover:border-sf-gold/70 hover:bg-white/[0.07] hover:-translate-y-1"
+                  className="group relative min-w-[80%] snap-center md:min-w-0 overflow-hidden rounded-3xl border border-sf-gold/25 bg-white/[0.04] p-6 md:p-8 text-center transition-all duration-300 hover:border-sf-gold/70 hover:bg-white/[0.07] hover:-translate-y-1"
                 >
                   <TarotFan count={n as 1 | 3 | 5} className="mx-auto h-[150px] w-full max-w-[260px] transition-transform duration-500 group-hover:scale-[1.06]" />
                   <p className="mt-5 text-[13px] font-bold tracking-widest text-sf-gold">{n}장 리딩</p>
@@ -319,7 +326,7 @@ export default async function HomePage() {
       </section>
 
       {/* ══ 저가 입문 — 가격 사다리 ══ */}
-      <section className="container py-16 md:py-28">
+      <section className="container py-12 md:py-28">
         <SectionHead
           eyebrow="START LIGHT"
           title="처음이라면, 가볍게 시작하세요"
@@ -328,7 +335,7 @@ export default async function HomePage() {
         <div className="relative">
           {/* 사다리 연결선 (PC) */}
           <div className="hidden md:block absolute top-1/2 inset-x-[8%] h-[2px] bg-gradient-to-r from-sf-line via-sf-amber/60 to-sf-amber" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {entryRow.map((p, i) => (
               <Link
                 key={p.slug}
@@ -355,7 +362,7 @@ export default async function HomePage() {
 
       {/* ══ 결과 예시 — 구매 결정 핵심 섹션 ══ */}
       <section className="bg-sf-navy">
-        <div className="container py-16 md:py-28">
+        <div className="container py-12 md:py-28">
           <SectionHead
             dark
             eyebrow="SAMPLE"
@@ -392,7 +399,7 @@ export default async function HomePage() {
       </section>
 
       {/* ══ 이용 과정 — 프로세스 타임라인 ══ */}
-      <section className="container py-16 md:py-28">
+      <section className="container py-12 md:py-28">
         <SectionHead eyebrow="HOW IT WORKS" title="이용 방법" desc="상품 선택부터 결과 확인까지 4단계입니다." />
         <ol className="relative grid grid-cols-1 sm:grid-cols-4 gap-6 md:gap-4">
           {/* 연결선 */}
@@ -425,7 +432,7 @@ export default async function HomePage() {
       {/* ══ 실제 후기 (0건이면 자동 숨김) ══ */}
       {reviews.length > 0 && (
         <section className="sf-paper border-y border-sf-line">
-          <div className="container py-16 md:py-24">
+          <div className="container py-12 md:py-24">
             <SectionHead eyebrow="REVIEWS" title="실제 이용 후기" desc="구매 고객이 직접 남긴 후기만 노출합니다." />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {reviews.map((r) => (
@@ -446,7 +453,7 @@ export default async function HomePage() {
       )}
 
       {/* ══ FAQ ══ */}
-      <section className="container py-16 md:py-28 max-w-4xl">
+      <section className="container py-12 md:py-28 max-w-4xl">
         <SectionHead eyebrow="FAQ" title="자주 묻는 질문" />
         <Faq items={HOME_FAQ} />
       </section>
@@ -455,7 +462,7 @@ export default async function HomePage() {
       <section className="relative sf-night-sky overflow-hidden border-t border-white/5">
         <SajuWheel className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] md:w-[760px] opacity-30 animate-sf-spin-slow" />
         <StarField className="absolute inset-x-0 top-0 w-full h-full opacity-50" />
-        <div className="container relative py-20 md:py-32 text-center">
+        <div className="container relative py-16 md:py-32 text-center">
           <p className="text-[12px] font-bold tracking-[0.3em] text-sf-gold mb-4">START NOW</p>
           <p className="text-[30px] md:text-[44px] font-extrabold text-white leading-tight">
             1분이면, 내 반복 패턴이 보입니다
@@ -479,6 +486,15 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+// 모바일: 가로 스냅 슬라이더 / sm 이상: 그리드
+function MobileRow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory sf-no-scrollbar -mx-5 px-5 pb-1 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 sm:overflow-visible">
+      {children}
     </div>
   );
 }
