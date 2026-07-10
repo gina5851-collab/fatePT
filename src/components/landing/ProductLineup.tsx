@@ -12,11 +12,12 @@ export async function ProductLineup() {
       .from("products")
       .select("slug, name, description, price")
       .eq("is_active", true)
+      .eq("service_type", "saju") // 사주 상품만 — 타로 상품은 /tarot 에서만 노출
       .order("display_order", { ascending: true });
     products = data;
   } else {
     products = productsSeed
-      .filter((p) => p.is_active)
+      .filter((p) => p.is_active && (p.service_type ?? "saju") === "saju")
       .sort((a, b) => a.display_order - b.display_order)
       .map(({ slug, name, description, price }) => ({ slug, name, description, price }));
   }
