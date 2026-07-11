@@ -52,13 +52,13 @@ export const PRODUCT_THEMES: Record<string, ProductTheme> = {
     art: "reunion",
     categoryLabel: "사주 · 재회",
   },
-  "tarot-daily": {
+  "tarot-one-card": {
     bg: "bg-gradient-to-b from-[#141d3a] via-[#0d1530] to-[#070d1e]",
     accentText: "text-sf-gold",
     art: "tarot-1",
     categoryLabel: "타로 · 1장",
   },
-  "tarot-inner-mind": {
+  "tarot-three-card": {
     bg: "bg-gradient-to-b from-[#231740] via-[#191033] to-[#0d081f]",
     accentText: "text-sf-gold",
     art: "tarot-3",

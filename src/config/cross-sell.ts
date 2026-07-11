@@ -15,13 +15,13 @@ export type CrossSellItem = {
 
 // 타로 결과 하단 → 관련 사주 상품 추천
 export const TAROT_TO_SAJU: Record<string, CrossSellItem[]> = {
-  "tarot-inner-mind": [
+  "tarot-three-card": [
     {
       slug: "crush-kit",
       href: "/products/crush-kit",
       label: "짝사랑 키트 보기",
       blurb: "그 사람 마음과 다가갈 타이밍을 사주로 더 깊이 진단해보세요.",
-      source: "xsell_tarot-inner-mind",
+      source: "xsell_tarot-three-card",
     },
   ],
   "tarot-celtic-cross": [
@@ -40,13 +40,13 @@ export const TAROT_TO_SAJU: Record<string, CrossSellItem[]> = {
       source: "xsell_tarot-celtic-cross",
     },
   ],
-  "tarot-daily": [
+  "tarot-one-card": [
     {
       slug: "inbody",
       href: "/products/inbody",
       label: "운명 인바디 보기",
       blurb: "하루 메시지를 넘어, 타고난 기질을 한 장으로 진단해보세요.",
-      source: "xsell_tarot-daily",
+      source: "xsell_tarot-one-card",
     },
   ],
 };
@@ -55,8 +55,8 @@ export const TAROT_TO_SAJU: Record<string, CrossSellItem[]> = {
 export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
   "love-session": [
     {
-      slug: "tarot-inner-mind",
-      href: "/products/tarot-inner-mind",
+      slug: "tarot-three-card",
+      href: "/products/tarot-three-card",
       label: "3 카드 타로 보기",
       blurb: "나·상대방·관계 구성의 카드 3장으로 지금 마음의 기류를 짚어보세요.",
       source: "xsell_love-session",
@@ -64,8 +64,8 @@ export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
   ],
   "crush-kit": [
     {
-      slug: "tarot-inner-mind",
-      href: "/products/tarot-inner-mind",
+      slug: "tarot-three-card",
+      href: "/products/tarot-three-card",
       label: "3 카드 타로 보기",
       blurb: "나·상대방·관계 구성으로 그 사람의 지금 마음을 가볍게 들여다볼 수 있어요.",
       source: "xsell_crush-kit",
@@ -84,7 +84,7 @@ export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
 
 // 기본값 — 매핑에 없을 때 타로관으로 유도(사주 결과 공통)
 export const DEFAULT_SAJU_TO_TAROT: CrossSellItem = {
-  slug: "tarot-daily",
+  slug: "tarot-one-card",
   href: "/tarot",
   label: "타로로도 물어보기",
   blurb: "카드가 짚어주는 오늘의 메시지, 타로관에서 만나보세요.",

@@ -63,7 +63,7 @@ const CATEGORIES = [
       "새로운 일을 시작하기 전 점검할 것",
       "지금은 확장보다 정리가 필요한 시기일까?",
     ],
-    productSlug: "tarot-daily",
+    productSlug: "tarot-one-card",
     productLabel: "오늘의 타로 →",
   },
   {

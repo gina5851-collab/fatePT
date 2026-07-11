@@ -64,7 +64,7 @@ export default async function TarotPage() {
         {/* 타로 상품 — 골드 카드 비주얼, 1/3/10장(켈틱 크로스) 차이 강조 */}
         <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
           {visible.map((p) => {
-            const n = p.slug === "tarot-daily" ? 1 : p.slug === "tarot-inner-mind" ? 3 : 10;
+            const n = p.slug === "tarot-one-card" ? 1 : p.slug === "tarot-three-card" ? 3 : 10;
             const priceV = resolvePrice(dbMap.get(p.slug), p.priceHint);
             return (
               <Link

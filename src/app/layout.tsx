@@ -50,7 +50,7 @@ const PRIMARY_NAV: { label: string; href: string }[] = [
 const SECONDARY_NAV: { label: string; href: string }[] = [
   { label: "종합운세", href: "/products/premium-saju" },
   { label: "돈·직장", href: "/products?tab=money" },
-  { label: "오늘의 운세", href: "/products/tarot-daily" },
+  { label: "오늘의 운세", href: "/products/tarot-one-card" },
   { label: "자기이해", href: "/products?tab=self" },
   { label: "콘텐츠", href: "/contents" },
 ];

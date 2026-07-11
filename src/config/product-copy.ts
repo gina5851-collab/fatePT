@@ -167,7 +167,7 @@ export const PRODUCT_COPY: Record<string, ProductCopy> = {
       {
         trigger: "그 사람의 지금 마음이 궁금하다면",
         suggestion: "나·상대방·관계 구성의 카드 3장으로 현재 마음의 기류를 짚어볼 수 있어요.",
-        slug: "tarot-inner-mind",
+        slug: "tarot-three-card",
         label: "3 카드 타로 보기",
       },
       {

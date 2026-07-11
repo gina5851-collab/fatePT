@@ -147,7 +147,7 @@ const CATEGORY_DATA: Record<
         body: "새로운 것을 추가하고 싶은데 기존 것들이 정리되지 않은 느낌이 있다면 — 모든 시기가 확장의 시기는 아닙니다. 지금이 정리의 시기인지 확장의 시기인지를 이해하면 에너지를 더 잘 쓸 수 있습니다.",
       },
     ],
-    productSlug: "tarot-daily",
+    productSlug: "tarot-one-card",
     productName: "오늘의 타로",
     productCta: "오늘의 선택, 카드 한 장으로 확인하기 →",
   },

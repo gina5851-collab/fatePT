@@ -34,7 +34,7 @@ export type TarotProduct = {
 
 export const TAROT_PRODUCTS: TarotProduct[] = [
   {
-    slug: "tarot-daily",
+    slug: "tarot-one-card",
     name: "원 카드 타로",
     description: "한 장으로 받는 핵심 메시지와 오늘의 조언",
     price: 1000,
@@ -46,7 +46,7 @@ export const TAROT_PRODUCTS: TarotProduct[] = [
     intro: "카드 한 장이 지금 흐름의 핵심 메시지와 오늘의 조언을 짚어줍니다. 결제 후 바로 확인할 수 있어요.",
   },
   {
-    slug: "tarot-inner-mind",
+    slug: "tarot-three-card",
     name: "3 카드 타로",
     description: "세 장으로 읽는 상황의 앞뒤 — 구성은 내가 선택",
     price: 3800,

@@ -63,13 +63,13 @@ export default async function HomePage() {
       .map((s) => products.find((p) => p.slug === s))
       .filter((p): p is NonNullable<typeof p> => !!p);
 
-  const featured = bySlug(["premium-saju", "tarot-daily", "reunion-check"]);
+  const featured = bySlug(["premium-saju", "tarot-one-card", "reunion-check"]);
   const sajuRow = bySlug(["free-taste", "inbody", "crush-kit", "premium-saju"]);
-  const loveRow = bySlug(["crush-kit", "reunion-check", "tarot-inner-mind", "tarot-celtic-cross"]);
-  const tarotRow = bySlug(["tarot-daily", "tarot-inner-mind", "tarot-celtic-cross"]);
-  const entryRow = bySlug(["free-taste", "tarot-daily", "inbody"]);
+  const loveRow = bySlug(["crush-kit", "reunion-check", "tarot-three-card", "tarot-celtic-cross"]);
+  const tarotRow = bySlug(["tarot-one-card", "tarot-three-card", "tarot-celtic-cross"]);
+  const entryRow = bySlug(["free-taste", "tarot-one-card", "inbody"]);
   const sajuSampleProduct = getCatalogProduct("premium-saju");
-  const tarotSampleProduct = getCatalogProduct("tarot-inner-mind");
+  const tarotSampleProduct = getCatalogProduct("tarot-three-card");
 
   // 실제 후기만 — 0건이면 섹션 자동 숨김
   let reviews: Review[] = [];
@@ -300,7 +300,7 @@ export default async function HomePage() {
           />
           <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory sf-no-scrollbar -mx-5 px-5 pb-1 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible">
             {tarotRow.map((p) => {
-              const n = p.slug === "tarot-daily" ? 1 : p.slug === "tarot-inner-mind" ? 3 : 10;
+              const n = p.slug === "tarot-one-card" ? 1 : p.slug === "tarot-three-card" ? 3 : 10;
               return (
                 <Link
                   key={p.slug}
@@ -390,10 +390,10 @@ export default async function HomePage() {
                 <p className="text-[15px] md:text-[17px] font-extrabold text-white mb-4">🃏 타로 리딩 예시</p>
                 <SampleViewer sample={tarotSampleProduct.sample} />
                 <Link
-                  href="/products/tarot-inner-mind"
+                  href="/products/tarot-three-card"
                   className="mt-5 block rounded-xl border border-sf-gold/60 py-3.5 text-center text-[14.5px] font-extrabold text-sf-gold hover:bg-sf-gold/10"
                 >
-                  3 카드 타로 {formatKRW(price("tarot-inner-mind"))} · 바로 확인 →
+                  3 카드 타로 {formatKRW(price("tarot-three-card"))} · 바로 확인 →
                 </Link>
               </div>
             )}
