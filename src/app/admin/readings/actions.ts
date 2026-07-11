@@ -18,10 +18,11 @@ function orderIdOf(formData: FormData): string {
 }
 
 // AI 초안 생성 / 재생성 (기존 초안 덮어씀)
+// force: 관리자는 draft/published 등 상태 무관 재생성 — 자동 재개 경로의 claim 제한을 받지 않는다
 export async function generateDraftAction(formData: FormData) {
   await assertAdmin();
   const orderId = orderIdOf(formData);
-  await generateDraft(orderId);
+  await generateDraft(orderId, { force: true });
   revalidatePath(`/admin/readings/${orderId}`);
   revalidatePath("/admin/readings");
 }

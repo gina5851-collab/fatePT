@@ -191,8 +191,11 @@ check("마이페이지: 타로 결과 링크 존재", mypageOrders.includes("/ta
 // 관리자 로그인 없이 결제한 본인이 미발행 리딩을 복구한다. 결제·주문·드로우는
 // 절대 새로 만들지 않는다 (990원 실결제 장애 복구 경로).
 const recoverRoute = readFileSync("src/app/api/readings/[service]/recover/route.ts", "utf8");
-check("recover: 로그인 세션 필수 (401)", recoverRoute.includes("getUser") && recoverRoute.includes("401"));
-check("recover: 본인 주문만 (user_id 일치, 403)", recoverRoute.includes("order.user_id !== user.id") && recoverRoute.includes("403"));
+check("recover: orderId 경로는 로그인 필수 (401)",
+  /if \(parsed\.data\.orderId\)[\s\S]*getUser/.test(recoverRoute) && recoverRoute.includes("401"));
+check("recover: orderId 경로는 본인 주문만 (user_id 일치, 403)", recoverRoute.includes("order.user_id !== user.id") && recoverRoute.includes("403"));
+check("recover: publicToken 경로는 무로그인 복구 허용 (비밀 URL 자체가 인증 — 결과 페이지와 동일 권한)",
+  recoverRoute.indexOf("getUser") > recoverRoute.indexOf("if (parsed.data.orderId)"));
 check("recover: paid 아닌 주문 거부 (409)", recoverRoute.includes('order.status !== "paid"') && recoverRoute.includes("409"));
 check("recover: published 는 기존 결과 반환 (재생성 없음)",
   recoverRoute.includes('"published"') && recoverRoute.includes("recovered: false"));
@@ -220,11 +223,11 @@ check("결과 대기 페이지: 복구 동작 포함", resultPage.includes("Taro
 check("결과 페이지: URL 접속 자동 복구 (runPaidReading)", resultPage.includes("runPaidReading"));
 check("결과 페이지: paid 에서만 복구 — 미결제는 비노출 유지",
   resultPage.indexOf('order.status !== "paid"') < resultPage.indexOf("await runPaidReading"));
-check("결과 페이지: drawn/failed/없음 만 재생성 대상",
+check("결과 페이지: drawn/failed/없음 재생성 대상",
   resultPage.includes('reading.status === "drawn"') && resultPage.includes('reading.status === "failed"'));
 check("결과 페이지: draft 는 발행만 (LLM 재호출 없음)", resultPage.includes("publishReading"));
-check("결과 페이지: generating 은 중복 실행 안 함 (재생성 조건에 미포함)",
-  !resultPage.includes('reading.status === "generating"'));
+check("결과 페이지: 고착 generating 도 재개 대상 (신선한 생성은 엔진 claim 이 보호)",
+  resultPage.includes('reading.status === "generating"'));
 check("결과 페이지: LLM 시간 대비 maxDuration 60", resultPage.includes("maxDuration = 60"));
 check("결과 페이지: Toss·주문·결제 로직 미호출",
   !resultPage.includes("confirmTossPayment") && !resultPage.includes('from("orders").insert') && !resultPage.includes(".update("));
@@ -234,6 +237,27 @@ check("복구 버튼: 실패 시 재시도만 (재결제 유도 없음)",
   !recoverButton.includes("결제하기") &&
   !recoverButton.includes("/checkout") &&
   !recoverButton.includes("/products/"));
+
+// ── 10. 동시성·재개 — 같은 요청이 반복/동시에 와도 reading 1개·LLM 생성 1회 ──
+check("engine: 'generating' 전이는 원자적 claim (drawn/failed 만)", engineSrc.includes("status.in.(drawn,failed)"));
+check("engine: 신선한 generating 은 가로채지 않음 — 고착(updated_at 경과)만 재개",
+  engineSrc.includes("status.eq.generating,updated_at.lt.") && engineSrc.includes("GENERATING_STALE_MS"));
+check("engine: 고착 기준 > 함수 maxDuration 60초 (진행 중 생성 오탐 방지)",
+  /GENERATING_STALE_MS = 3 \* 60 \* 1000/.test(engineSrc));
+check("engine: claim 실패 시 중복 생성 없이 'generating' 반환",
+  engineSrc.includes('return { status: "generating" }'));
+check("engine: 드로우 경쟁은 먼저 쓴 쪽이 승리 (ON CONFLICT DO NOTHING — 재드로우·덮어쓰기 없음)",
+  engineSrc.includes("ignoreDuplicates: true"));
+check("engine: 빈 draw_record 만 조건부 채움 (기존 드로우 불가침)",
+  engineSrc.includes('.is("draw_record", null)'));
+check("engine: runPaidReading — published 는 기존 결과 단락 반환",
+  engineSrc.includes('existing?.status === "published"') && engineSrc.includes("existing.final_result"));
+check("engine: runPaidReading — draft 는 기존 초안 발행만 (LLM 재호출 없음)",
+  engineSrc.includes('existing?.status === "draft"') && engineSrc.includes("existing.draft_result"));
+const adminActions = readFileSync("src/app/admin/readings/actions.ts", "utf8");
+check("admin: 재생성은 force 전용 (자동 재개 경로는 claim 제한 유지)", adminActions.includes("{ force: true }"));
+check("recover: 고착 generating 재개도 엔진 위임 (경로 자체 재시도 로직 없음)",
+  !recoverRoute.includes("GENERATING_STALE_MS") && recoverRoute.includes("runPaidReading"));
 
 // ── 결과 ──
 if (failed > 0) {
