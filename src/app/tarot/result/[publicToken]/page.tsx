@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createServiceClient } from "@/lib/supabase/server";
+import { runPaidReading, publishReading } from "@/lib/readings/engine";
 import { getCard } from "@/lib/readings/services/tarot/cards";
 import { TarotCard } from "@/components/tarot/TarotCard";
 import { TarotRecoverButton } from "@/components/tarot/TarotRecoverButton";
@@ -9,6 +10,8 @@ import { sajuCrossSellForTarot } from "@/config/cross-sell";
 import type { DrawRecord, ReadingResult } from "@/lib/readings/types";
 
 export const dynamic = "force-dynamic";
+// 접속 시 자동 복구(LLM 해석 생성)가 실행될 수 있어 confirm 과 동일하게 60초로 확장.
+export const maxDuration = 60;
 export const metadata: Metadata = { title: "타로 결과", robots: { index: false } };
 
 const GOLD = "#c9a24b";
@@ -35,7 +38,7 @@ export default async function TarotResultPage({ params }: { params: Promise<{ pu
     .select("payload")
     .eq("order_id", order.id)
     .maybeSingle();
-  const { data: reading } = await service
+  let { data: reading } = await service
     .from("readings")
     .select("draw_record, final_result, status")
     .eq("order_id", order.id)
@@ -51,6 +54,31 @@ export default async function TarotResultPage({ params }: { params: Promise<{ pu
         message="결제가 아직 확인되지 않았습니다. 결제를 완료하시면 결과를 확인할 수 있어요."
       />
     );
+  }
+
+  // ── URL 접속만으로 자동 복구 (paid + 미발행) ──
+  // public_token 은 결제자 본인에게만 발급되는 비공개 URL 이다.
+  // 엔진이 idempotent 보장: 기존 드로우 재사용(재드로우 없음), readings 는
+  // order_id unique + upsert 로 1행 유지, Toss 승인·주문·결제 로직은 호출하지 않는다.
+  // generating(생성 진행 중)은 중복 실행하지 않고 아래 준비 중 화면으로 넘어간다.
+  const needsRecovery = !reading || reading.status === "drawn" || reading.status === "failed";
+  const needsPublishOnly = reading?.status === "draft";
+  if (needsRecovery || needsPublishOnly) {
+    try {
+      if (needsPublishOnly) {
+        await publishReading(order.id); // 초안 존재 — 발행만 (LLM 재호출 없음)
+      } else {
+        await runPaidReading(order.id); // 없음/드로우만/실패 — 기존 카드로 해석 생성·발행
+      }
+      const { data: refreshed } = await service
+        .from("readings")
+        .select("draw_record, final_result, status")
+        .eq("order_id", order.id)
+        .maybeSingle();
+      if (refreshed) reading = refreshed;
+    } catch {
+      // 실패해도 아래 준비 중 화면 + 수동 복구 버튼으로 안내
+    }
   }
 
   // 미발행(생성 중/실패 등 예외 상태) → 준비 중 안내 + 본인 복구 동작 (기준 v1: 전 상품 자동 발행)
