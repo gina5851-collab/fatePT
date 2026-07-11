@@ -61,10 +61,10 @@ export default async function TarotPage() {
           </div>
         </div>
 
-        {/* 타로 상품 — 골드 카드 비주얼, 1/3/5장 차이 강조 */}
+        {/* 타로 상품 — 골드 카드 비주얼, 1/3/10장(켈틱 크로스) 차이 강조 */}
         <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
           {visible.map((p) => {
-            const n = p.slug === "tarot-daily" ? 1 : p.slug === "tarot-inner-mind" ? 3 : 5;
+            const n = p.slug === "tarot-one-card" ? 1 : p.slug === "tarot-three-card" ? 3 : 10;
             const priceV = resolvePrice(dbMap.get(p.slug), p.priceHint);
             return (
               <Link
@@ -73,16 +73,19 @@ export default async function TarotPage() {
                 className="group relative overflow-hidden rounded-3xl border border-sf-gold/25 bg-white/[0.04] p-7 md:p-8 text-center transition-all duration-300 hover:border-sf-gold/70 hover:bg-white/[0.07] hover:-translate-y-1"
               >
                 <TarotFan
-                  count={n as 1 | 3 | 5}
+                  count={n as 1 | 3 | 10}
                   className="mx-auto h-[160px] w-full max-w-[270px] transition-transform duration-500 group-hover:scale-[1.06]"
                 />
                 <p className="mt-5 text-[13px] font-bold tracking-widest text-sf-gold">{n}장 리딩</p>
                 <p className="mt-1.5 text-[22px] md:text-[24px] font-extrabold text-white">{p.displayName}</p>
                 <p className="mt-2 text-[14px] text-[#aab6cf] leading-relaxed">{p.shortDescription}</p>
-                <p className="mt-5 text-[28px] font-mono font-extrabold text-sf-gold">{formatKRW(priceV)}</p>
-                <p className="mt-1 text-[13px] text-[#93a1c0]">
-                  {p.delivery.mode === "auto" ? "⚡ 결제 후 바로 확인" : "✍️ 검수 후 24시간 내 발행"}
+                <p className="mt-5 flex items-baseline justify-center gap-2 text-[28px] font-mono font-extrabold text-sf-gold">
+                  {p.originalPrice && p.originalPrice > priceV ? (
+                    <span className="text-[15px] text-white/40 line-through">{formatKRW(p.originalPrice)}</span>
+                  ) : null}
+                  {formatKRW(priceV)}
                 </p>
+                <p className="mt-1 text-[13px] text-[#93a1c0]">⚡ {p.delivery.timeText}</p>
                 <span className="mt-6 block rounded-xl bg-sf-amber py-3.5 text-[14.5px] font-extrabold text-sf-navy group-hover:opacity-95">
                   카드 뽑으러 가기 →
                 </span>

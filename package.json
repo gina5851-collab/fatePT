@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "test:tarot": "tsx scripts/test-tarot-standard.ts",
     "seed:products": "tsx scripts/seed-products.ts",
     "create:admin": "tsx scripts/create-admin.ts"
   },

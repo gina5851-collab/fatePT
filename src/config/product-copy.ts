@@ -166,9 +166,9 @@ export const PRODUCT_COPY: Record<string, ProductCopy> = {
     upsell: [
       {
         trigger: "그 사람의 지금 마음이 궁금하다면",
-        suggestion: "카드 3장으로 그 사람의 현재 속마음을 가볍게 짚어볼 수 있어요.",
-        slug: "tarot-inner-mind",
-        label: "그 사람의 속마음 타로 보기",
+        suggestion: "나·상대방·관계 구성의 카드 3장으로 현재 마음의 기류를 짚어볼 수 있어요.",
+        slug: "tarot-three-card",
+        label: "3 카드 타로 보기",
       },
       {
         trigger: "관계를 넘어 내 패턴 전체가 궁금하다면",
@@ -235,10 +235,10 @@ export const PRODUCT_COPY: Record<string, ProductCopy> = {
     disclaimer: "재회를 보장하거나 상대 마음을 단정하지 않습니다. 가능성과 방향을 진단하는 리포트입니다.",
     upsell: [
       {
-        trigger: "관계의 지금 흐름을 한 번 더 확인하고 싶다면",
-        suggestion: "카드 5장으로 두 사람 관계의 현재 좌표와 방향을 짚어볼 수 있어요.",
-        slug: "tarot-relationship",
-        label: "우리 관계의 흐름 타로 보기",
+        trigger: "문제의 전체 구조를 한 번 더 펼쳐보고 싶다면",
+        suggestion: "정통 켈틱 크로스 10장으로 현재부터 최종 결과까지 한눈에 볼 수 있어요.",
+        slug: "tarot-celtic-cross",
+        label: "켈틱 크로스 타로 보기",
       },
     ],
   },

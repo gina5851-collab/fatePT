@@ -118,17 +118,23 @@ export function TarotCardBack({
   );
 }
 
-/** 타로 카드 팬 — 1/3/5장 차이를 시각화 */
-export function TarotFan({ count, className = "" }: { count: 1 | 3 | 5; className?: string }) {
-  const tilts = count === 1 ? [0] : count === 3 ? [-14, 0, 14] : [-26, -13, 0, 13, 26];
+/** 타로 카드 팬 — 1/3/10장(켈틱 크로스) 차이를 시각화 */
+export function TarotFan({ count, className = "" }: { count: 1 | 3 | 10; className?: string }) {
+  const tilts =
+    count === 1
+      ? [0]
+      : count === 3
+        ? [-14, 0, 14]
+        : [-36, -28, -20, -12, -4, 4, 12, 20, 28, 36];
+  const sizeCls = count === 10 ? "w-[17%] max-w-[64px] -mx-[3.5%]" : "w-[38%] max-w-[96px] -mx-[7%]";
   // 주의: 여기서 position 클래스를 하드코딩하지 않는다 — 호출부가 absolute 배치를 넘길 수 있음.
   return (
     <div className={`flex items-end justify-center ${className}`} aria-hidden>
       {tilts.map((t, i) => (
         <div
           key={i}
-          className="w-[38%] max-w-[96px] -mx-[7%]"
-          style={{ transform: `rotate(${t}deg) translateY(${Math.abs(t) * 0.9}px)`, zIndex: 10 - Math.abs(t) }}
+          className={sizeCls}
+          style={{ transform: `rotate(${t}deg) translateY(${Math.abs(t) * (count === 10 ? 0.55 : 0.9)}px)`, zIndex: 40 - Math.abs(t) }}
         >
           <TarotCardBack className="w-full h-auto drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)]" glow={t === 0} />
         </div>

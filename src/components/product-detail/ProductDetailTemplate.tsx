@@ -36,8 +36,8 @@ function HeroArt({ kind }: { kind: ArtKind }) {
       return <TarotFan count={1} className="absolute right-2 md:right-14 bottom-0 w-[110px] md:w-[220px] opacity-40 md:opacity-90" />;
     case "tarot-3":
       return <TarotFan count={3} className="absolute -right-6 md:right-8 bottom-0 w-[160px] md:w-[320px] opacity-40 md:opacity-90" />;
-    case "tarot-5":
-      return <TarotFan count={5} className="absolute -right-10 md:right-2 bottom-0 w-[190px] md:w-[380px] opacity-40 md:opacity-90" />;
+    case "tarot-10":
+      return <TarotFan count={10} className="absolute -right-10 md:right-2 bottom-0 w-[230px] md:w-[440px] opacity-40 md:opacity-90" />;
     case "reunion":
       return <ReunionLines className="absolute right-0 bottom-4 w-[70%] md:w-[520px] opacity-50 md:opacity-80" />;
     case "crush":

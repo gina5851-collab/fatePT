@@ -25,7 +25,7 @@ const HOME_FAQ = [
   },
   {
     q: "결과는 언제 받을 수 있나요?",
-    a: "사주 리포트와 오늘의 타로는 결제 후 바로 확인됩니다. 3장·5장 타로는 사람이 검수한 뒤 보통 24시간 이내에 발행돼요. 각 상품 상세에 제공 시간이 표시돼 있어요.",
+    a: "사주 리포트와 타로 모두 결제 즉시 자동 발행됩니다. 기다림 없이 바로 결과 페이지가 열리고, 링크로 언제든 다시 볼 수 있어요.",
   },
   {
     q: "태어난 시간을 몰라도 되나요?",
@@ -39,8 +39,8 @@ const HOME_FAQ = [
 
 // 신뢰 영역 — 허위 수치 없이 실제 사실만
 const TRUST_ITEMS = [
-  { icon: "⚡", title: "결제 후 바로", desc: "사주 리포트·오늘의 타로는 결제 즉시 온라인으로 결과를 확인합니다" },
-  { icon: "✍️", title: "검수 후 발행", desc: "3장·5장 타로는 초안을 사람이 검수해 24시간 이내 발행합니다" },
+  { icon: "⚡", title: "결제 후 바로", desc: "사주 리포트와 타로 전 상품, 결제 즉시 온라인으로 결과를 확인합니다" },
+  { icon: "🃏", title: "질문 반영 리딩", desc: "남긴 질문과 상황을 카드 해석에 그대로 반영합니다" },
   { icon: "∞", title: "영구 재열람", desc: "모든 결과는 전용 링크로 언제든 다시 열어볼 수 있습니다" },
   { icon: "🧭", title: "패턴 중심", desc: "'된다/안 된다' 단정 대신 반복 패턴과 선택 기준을 드립니다" },
   { icon: "💳", title: "카드·무통장", desc: "토스페이먼츠 카드 결제와 무통장입금을 지원합니다" },
@@ -63,13 +63,13 @@ export default async function HomePage() {
       .map((s) => products.find((p) => p.slug === s))
       .filter((p): p is NonNullable<typeof p> => !!p);
 
-  const featured = bySlug(["premium-saju", "tarot-daily", "reunion-check"]);
+  const featured = bySlug(["premium-saju", "tarot-one-card", "reunion-check"]);
   const sajuRow = bySlug(["free-taste", "inbody", "crush-kit", "premium-saju"]);
-  const loveRow = bySlug(["crush-kit", "reunion-check", "tarot-inner-mind", "tarot-relationship"]);
-  const tarotRow = bySlug(["tarot-daily", "tarot-inner-mind", "tarot-relationship"]);
-  const entryRow = bySlug(["free-taste", "tarot-daily", "inbody"]);
+  const loveRow = bySlug(["crush-kit", "reunion-check", "tarot-three-card", "tarot-celtic-cross"]);
+  const tarotRow = bySlug(["tarot-one-card", "tarot-three-card", "tarot-celtic-cross"]);
+  const entryRow = bySlug(["free-taste", "tarot-one-card", "inbody"]);
   const sajuSampleProduct = getCatalogProduct("premium-saju");
-  const tarotSampleProduct = getCatalogProduct("tarot-inner-mind");
+  const tarotSampleProduct = getCatalogProduct("tarot-three-card");
 
   // 실제 후기만 — 0건이면 섹션 자동 숨김
   let reviews: Review[] = [];
@@ -293,28 +293,31 @@ export default async function HomePage() {
             dark
             eyebrow="TAROT"
             title="지금 흐름을 비추는 카드"
-            desc="1장은 오늘의 방향, 3장은 그 사람의 마음, 5장은 관계의 구조까지."
+            desc="1장은 오늘의 방향, 3장은 상황의 앞뒤, 10장 켈틱 크로스는 문제의 전체 지도까지."
             href="/tarot"
             linkLabel="타로 전체 보기"
             darkLink
           />
           <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory sf-no-scrollbar -mx-5 px-5 pb-1 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible">
             {tarotRow.map((p) => {
-              const n = p.slug === "tarot-daily" ? 1 : p.slug === "tarot-inner-mind" ? 3 : 5;
+              const n = p.slug === "tarot-one-card" ? 1 : p.slug === "tarot-three-card" ? 3 : 10;
               return (
                 <Link
                   key={p.slug}
                   href={`/products/${p.slug}`}
                   className="group relative min-w-[80%] snap-center md:min-w-0 overflow-hidden rounded-3xl border border-sf-gold/25 bg-white/[0.04] p-6 md:p-8 text-center transition-all duration-300 hover:border-sf-gold/70 hover:bg-white/[0.07] hover:-translate-y-1"
                 >
-                  <TarotFan count={n as 1 | 3 | 5} className="mx-auto h-[150px] w-full max-w-[260px] transition-transform duration-500 group-hover:scale-[1.06]" />
+                  <TarotFan count={n as 1 | 3 | 10} className="mx-auto h-[150px] w-full max-w-[260px] transition-transform duration-500 group-hover:scale-[1.06]" />
                   <p className="mt-5 text-[13px] font-bold tracking-widest text-sf-gold">{n}장 리딩</p>
                   <p className="mt-1.5 text-[21px] md:text-[23px] font-extrabold text-white">{p.displayName}</p>
                   <p className="mt-1.5 text-[13.5px] text-[#aab6cf]">{p.shortDescription}</p>
-                  <p className="mt-4 text-[26px] font-mono font-bold text-sf-gold">{formatKRW(price(p.slug))}</p>
-                  <p className="mt-1 text-[12.5px] text-[#93a1c0]">
-                    {p.delivery.mode === "auto" ? "⚡ 결제 후 바로 확인" : "✍️ 검수 후 24시간 내 발행"}
+                  <p className="mt-4 flex items-baseline justify-center gap-2 text-[26px] font-mono font-bold text-sf-gold">
+                    {p.originalPrice && p.originalPrice > price(p.slug) ? (
+                      <span className="text-[14px] text-white/40 line-through">{formatKRW(p.originalPrice)}</span>
+                    ) : null}
+                    {formatKRW(price(p.slug))}
                   </p>
+                  <p className="mt-1 text-[12.5px] text-[#93a1c0]">⚡ {p.delivery.timeText}</p>
                   <span className="mt-5 block rounded-xl bg-sf-amber py-3 text-[14px] font-extrabold text-sf-navy group-hover:opacity-95">
                     카드 뽑으러 가기 →
                   </span>
@@ -330,7 +333,7 @@ export default async function HomePage() {
         <SectionHead
           eyebrow="START LIGHT"
           title="처음이라면, 가볍게 시작하세요"
-          desc="무료 → 990원 → 4,900원. 결과 스타일을 확인하고 깊게 들어가면 됩니다."
+          desc="무료 → 1,000원 → 4,900원. 결과 스타일을 확인하고 깊게 들어가면 됩니다."
         />
         <div className="relative">
           {/* 사다리 연결선 (PC) */}
@@ -343,7 +346,7 @@ export default async function HomePage() {
                 className="group relative rounded-2xl border border-sf-line bg-sf-panel p-6 md:p-7 text-center transition-all hover:border-sf-amber hover:shadow-[0_10px_36px_rgba(20,35,63,0.12)]"
               >
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-sf-navy text-sf-gold text-[11px] font-bold px-3 py-1">
-                  {i === 0 ? "STEP 1 · 무료" : i === 1 ? "STEP 2 · 990원" : "STEP 3 · 4,900원"}
+                  {i === 0 ? "STEP 1 · 무료" : i === 1 ? "STEP 2 · 1,000원" : "STEP 3 · 4,900원"}
                 </span>
                 <p className="mt-3 text-[19px] md:text-[21px] font-extrabold text-sf-ink">{p.displayName}</p>
                 <p className="mt-1.5 text-[13.5px] text-sf-body">{p.shortDescription}</p>
@@ -387,10 +390,10 @@ export default async function HomePage() {
                 <p className="text-[15px] md:text-[17px] font-extrabold text-white mb-4">🃏 타로 리딩 예시</p>
                 <SampleViewer sample={tarotSampleProduct.sample} />
                 <Link
-                  href="/products/tarot-inner-mind"
+                  href="/products/tarot-three-card"
                   className="mt-5 block rounded-xl border border-sf-gold/60 py-3.5 text-center text-[14.5px] font-extrabold text-sf-gold hover:bg-sf-gold/10"
                 >
-                  그 사람의 속마음 {formatKRW(price("tarot-inner-mind"))} · 24시간 내 발행 →
+                  3 카드 타로 {formatKRW(price("tarot-three-card"))} · 바로 확인 →
                 </Link>
               </div>
             )}
@@ -408,7 +411,7 @@ export default async function HomePage() {
             { t: "상품 선택", d: "고민에 맞는 리포트나 타로를 고릅니다" },
             { t: "정보 입력", d: "생년월일 또는 질문을 입력합니다" },
             { t: "결제", d: "카드 결제 또는 무통장입금" },
-            { t: "결과 확인", d: "즉시 확인 — 검수형은 24시간 내 발행" },
+            { t: "결과 확인", d: "결제 즉시 자동 발행 — 링크로 영구 소장" },
           ].map((s, i) => (
             <li key={s.t} className="relative text-center sm:px-2">
               <span className="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sf-navy text-sf-gold text-[20px] font-extrabold border-4 border-sf-bg shadow-[0_4px_16px_rgba(20,35,63,0.25)]">
@@ -421,10 +424,10 @@ export default async function HomePage() {
         </ol>
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
           <div className="rounded-2xl border border-sf-line bg-sf-panel px-5 py-4 text-[13.5px] text-sf-body">
-            <b className="text-sf-ink">⚡ 자동형</b> — 사주 리포트 · 오늘의 타로 1장. 결제 즉시 결과 페이지가 열립니다.
+            <b className="text-sf-ink">⚡ 즉시 발행</b> — 사주 리포트와 타로 전 상품, 결제 즉시 결과 페이지가 열립니다.
           </div>
           <div className="rounded-2xl border border-sf-line bg-sf-panel px-5 py-4 text-[13.5px] text-sf-body">
-            <b className="text-sf-ink">✍️ 검수형</b> — 타로 3장·5장. 초안을 사람이 다듬어 보통 24시간 내 발행합니다.
+            <b className="text-sf-ink">∞ 영구 소장</b> — 결과는 전용 링크와 마이페이지에서 언제든 다시 열 수 있습니다.
           </div>
         </div>
       </section>

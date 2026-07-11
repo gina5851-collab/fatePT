@@ -15,38 +15,38 @@ export type CrossSellItem = {
 
 // 타로 결과 하단 → 관련 사주 상품 추천
 export const TAROT_TO_SAJU: Record<string, CrossSellItem[]> = {
-  "tarot-inner-mind": [
+  "tarot-three-card": [
     {
       slug: "crush-kit",
       href: "/products/crush-kit",
       label: "짝사랑 키트 보기",
       blurb: "그 사람 마음과 다가갈 타이밍을 사주로 더 깊이 진단해보세요.",
-      source: "xsell_tarot-inner-mind",
+      source: "xsell_tarot-three-card",
     },
   ],
-  "tarot-relationship": [
+  "tarot-celtic-cross": [
     {
       slug: "premium-saju",
       href: "/products/premium-saju",
       label: "전체 사주 리포트 보기",
-      blurb: "관계를 포함한 내 반복 패턴 전체를 사주로 길게 내다볼 수 있어요.",
-      source: "xsell_tarot-relationship",
+      blurb: "카드로 본 구조를, 사주의 반복 패턴으로 더 길게 내다볼 수 있어요.",
+      source: "xsell_tarot-celtic-cross",
     },
     {
       slug: "reunion-check",
       href: "/products/reunion-check",
       label: "재회 가능성 리포트 보기",
       blurb: "이미 멀어진 관계라면, 재회 가능성부터 사주로 짚어보세요.",
-      source: "xsell_tarot-relationship",
+      source: "xsell_tarot-celtic-cross",
     },
   ],
-  "tarot-daily": [
+  "tarot-one-card": [
     {
       slug: "inbody",
       href: "/products/inbody",
       label: "운명 인바디 보기",
       blurb: "하루 메시지를 넘어, 타고난 기질을 한 장으로 진단해보세요.",
-      source: "xsell_tarot-daily",
+      source: "xsell_tarot-one-card",
     },
   ],
 };
@@ -55,28 +55,28 @@ export const TAROT_TO_SAJU: Record<string, CrossSellItem[]> = {
 export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
   "love-session": [
     {
-      slug: "tarot-inner-mind",
-      href: "/products/tarot-inner-mind",
-      label: "그 사람의 속마음 타로",
-      blurb: "지금 이 순간 그 사람의 마음이 궁금하다면, 타로 3장으로 짚어보세요.",
+      slug: "tarot-three-card",
+      href: "/products/tarot-three-card",
+      label: "3 카드 타로 보기",
+      blurb: "나·상대방·관계 구성의 카드 3장으로 지금 마음의 기류를 짚어보세요.",
       source: "xsell_love-session",
     },
   ],
   "crush-kit": [
     {
-      slug: "tarot-inner-mind",
-      href: "/products/tarot-inner-mind",
-      label: "그 사람의 속마음 타로",
-      blurb: "짝사랑 상대의 지금 마음을 타로로 가볍게 들여다볼 수 있어요.",
+      slug: "tarot-three-card",
+      href: "/products/tarot-three-card",
+      label: "3 카드 타로 보기",
+      blurb: "나·상대방·관계 구성으로 그 사람의 지금 마음을 가볍게 들여다볼 수 있어요.",
       source: "xsell_crush-kit",
     },
   ],
   "reunion-check": [
     {
-      slug: "tarot-relationship",
-      href: "/products/tarot-relationship",
-      label: "우리 관계의 흐름 타로",
-      blurb: "재회 흐름이 궁금하다면, 관계의 현재 좌표를 타로 5장으로 확인해보세요.",
+      slug: "tarot-celtic-cross",
+      href: "/products/tarot-celtic-cross",
+      label: "켈틱 크로스 타로 보기",
+      blurb: "재회 문제의 전체 구조가 궁금하다면, 켈틱 크로스 10장으로 펼쳐보세요.",
       source: "xsell_reunion-check",
     },
   ],
@@ -84,7 +84,7 @@ export const SAJU_TO_TAROT: Record<string, CrossSellItem[]> = {
 
 // 기본값 — 매핑에 없을 때 타로관으로 유도(사주 결과 공통)
 export const DEFAULT_SAJU_TO_TAROT: CrossSellItem = {
-  slug: "tarot-daily",
+  slug: "tarot-one-card",
   href: "/tarot",
   label: "타로로도 물어보기",
   blurb: "카드가 짚어주는 오늘의 메시지, 타로관에서 만나보세요.",

@@ -13,7 +13,7 @@ const CATEGORY_ITEMS: { label: string; href: string }[] = [
   { label: "돈·직장", href: "/products?tab=money" },
   { label: "종합운세", href: "/products/premium-saju" },
   { label: "타로", href: "/tarot" },
-  { label: "오늘의 운세", href: "/products/tarot-daily" },
+  { label: "오늘의 운세", href: "/products/tarot-one-card" },
   { label: "전체 상품", href: "/products" },
 ];
 

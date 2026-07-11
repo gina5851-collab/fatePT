@@ -7,6 +7,8 @@
 // - isPublished=false 상품은 프런트에 노출하지 않는다 (DB is_active 와 별개의 프런트 스위치).
 // - 결제/주문/결과 생성 코드는 이 파일을 참조하지 않는다 (표시 전용).
 
+import { TAROT_PRODUCTS, type TarotProduct } from "@/lib/readings/services/tarot/config";
+
 export type ServiceType = "saju" | "tarot";
 
 /** 고민별 탐색 태그 — /products?tab= 필터와 헤더 카테고리가 사용 */
@@ -84,10 +86,199 @@ const FAQ_TAROT_QUESTION = {
   q: "질문을 꼭 적어야 하나요?",
   a: "선택 사항이에요. 다만 상황을 한두 줄이라도 적어주시면 카드 해석이 훨씬 구체적으로 나옵니다.",
 };
-const FAQ_TAROT_REVIEW = {
-  q: "'검수 후 발행'이 무슨 뜻인가요?",
-  a: "자동으로 나온 초안을 그대로 내보내지 않고, 발행 전에 사람이 내용을 확인하고 다듬은 뒤 보내드린다는 뜻이에요. 그만큼 시간이 걸리지만(보통 24시간 이내) 더 정돈된 결과를 받으실 수 있어요.",
+const FAQ_TAROT_INSTANT = {
+  q: "결과는 언제 나오나요?",
+  a: "결제 즉시 카드가 뽑히고 해석까지 자동 발행됩니다. 기다림 없이 바로 결과 페이지가 열려요.",
 };
+
+// =====================================================
+// 타로 — 상거래 값(이름·slug·가격·정상가·카드수·발행·순서)은
+// TAROT_PRODUCTS(단일 소스)에서 파생하고, 여기서는 마케팅 카피만 정의한다.
+// =====================================================
+type TarotCopy = Pick<
+  CatalogProduct,
+  | "concerns"
+  | "empathy"
+  | "questions"
+  | "forWhom"
+  | "resultToc"
+  | "sample"
+  | "process"
+  | "methodNote"
+  | "badge"
+  | "faq"
+  | "caution"
+  | "related"
+>;
+
+function tarotToCatalog(tp: TarotProduct, copy: TarotCopy): CatalogProduct {
+  return {
+    slug: tp.slug,
+    serviceType: "tarot",
+    displayName: tp.name,
+    shortDescription: tp.description,
+    headline: tp.headline,
+    priceHint: tp.price,
+    originalPrice: tp.originalPrice,
+    delivery:
+      tp.publish === "auto"
+        ? { mode: "auto", timeText: "결제 후 바로 확인" }
+        : { mode: "review", timeText: "검수 후 24시간 이내 발행" },
+    isPublished: true,
+    displayOrder: tp.display_order,
+    ...copy,
+  };
+}
+
+// 마케팅 카피 (상거래 값 없음 — 기준 v1)
+const TAROT_COPY: Record<string, TarotCopy> = {
+  "tarot-one-card": {
+    concerns: ["daily"],
+    badge: "입문",
+    empathy: [
+      "결정할 게 많은 날, 마음이 어수선한 날 — 긴 리포트까지는 필요 없고, 방향을 잡아줄 한 마디면 충분할 때가 있죠.",
+    ],
+    questions: [
+      "오늘 하루, 어디에 힘을 주고 어디서 힘을 빼야 할까?",
+      "지금 마음에 걸리는 그 일, 오늘 움직여도 될까?",
+    ],
+    forWhom: ["아침 루틴처럼 가볍게 하루 방향을 잡고 싶은 분", "타로를 처음 결제해 보는 분"],
+    resultToc: ["카드 1장 드로우", "핵심 메시지", "오늘의 조언"],
+    sample: {
+      kind: "tarot",
+      title: "결과 예시",
+      question: "오늘 미뤄둔 결정을 처리해도 될까요?",
+      cards: [
+        { position: "핵심 메시지", card: "완드 에이스 (정방향)", meaning: "새로 시작하는 에너지가 살아나는 날. 미뤄둔 일의 첫 단추를 끼우기에 좋은 흐름." },
+      ],
+      summary: "오늘은 '완벽한 준비'보다 '작은 착수'가 유리한 날이에요. 크게 벌이기보다 첫 걸음 하나만.",
+      action: "오늘 안에 그 일의 가장 작은 첫 단계 하나를 실행해 보세요.",
+    },
+    process: ["질문 입력 (선택)", "결제 (카드/무통장)", "카드 드로우 · 결과 바로 확인"],
+    methodNote: "결제 즉시 카드가 드로우되고, 카드 의미와 질문 맥락을 반영한 해석이 자동 발행됩니다.",
+    faq: [
+      FAQ_TAROT_INSTANT,
+      FAQ_TAROT_QUESTION,
+      { q: "매일 뽑아도 되나요?", a: "네. 원 카드 타로는 하루의 흐름을 읽는 용도라 매일 새로 받아보셔도 좋아요." },
+      FAQ_REFUND,
+      FAQ_NOT_PROPHECY,
+    ],
+    caution: "타로는 확정된 미래가 아니라 지금 흐름을 비추는 거울입니다. 가벼운 마음으로 활용해 주세요.",
+    related: ["tarot-three-card", "free-taste", "inbody"],
+  },
+
+  "tarot-three-card": {
+    concerns: ["love", "daily"],
+    empathy: [
+      "한 장으로는 부족하고, 긴 리딩까지는 부담스러울 때 — 상황의 흐름을 잡는 데는 세 장이 딱 좋아요.",
+      "시간의 흐름이 궁금하면 과거·현재·미래로, 그 사람 마음이 궁금하면 나·상대방·관계로, 일의 매듭이 궁금하면 원인·과정·결과로 — 구성을 직접 고르세요.",
+    ],
+    questions: [
+      "이 상황은 어디서 와서, 어디로 가고 있을까?",
+      "그 사람과 나, 그리고 우리 사이의 기류는?",
+      "이 문제의 원인과 결말은 어떻게 이어질까?",
+    ],
+    forWhom: [
+      "상황의 앞뒤 맥락을 한 번에 정리하고 싶은 분",
+      "상대의 마음과 관계의 방향이 헷갈리는 분",
+      "일이 꼬인 원인과 매듭을 확인하고 싶은 분",
+    ],
+    resultToc: [
+      "구성 선택 (과거/현재/미래 · 나/상대방/관계 · 원인/과정/결과)",
+      "카드 3장 드로우",
+      "자리별 카드 해석",
+      "카드 조합 종합 리딩",
+      "지금 할 수 있는 행동 조언",
+    ],
+    sample: {
+      kind: "tarot",
+      title: "결과 예시 — 나 / 상대방 / 관계 구성",
+      question: "요즘 연락이 뜸해진 그 사람, 마음이 식은 걸까요?",
+      cards: [
+        { position: "나", card: "소드 4 (정방향)", meaning: "지친 마음을 스스로 달래는 중. 확인받고 싶은 욕구가 커진 상태." },
+        { position: "상대방", card: "컵 2 (정방향)", meaning: "호감의 기반은 남아 있음. 표현이 줄었을 뿐 마음의 연결은 유지." },
+        { position: "관계", card: "펜타클 페이지 (역방향)", meaning: "서두르면 부담, 기다리며 신뢰를 쌓으면 회복되는 흐름." },
+      ],
+      summary: "식은 게 아니라 멈춰 서 있는 상태에 가까워요. 지금 필요한 건 확인 요구가 아니라 편안한 존재감입니다.",
+      action: "답장을 재촉하기보다, 부담 없는 안부 한 번으로 연결만 유지해 보세요.",
+    },
+    process: ["구성 선택 + 질문 입력 (선택)", "결제 (카드/무통장)", "카드 드로우 · 결과 바로 확인"],
+    methodNote: "고른 구성의 세 자리에 카드가 놓이고, 자리별 해석과 조합 종합·행동 조언까지 자동 발행됩니다.",
+    faq: [
+      { q: "구성은 어떻게 고르나요?", a: "결제 전 입력 화면에서 과거/현재/미래, 나/상대방/관계, 원인/과정/결과 중 하나를 선택합니다. 고민 종류에 맞는 구성을 고르면 세 자리의 의미가 그에 맞게 정해져요." },
+      FAQ_TAROT_INSTANT,
+      FAQ_TAROT_QUESTION,
+      FAQ_REFUND,
+      FAQ_NOT_PROPHECY,
+    ],
+    caution: "상대의 마음을 단정하지 않습니다. 지금 상황을 정리하고 다음 행동을 잡는 참고 자료입니다.",
+    related: ["crush-kit", "tarot-celtic-cross", "tarot-one-card"],
+  },
+
+  "tarot-celtic-cross": {
+    concerns: ["love", "reunion", "self"],
+    badge: "BEST",
+    empathy: [
+      "한두 장으로는 잡히지 않는 복잡한 고민이 있어요. 마음, 상황, 주변, 그리고 내가 모르는 나까지 얽혀 있을 때요.",
+      "켈틱 크로스는 수백 년을 이어온 정통 스프레드예요. 현재에서 최종 결과까지, 문제의 구조 전체를 열 자리에 펼쳐 읽습니다.",
+    ],
+    questions: [
+      "이 문제의 진짜 구조는 무엇이고, 무엇이 막고 있나?",
+      "내가 의식하지 못한 기반과 외부의 작용은?",
+      "이대로 가면 어디에 도착하고, 지금 무엇을 바꿔야 하나?",
+    ],
+    forWhom: [
+      "복잡하게 얽힌 고민을 한 번에 깊게 보고 싶은 분",
+      "관계·일·인생의 중요한 갈림길에 서 있는 분",
+      "가장 정통적인 풀 리딩을 경험하고 싶은 분",
+    ],
+    resultToc: [
+      "① 현재 상황",
+      "② 도전 또는 장애물",
+      "③ 의식적 목표",
+      "④ 무의식 또는 기반",
+      "⑤ 과거의 영향",
+      "⑥ 가까운 미래",
+      "⑦ 나의 접근 방식",
+      "⑧ 외부 영향",
+      "⑨ 희망과 두려움",
+      "⑩ 최종 결과 + 조합 종합·행동 조언",
+    ],
+    sample: {
+      kind: "tarot",
+      title: "결과 예시 (10장 중 일부 자리)",
+      question: "지금 관계를 계속 끌고 가는 게 맞을까요?",
+      cards: [
+        { position: "현재 상황", card: "은둔자 (정방향)", meaning: "각자 생각이 깊어진 시기. 멀어짐이 아니라 정리의 구간." },
+        { position: "도전 또는 장애물", card: "소드 8 (정방향)", meaning: "'말해도 안 변할 것'이라는 체념이 정면의 과제." },
+        { position: "무의식 또는 기반", card: "컵 6 (정방향)", meaning: "좋았던 기억이 관계의 바닥을 여전히 지탱하는 중." },
+        { position: "가까운 미래", card: "절제 (정방향)", meaning: "속도를 맞추면 회복 국면으로 넘어가는 흐름." },
+        { position: "최종 결과", card: "컵 에이스 (정방향)", meaning: "감정을 솔직히 여는 쪽으로 움직이면 새 물꼬가 트임." },
+      ],
+      summary: "끝나가는 관계가 아니라 대화가 멈춘 관계예요. 기반의 감정은 살아 있고, 체념을 깨는 쪽이 최종 결과를 바꿉니다. 실제 결과에는 10개 자리 전체 해석이 담깁니다.",
+      action: "이번 주, '요즘 우리'에 대한 판단 없는 대화 30분을 먼저 제안해 보세요.",
+    },
+    process: ["질문·상황 입력 (선택)", "결제 (카드/무통장)", "카드 10장 드로우 · 결과 바로 확인"],
+    methodNote: "정통 켈틱 크로스 배열의 열 자리에 카드가 놓이고, 자리별 해석과 1→10 서사의 조합 종합, 행동 조언까지 자동 발행됩니다.",
+    faq: [
+      { q: "10장이면 결과가 많이 긴가요?", a: "네, 타로 중 가장 깊고 긴 리딩이에요. 자리별 해석 10개에 종합과 행동 조언까지 담기며, 링크로 소장하고 천천히 다시 읽기 좋아요." },
+      FAQ_TAROT_INSTANT,
+      { q: "헤어진 사이여도 볼 수 있나요?", a: "네. 복잡한 관계 정리, 재회 판단용으로도 많이 활용돼요. 더 깊은 재회 분석은 사주 기반 '재회 가능성 리포트'와 함께 보시면 좋아요." },
+      FAQ_TAROT_QUESTION,
+      FAQ_REFUND,
+      FAQ_NOT_PROPHECY,
+    ],
+    caution: "미래를 확정하지 않습니다. 문제의 구조를 이해하고 다음 행동을 잡는 참고 자료입니다.",
+    related: ["reunion-check", "tarot-three-card", "premium-saju"],
+  },
+};
+
+// TAROT_PRODUCTS(단일 소스) × 카피 → 카탈로그 항목. 누락 시 빌드에서 즉시 실패.
+const TAROT_CATALOG: CatalogProduct[] = TAROT_PRODUCTS.map((tp) => {
+  const copy = TAROT_COPY[tp.slug];
+  if (!copy) throw new Error(`TAROT_COPY 누락: ${tp.slug}`);
+  return tarotToCatalog(tp, copy);
+});
 
 // ── 카탈로그 본문 ──
 export const CATALOG: CatalogProduct[] = [
@@ -137,7 +328,7 @@ export const CATALOG: CatalogProduct[] = [
       FAQ_NOT_PROPHECY,
     ],
     caution: "맛보기용 짧은 진단입니다. 더 정밀한 분석은 유료 리포트에서 제공됩니다.",
-    related: ["premium-saju", "inbody", "tarot-daily"],
+    related: ["premium-saju", "inbody", "tarot-one-card"],
     isPublished: true,
     displayOrder: 5,
   },
@@ -188,7 +379,7 @@ export const CATALOG: CatalogProduct[] = [
       FAQ_NOT_PROPHECY,
     ],
     caution: "운명을 예언하는 것이 아니라, 단련의 출발점을 진단하는 입문 측정입니다.",
-    related: ["premium-saju", "crush-kit", "tarot-daily"],
+    related: ["premium-saju", "crush-kit", "tarot-one-card"],
     isPublished: true,
     displayOrder: 10,
   },
@@ -305,7 +496,7 @@ export const CATALOG: CatalogProduct[] = [
       FAQ_REVIEW_LINK,
     ],
     caution: "상대의 마음을 단정하거나 성공을 보장하지 않습니다. 접근 방향을 잡는 참고 자료입니다.",
-    related: ["tarot-inner-mind", "premium-saju", "reunion-check"],
+    related: ["tarot-three-card", "premium-saju", "reunion-check"],
     isPublished: true,
     displayOrder: 20,
   },
@@ -357,159 +548,15 @@ export const CATALOG: CatalogProduct[] = [
       FAQ_NOT_PROPHECY,
     ],
     caution: "재회를 보장하거나 상대의 마음을 단정하지 않습니다. 행동 전 점검용 리포트입니다.",
-    related: ["tarot-relationship", "premium-saju", "crush-kit"],
+    related: ["tarot-celtic-cross", "premium-saju", "crush-kit"],
     isPublished: true,
     displayOrder: 25,
   },
 
   // ─────────────────────────────────────────────
-  // 6. 오늘의 타로 (1장)
+  // 6~8. 타로 3종 — TAROT_PRODUCTS(단일 소스) 파생. 카피는 TAROT_COPY 참조.
   // ─────────────────────────────────────────────
-  {
-    slug: "tarot-daily",
-    serviceType: "tarot",
-    concerns: ["daily"],
-    displayName: "오늘의 타로",
-    shortDescription: "지금 나에게 필요한 한 장의 메시지",
-    headline: "오늘, 나에게 필요한 한 마디",
-    empathy: [
-      "결정할 게 많은 날, 마음이 어수선한 날 — 긴 리포트까지는 필요 없고, 방향을 잡아줄 한 마디면 충분할 때가 있죠.",
-    ],
-    questions: [
-      "오늘 하루, 어디에 힘을 주고 어디서 힘을 빼야 할까?",
-      "지금 마음에 걸리는 그 일, 오늘 움직여도 될까?",
-    ],
-    forWhom: ["아침 루틴처럼 가볍게 하루 방향을 잡고 싶은 분", "타로를 처음 결제해 보는 분"],
-    resultToc: ["오늘의 카드 1장", "카드가 짚는 오늘의 흐름", "오늘의 행동 메시지"],
-    sample: {
-      kind: "tarot",
-      title: "결과 예시",
-      question: "오늘 미뤄둔 결정을 처리해도 될까요?",
-      cards: [
-        { position: "오늘의 카드", card: "완드 에이스 (정방향)", meaning: "새로 시작하는 에너지가 살아나는 날. 미뤄둔 일의 첫 단추를 끼우기에 좋은 흐름." },
-      ],
-      summary: "오늘은 '완벽한 준비'보다 '작은 착수'가 유리한 날이에요. 크게 벌이기보다 첫 걸음 하나만.",
-      action: "오늘 안에 그 일의 가장 작은 첫 단계 하나를 실행해 보세요.",
-    },
-    process: ["질문 입력 (선택)", "결제 990원", "카드 드로우 · 결과 바로 확인"],
-    methodNote: "결제 즉시 카드가 드로우되고, 카드 의미와 질문 맥락을 반영한 해석이 자동 발행됩니다.",
-    delivery: { mode: "auto", timeText: "결제 후 바로 확인" },
-    priceHint: 990,
-    badge: "입문",
-    faq: [
-      FAQ_TAROT_QUESTION,
-      { q: "매일 뽑아도 되나요?", a: "네. 오늘의 타로는 하루의 흐름을 읽는 용도라 매일 새로 받아보셔도 좋아요." },
-      { q: "결과는 어디서 보나요?", a: "결제 직후 결과 페이지로 이동하며, 전용 링크로 언제든 다시 볼 수 있어요. 로그인 상태라면 마이페이지에서도 확인됩니다." },
-      FAQ_REFUND,
-      FAQ_NOT_PROPHECY,
-    ],
-    caution: "타로는 확정된 미래가 아니라 지금 흐름을 비추는 거울입니다. 가벼운 마음으로 활용해 주세요.",
-    related: ["tarot-inner-mind", "free-taste", "inbody"],
-    isPublished: true,
-    displayOrder: 110,
-  },
-
-  // ─────────────────────────────────────────────
-  // 7. 그 사람의 속마음 (3장)
-  // ─────────────────────────────────────────────
-  {
-    slug: "tarot-inner-mind",
-    serviceType: "tarot",
-    concerns: ["love"],
-    displayName: "그 사람의 속마음",
-    shortDescription: "3장으로 읽는 그 사람의 진짜 마음",
-    headline: "그 사람, 지금 무슨 생각일까?",
-    empathy: [
-      "읽씹인지 바쁜 건지, 관심인지 예의인지 — 메시지 하나에 하루 종일 마음이 오르락내리락하죠.",
-      "혼자 해석하다 지치기 전에, 카드 3장으로 지금 상황을 정리해 보세요.",
-    ],
-    questions: [
-      "그 사람은 지금 나를 어떤 마음으로 보고 있을까?",
-      "우리 사이, 지금 어떤 상황에 놓여 있을까?",
-      "이대로 가면 흐름은 어디로 갈까?",
-    ],
-    forWhom: ["상대의 마음이 헷갈려 잠이 안 오는 분", "썸·연애 초반에 방향을 잡고 싶은 분"],
-    resultToc: ["카드 3장 드로우 (현재 상황 · 상대의 속마음 · 앞으로의 흐름)", "자리별 카드 해석", "종합 리딩", "지금 할 수 있는 행동 메시지"],
-    sample: {
-      kind: "tarot",
-      title: "결과 예시",
-      question: "요즘 연락이 뜸해진 그 사람, 마음이 식은 걸까요?",
-      cards: [
-        { position: "현재 상황", card: "소드 4 (정방향)", meaning: "관계가 식었다기보다, 상대가 스스로를 재정비하는 휴지기." },
-        { position: "상대의 속마음", card: "컵 2 (정방향)", meaning: "호감의 기반은 남아 있음. 표현이 줄었을 뿐 마음의 연결은 유지." },
-        { position: "앞으로의 흐름", card: "펜타클 페이지 (역방향)", meaning: "서두르면 부담, 기다리며 신뢰를 쌓으면 회복되는 흐름." },
-      ],
-      summary: "식은 게 아니라 멈춰 서 있는 상태에 가까워요. 지금 필요한 건 확인 요구가 아니라 편안한 존재감입니다.",
-      action: "답장을 재촉하기보다, 부담 없는 안부 한 번으로 연결만 유지해 보세요.",
-    },
-    process: ["질문·상황 입력 (선택)", "결제 (카드/무통장)", "카드 드로우", "검수 후 발행 — 보통 24시간 이내"],
-    methodNote: "결제 시 카드가 드로우되고 해석 초안이 만들어집니다. 초안을 그대로 내보내지 않고 검수를 거쳐 정돈된 결과로 발행해 드려요.",
-    delivery: { mode: "review", timeText: "검수 후 24시간 이내 발행" },
-    priceHint: 2970,
-    faq: [
-      FAQ_TAROT_REVIEW,
-      FAQ_TAROT_QUESTION,
-      { q: "발행되면 어떻게 알 수 있나요?", a: "결제 직후 발급되는 결과 링크에서 상태를 확인할 수 있어요. 발행이 완료되면 같은 링크에서 전체 리딩이 열립니다." },
-      FAQ_REFUND,
-      FAQ_NOT_PROPHECY,
-    ],
-    caution: "상대의 마음을 단정하지 않습니다. 지금 상황을 정리하고 다음 행동을 잡는 참고 자료입니다.",
-    related: ["crush-kit", "tarot-relationship", "tarot-daily"],
-    isPublished: true,
-    displayOrder: 120,
-  },
-
-  // ─────────────────────────────────────────────
-  // 8. 우리 관계의 흐름 (5장)
-  // ─────────────────────────────────────────────
-  {
-    slug: "tarot-relationship",
-    serviceType: "tarot",
-    concerns: ["love", "reunion"],
-    displayName: "우리 관계의 흐름",
-    shortDescription: "5장으로 보는 두 사람의 관계 흐름",
-    headline: "우리 관계, 지금 어디로 가고 있을까?",
-    empathy: [
-      "나쁘지 않은데 어딘가 정체된 느낌, 좋다가도 반복되는 다툼 — 관계가 어디로 흐르는지 모른 채 감정만 소모될 때가 있어요.",
-      "카드 5장으로 관계의 현재 좌표와 방향을 한 번에 펼쳐봅니다.",
-    ],
-    questions: [
-      "우리 관계는 지금 어떤 상태에 있나?",
-      "겉으로 안 보이는 걸림돌은 뭘까?",
-      "가까운 미래의 흐름과, 지금 내가 할 수 있는 건?",
-    ],
-    forWhom: ["관계의 방향이 헷갈리는 커플·썸 단계의 분", "이별 후 관계의 흐름을 정리하고 싶은 분"],
-    resultToc: ["카드 5장 드로우 (현재 관계 · 상대의 감정 · 숨은 장애물 · 가까운 미래 · 조언)", "자리별 카드 해석", "종합 리딩", "관계를 위한 행동 메시지"],
-    sample: {
-      kind: "tarot",
-      title: "결과 예시",
-      question: "권태기 같은 우리, 계속 가도 괜찮을까요?",
-      cards: [
-        { position: "현재 관계", card: "은둔자 (정방향)", meaning: "각자 생각이 깊어진 시기. 멀어짐이 아니라 정리의 구간." },
-        { position: "상대의 감정", card: "컵 8 (역방향)", meaning: "떠나고 싶은 게 아니라, 관계가 나아지길 바라며 머무는 마음." },
-        { position: "숨은 장애물", card: "소드 8 (정방향)", meaning: "'말해도 안 변할 것'이라는 서로의 체념이 진짜 걸림돌." },
-        { position: "가까운 미래", card: "절제 (정방향)", meaning: "속도를 맞추면 회복되는 흐름. 급한 결론은 금물." },
-        { position: "조언", card: "컵 에이스 (정방향)", meaning: "평가 없는 솔직한 감정 표현이 물꼬를 튼다." },
-      ],
-      summary: "끝나가는 관계가 아니라, 대화 방식이 멈춘 관계예요. 체념을 깨는 쪽이 흐름을 바꿉니다.",
-      action: "이번 주, '요즘 우리'에 대한 판단 없는 대화 30분을 먼저 제안해 보세요.",
-    },
-    process: ["질문·상황 입력 (선택)", "결제 (카드/무통장)", "카드 드로우", "검수 후 발행 — 보통 24시간 이내"],
-    methodNote: "5장 스프레드로 관계의 구조(현재·감정·장애물·미래·조언)를 읽습니다. 검수를 거쳐 정돈된 리딩으로 발행됩니다.",
-    delivery: { mode: "review", timeText: "검수 후 24시간 이내 발행" },
-    priceHint: 4950,
-    faq: [
-      FAQ_TAROT_REVIEW,
-      { q: "헤어진 사이여도 볼 수 있나요?", a: "네. 끝난 관계의 흐름 정리, 재회 가능성 점검용으로도 많이 활용돼요. 더 깊은 재회 분석은 사주 기반 '재회 가능성 리포트'와 함께 보시면 좋아요." },
-      FAQ_TAROT_QUESTION,
-      FAQ_REFUND,
-      FAQ_NOT_PROPHECY,
-    ],
-    caution: "관계의 미래를 확정하지 않습니다. 지금 구조를 이해하고 다음 행동을 잡는 참고 자료입니다.",
-    related: ["reunion-check", "tarot-inner-mind", "premium-saju"],
-    isPublished: true,
-    displayOrder: 130,
-  },
+  ...TAROT_CATALOG,
 
   // ─────────────────────────────────────────────
   // 숨김 상품 — isPublished=false (프런트 미노출, 직접 URL 은 /products 로 안내)
