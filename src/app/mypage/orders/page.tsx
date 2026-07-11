@@ -21,7 +21,7 @@ export default async function MyOrdersPage() {
   const service = createServiceClient();
   const { data: orders } = await service
     .from("orders")
-    .select("id, order_id, amount, status, created_at, product_id, user_id")
+    .select("id, order_id, amount, status, created_at, product_id, user_id, service_type, public_token")
     .or(`user_id.eq.${user.id},guest_email.eq.${user.email}`)
     .order("created_at", { ascending: false });
 
@@ -77,6 +77,14 @@ export default async function MyOrdersPage() {
                   </Badge>
                   {resultId && (
                     <Link href={`/results/${resultId}`} className="text-sm font-medium underline underline-offset-4 text-ink">
+                      결과 보기
+                    </Link>
+                  )}
+                  {o.service_type === "tarot" && o.status === "paid" && o.public_token && (
+                    <Link
+                      href={`/tarot/result/${o.public_token}`}
+                      className="text-sm font-medium underline underline-offset-4 text-ink"
+                    >
                       결과 보기
                     </Link>
                   )}

@@ -171,6 +171,22 @@ check("주문 API: 상품 설정은 신 slug 기준", orderRoute.includes("getTa
 const catalogDb = readFileSync("src/lib/catalog-db.ts", "utf8");
 check("catalog-db: fallback 조회 적용", catalogDb.includes("expandSlugsWithLegacy") && catalogDb.includes("pickRowForSlug"));
 
+// ── 7. 결제 후 자동 발행 — 구 slug 주문 회귀 테스트 ──
+// 장애 재현: 구 slug 행(fallback)으로 생성된 주문은 confirm 시 DB slug 가 구 slug 로
+// 조회된다. publishPolicy 가 구 slug 를 모르면 'review' 로 오판 → LLM 생성·발행이
+// 실행되지 않아 결과가 영구 '준비 중' 으로 남는다. (990원 실결제 장애 원인)
+for (const [legacy, next] of Object.entries(LEGACY_TAROT_SLUG_MAP)) {
+  check(`구 slug '${legacy}' → 상품 설정 정규화 조회`, getTarotProduct(legacy)?.slug === next);
+  check(`구 slug '${legacy}' 발행정책 = auto (자동 발행)`, tarotService.publishPolicy(legacy) === "auto");
+}
+check("미등록 slug 발행정책 = review (안전 기본값 유지)", tarotService.publishPolicy("unknown-slug") === "review");
+
+// paid 주문 자동 복구 + 결과 URL 명시 — 소스 검사
+check("confirm: paid 주문 미발행 리딩 자동 복구", /alreadyPaid[\s\S]*runPaidReading|runPaidReading[\s\S]*alreadyPaid/.test(confirmRoute));
+check("confirm: 응답에 resultUrl 명시", confirmRoute.includes("resultUrl"));
+const mypageOrders = readFileSync("src/app/mypage/orders/page.tsx", "utf8");
+check("마이페이지: 타로 결과 링크 존재", mypageOrders.includes("/tarot/result/"));
+
 // ── 결과 ──
 if (failed > 0) {
   console.error(`\n✗ 실패 ${failed}건`);

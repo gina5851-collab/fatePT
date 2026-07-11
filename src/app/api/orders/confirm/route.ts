@@ -39,7 +39,34 @@ export async function POST(request: NextRequest) {
     // idempotent: 이미 결제된 주문 — 결과 페이지로 안내
     // 타로(및 그 외 리딩 서비스)는 publicToken 으로, 사주는 기존 resultId 로 안내.
     if (order.service_type === "tarot") {
-      return NextResponse.json({ publicToken: order.public_token, service: order.service_type, alreadyPaid: true });
+      // 자동 복구: paid 인데 리딩이 미발행(없음/드로우만/실패)로 남았으면 1회 재시도.
+      // ensureDrawn 은 기존 드로우를 재사용하므로 재드로우·중복 reading 이 생기지 않고,
+      // generating/draft/published 상태는 건드리지 않는다. 결제 재승인도 없다.
+      try {
+        const { data: reading } = await service
+          .from("readings")
+          .select("status")
+          .eq("order_id", order.id)
+          .maybeSingle();
+        if (!reading || reading.status === "drawn" || reading.status === "failed") {
+          const { publicToken, status } = await runPaidReading(order.id);
+          return NextResponse.json({
+            publicToken,
+            resultUrl: publicToken ? `/tarot/result/${publicToken}` : null,
+            service: order.service_type,
+            readingStatus: status,
+            alreadyPaid: true,
+          });
+        }
+      } catch {
+        // 복구 실패해도 기존 응답과 동일하게 결과 페이지로 안내 (아래로 진행)
+      }
+      return NextResponse.json({
+        publicToken: order.public_token,
+        resultUrl: order.public_token ? `/tarot/result/${order.public_token}` : null,
+        service: order.service_type,
+        alreadyPaid: true,
+      });
     }
     const { data: result } = await service
       .from("saju_results")
@@ -81,10 +108,16 @@ export async function POST(request: NextRequest) {
   if (order.service_type === "tarot") {
     try {
       const { publicToken, status } = await runPaidReading(order.id);
-      return NextResponse.json({ publicToken, service: order.service_type, readingStatus: status });
+      return NextResponse.json({
+        publicToken,
+        resultUrl: publicToken ? `/tarot/result/${publicToken}` : null,
+        service: order.service_type,
+        readingStatus: status,
+      });
     } catch (err) {
       return NextResponse.json({
         publicToken: order.public_token,
+        resultUrl: order.public_token ? `/tarot/result/${order.public_token}` : null,
         service: order.service_type,
         readingStatus: "failed",
         detail: err instanceof Error ? err.message : String(err),
