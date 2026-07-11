@@ -59,16 +59,21 @@ export default async function TarotResultPage({ params }: { params: Promise<{ pu
   // ── URL 접속만으로 자동 복구 (paid + 미발행) ──
   // public_token 은 결제자 본인에게만 발급되는 비공개 URL 이다.
   // 엔진이 idempotent 보장: 기존 드로우 재사용(재드로우 없음), readings 는
-  // order_id unique + upsert 로 1행 유지, Toss 승인·주문·결제 로직은 호출하지 않는다.
-  // generating(생성 진행 중)은 중복 실행하지 않고 아래 준비 중 화면으로 넘어간다.
-  const needsRecovery = !reading || reading.status === "drawn" || reading.status === "failed";
+  // order_id unique + 원자적 claim 으로 1행·1생성 유지, Toss 승인·주문·결제 로직은 호출하지 않는다.
+  // generating 도 재개 대상에 포함하되, 신선한(진행 중) generating 은 엔진 claim 이
+  // 가로채지 않고 그대로 두므로 중복 생성이 없다 — 함수 사망으로 고착된 경우만 이어서 생성한다.
+  const needsRecovery =
+    !reading ||
+    reading.status === "drawn" ||
+    reading.status === "failed" ||
+    reading.status === "generating";
   const needsPublishOnly = reading?.status === "draft";
   if (needsRecovery || needsPublishOnly) {
     try {
       if (needsPublishOnly) {
         await publishReading(order.id); // 초안 존재 — 발행만 (LLM 재호출 없음)
       } else {
-        await runPaidReading(order.id); // 없음/드로우만/실패 — 기존 카드로 해석 생성·발행
+        await runPaidReading(order.id); // 없음/드로우만/실패/고착 generating — 기존 카드로 해석 생성·발행
       }
       const { data: refreshed } = await service
         .from("readings")

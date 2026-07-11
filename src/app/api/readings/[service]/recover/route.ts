@@ -27,15 +27,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: "잘못된 요청입니다" }, { status: 400 });
   }
 
-  // 로그인 세션 필수 — 익명 복구 불가
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "로그인이 필요합니다" }, { status: 401 });
-  }
-
   const service = createServiceClient();
   const query = service.from("orders").select("id, user_id, status, service_type, public_token");
   const { data: order } = parsed.data.orderId
@@ -45,9 +36,22 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (!order || order.service_type !== serviceType) {
     return NextResponse.json({ error: "주문을 찾을 수 없습니다" }, { status: 404 });
   }
-  // 본인 주문만 — 다른 사용자의 주문은 존재 여부와 무관하게 거부
-  if (order.user_id !== user.id) {
-    return NextResponse.json({ error: "본인 주문만 복구할 수 있습니다" }, { status: 403 });
+  // 내부 orderId 경로(마이페이지) — 로그인 + 본인 주문 확인 필수.
+  // publicToken 경로는 결제자 본인에게만 전달되는 비밀 URL 자체가 인증 수단이다:
+  // 결과 페이지가 이미 같은 토큰만으로 전체 결과를 노출하므로 추가 권한 상승이 없고,
+  // 관리자·사용자 로그인 없이도 결제 완료 주문의 결과를 복구할 수 있어야 한다.
+  if (parsed.data.orderId) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "로그인이 필요합니다" }, { status: 401 });
+    }
+    // 본인 주문만 — 다른 사용자의 주문은 존재 여부와 무관하게 거부
+    if (order.user_id !== user.id) {
+      return NextResponse.json({ error: "본인 주문만 복구할 수 있습니다" }, { status: 403 });
+    }
   }
   // 결제 미완료 주문은 복구 대상이 아니다 (임의 paid 처리 금지)
   if (order.status !== "paid") {
@@ -66,10 +70,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (reading?.status === "published" && reading.final_result) {
     return NextResponse.json({ resultUrl, readingStatus: "published", recovered: false });
   }
-  // 생성 진행 중 — 중복 생성하지 않고 진행 상태만 반환
-  if (reading?.status === "generating") {
-    return NextResponse.json({ resultUrl, readingStatus: "generating", recovered: false });
-  }
 
   try {
     // 초안까지 있으면 발행만 (LLM 재호출 없음)
@@ -77,12 +77,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       await publishReading(order.id);
       return NextResponse.json({ resultUrl, readingStatus: "published", recovered: true });
     }
-    // 없음/드로우만/실패 — 엔진이 idempotent 처리:
+    // 없음/드로우만/실패/generating — 엔진이 idempotent 처리:
     // ensureDrawn 은 기존 드로우를 재사용하고(재드로우 없음), readings 는
-    // order_id unique + upsert 라 정확히 1행만 존재한다. 결제 로직은 호출하지 않는다.
+    // order_id unique + 원자적 claim 이라 정확히 1행·1생성만 존재한다.
+    // 신선한 generating 은 엔진이 가로채지 않고 'generating' 을 반환하며,
+    // 고착된 generating(함수 사망)만 claim 해 이어서 생성한다. 결제 로직은 호출하지 않는다.
     const { status } = await runPaidReading(order.id);
     if (status === "published") {
       return NextResponse.json({ resultUrl, readingStatus: status, recovered: true });
+    }
+    if (status === "generating") {
+      // 다른 요청이 생성 진행 중 — 중복 생성 없이 진행 상태만 반환
+      return NextResponse.json({ resultUrl, readingStatus: "generating", recovered: false });
     }
     return NextResponse.json(
       { error: "결과 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.", resultUrl, readingStatus: status },
