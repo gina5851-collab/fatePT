@@ -187,6 +187,41 @@ check("confirm: 응답에 resultUrl 명시", confirmRoute.includes("resultUrl"))
 const mypageOrders = readFileSync("src/app/mypage/orders/page.tsx", "utf8");
 check("마이페이지: 타로 결과 링크 존재", mypageOrders.includes("/tarot/result/"));
 
+// ── 8. 사용자 결과 복구 API — 보안·idempotent 검증 ──
+// 관리자 로그인 없이 결제한 본인이 미발행 리딩을 복구한다. 결제·주문·드로우는
+// 절대 새로 만들지 않는다 (990원 실결제 장애 복구 경로).
+const recoverRoute = readFileSync("src/app/api/readings/[service]/recover/route.ts", "utf8");
+check("recover: 로그인 세션 필수 (401)", recoverRoute.includes("getUser") && recoverRoute.includes("401"));
+check("recover: 본인 주문만 (user_id 일치, 403)", recoverRoute.includes("order.user_id !== user.id") && recoverRoute.includes("403"));
+check("recover: paid 아닌 주문 거부 (409)", recoverRoute.includes('order.status !== "paid"') && recoverRoute.includes("409"));
+check("recover: published 는 기존 결과 반환 (재생성 없음)",
+  recoverRoute.includes('"published"') && recoverRoute.includes("recovered: false"));
+check("recover: generating 은 중복 생성 없이 진행 상태 반환", recoverRoute.includes('"generating"'));
+check("recover: 엔진 재사용 — 직접 draw/INSERT 없음",
+  recoverRoute.includes("runPaidReading") && !recoverRoute.includes(".draw(") && !recoverRoute.includes(".insert("));
+check("recover: Toss 결제 승인 재호출 없음", !recoverRoute.includes("confirmTossPayment"));
+check("recover: 리딩 서비스 한정 (사주 무영향)", recoverRoute.includes("isReadingService"));
+
+// idempotent 근거 — 엔진과 스키마
+const engineSrc = readFileSync("src/lib/readings/engine.ts", "utf8");
+check("engine: 기존 드로우 재사용 (재드로우 없음)", engineSrc.includes("existing?.draw_record"));
+check("engine: readings upsert onConflict order_id", engineSrc.includes('onConflict: "order_id"'));
+const readingsMigration = readFileSync("supabase/migrations/0009_readings.sql", "utf8");
+check("스키마: readings.order_id unique (물리적 중복 불가)", /order_id uuid not null unique/.test(readingsMigration));
+
+// 사용자 화면 — 상태별 버튼
+check("마이페이지: 복구 버튼(미발행) 분기", mypageOrders.includes("TarotRecoverButton"));
+check("마이페이지: 생성 중 표시 분기", mypageOrders.includes("결과 생성 중"));
+check("마이페이지: published 만 결과 보기 링크", mypageOrders.includes('=== "published"'));
+const resultPage = readFileSync("src/app/tarot/result/[publicToken]/page.tsx", "utf8");
+check("결과 대기 페이지: 복구 동작 포함", resultPage.includes("TarotRecoverButton"));
+const recoverButton = readFileSync("src/components/tarot/TarotRecoverButton.tsx", "utf8");
+check("복구 버튼: 실패 시 재시도만 (재결제 유도 없음)",
+  recoverButton.includes("다시 시도") &&
+  !recoverButton.includes("결제하기") &&
+  !recoverButton.includes("/checkout") &&
+  !recoverButton.includes("/products/"));
+
 // ── 결과 ──
 if (failed > 0) {
   console.error(`\n✗ 실패 ${failed}건`);

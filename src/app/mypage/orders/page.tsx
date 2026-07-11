@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
+import { TarotRecoverButton } from "@/components/tarot/TarotRecoverButton";
 import { formatKRW, formatDate } from "@/lib/utils";
 
 export const metadata = { title: "결제 내역" };
@@ -40,6 +41,12 @@ export default async function MyOrdersPage() {
     ? await service.from("reviews").select("order_id").in("order_id", orderIds)
     : { data: [] };
   const reviewedSet = new Set((reviews ?? []).map((r) => r.order_id));
+
+  // 타로 리딩 상태 — published(결과 보기) / generating(생성 중) / 그 외(결과 복구하기)
+  const { data: readings } = orderIds.length
+    ? await service.from("readings").select("order_id, status").in("order_id", orderIds)
+    : { data: [] };
+  const readingStatusMap = new Map((readings ?? []).map((r) => [r.order_id, r.status]));
 
   return (
     <div className="container py-12 max-w-3xl">
@@ -81,12 +88,18 @@ export default async function MyOrdersPage() {
                     </Link>
                   )}
                   {o.service_type === "tarot" && o.status === "paid" && o.public_token && (
-                    <Link
-                      href={`/tarot/result/${o.public_token}`}
-                      className="text-sm font-medium underline underline-offset-4 text-ink"
-                    >
-                      결과 보기
-                    </Link>
+                    readingStatusMap.get(o.id) === "published" ? (
+                      <Link
+                        href={`/tarot/result/${o.public_token}`}
+                        className="text-sm font-medium underline underline-offset-4 text-ink"
+                      >
+                        결과 보기
+                      </Link>
+                    ) : readingStatusMap.get(o.id) === "generating" ? (
+                      <span className="text-sm text-body">결과 생성 중</span>
+                    ) : (
+                      <TarotRecoverButton orderId={o.id} />
+                    )
                   )}
                   {canReview && (
                     <Link

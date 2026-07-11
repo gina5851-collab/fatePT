@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createServiceClient } from "@/lib/supabase/server";
 import { getCard } from "@/lib/readings/services/tarot/cards";
 import { TarotCard } from "@/components/tarot/TarotCard";
+import { TarotRecoverButton } from "@/components/tarot/TarotRecoverButton";
 import { sajuCrossSellForTarot } from "@/config/cross-sell";
 import type { DrawRecord, ReadingResult } from "@/lib/readings/types";
 
@@ -52,13 +53,17 @@ export default async function TarotResultPage({ params }: { params: Promise<{ pu
     );
   }
 
-  // 미발행(생성 중/실패 등 예외 상태) → 준비 중 안내 (기준 v1: 전 상품 자동 발행)
+  // 미발행(생성 중/실패 등 예외 상태) → 준비 중 안내 + 본인 복구 동작 (기준 v1: 전 상품 자동 발행)
   if (!reading || reading.status !== "published" || !reading.final_result) {
     return (
       <StatusScreen
         title="결과 준비 중"
-        message="카드를 뽑아두었어요. 결과를 정리하는 중입니다 — 잠시 후 새로고침하면 이 링크에서 바로 확인할 수 있어요. 문제가 지속되면 고객센터로 문의해 주세요."
-      />
+        message="카드를 뽑아두었어요. 결과를 정리하는 중입니다 — 아래 버튼을 누르면 바로 결과를 완성해 드려요. 문제가 지속되면 고객센터로 문의해 주세요."
+      >
+        <div className="mt-5">
+          <TarotRecoverButton publicToken={publicToken} label="결과 완성하기" />
+        </div>
+      </StatusScreen>
     );
   }
 
@@ -159,7 +164,7 @@ export default async function TarotResultPage({ params }: { params: Promise<{ pu
   );
 }
 
-function StatusScreen({ title, message }: { title: string; message: string }) {
+function StatusScreen({ title, message, children }: { title: string; message: string; children?: React.ReactNode }) {
   return (
     <div className="container py-20 max-w-md text-center">
       <span className="text-4xl" style={{ color: GOLD }}>
@@ -167,6 +172,7 @@ function StatusScreen({ title, message }: { title: string; message: string }) {
       </span>
       <h1 className="mt-4 text-xl font-semibold text-ink">{title}</h1>
       <p className="mt-3 text-sm text-body leading-relaxed">{message}</p>
+      {children}
       <Link href="/mypage/orders" className="mt-6 inline-block text-xs text-body underline underline-offset-4 hover:text-ink">
         주문내역 보기 →
       </Link>
