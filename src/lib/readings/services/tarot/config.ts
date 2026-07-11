@@ -90,3 +90,60 @@ export function allowedSpreads(product: TarotProduct): TarotSpreadKind[] {
   const opts = product.spreadOptions?.map((o) => o.kind) ?? [];
   return Array.from(new Set([product.spread, ...opts]));
 }
+
+// =====================================================
+// 구→신 slug 매핑 — 무중단 전환 전용 (이 파일에서만 정의)
+// =====================================================
+// 용도: ① next.config redirect ② Production SQL 매핑 ③ DB fallback 조회.
+// 구 slug 는 UI 상품 정의(TAROT_PRODUCTS)·클라이언트·내부 링크에 절대 포함하지 않는다.
+// SQL(scripts/sql/tarot_standard_v1.sql) 적용 전에는 운영 DB 가 구 slug 행이므로,
+// 신 slug 조회 실패 시 대응 구 slug 로 '한 번만' fallback 한다. 적용 후에는 신 slug 로 즉시 매칭.
+
+export const LEGACY_TAROT_SLUG_MAP: Record<string, string> = {
+  "tarot-daily": "tarot-one-card",
+  "tarot-inner-mind": "tarot-three-card",
+  "tarot-relationship": "tarot-celtic-cross",
+};
+
+const NEW_TO_LEGACY: Record<string, string> = Object.fromEntries(
+  Object.entries(LEGACY_TAROT_SLUG_MAP).map(([legacy, next]) => [next, legacy]),
+);
+
+/** 신 slug 에 대응하는 구 slug (없으면 undefined — 사주 등 비대상 slug) */
+export function legacyTarotSlugFor(slug: string): string | undefined {
+  return NEW_TO_LEGACY[slug];
+}
+
+/** DB 조회용 slug 목록 확장 — 신 slug 뒤에 대응 구 slug 를 덧붙인다 (fallback 후보) */
+export function expandSlugsWithLegacy(slugs: string[]): string[] {
+  const out = new Set<string>();
+  for (const s of slugs) {
+    out.add(s);
+    const legacy = legacyTarotSlugFor(s);
+    if (legacy) out.add(legacy);
+  }
+  return Array.from(out);
+}
+
+export type SlugPick<T> = { row: T | null; usedLegacy: boolean; warning?: string };
+
+/**
+ * 조회된 행들 중 요청 slug 에 해당하는 행 선택.
+ * - 신 slug 행 우선. 없으면 대응 구 slug 행으로 fallback.
+ * - 신·구가 동시에 존재하는 비정상 상태면 신 slug 행을 쓰고 warning 을 남긴다.
+ */
+export function pickRowForSlug<T extends { slug: string }>(requested: string, rows: T[]): SlugPick<T> {
+  const exact = rows.find((r) => r.slug === requested) ?? null;
+  const legacySlug = legacyTarotSlugFor(requested);
+  const legacy = legacySlug ? rows.find((r) => r.slug === legacySlug) ?? null : null;
+  if (exact && legacy) {
+    return {
+      row: exact,
+      usedLegacy: false,
+      warning: `신·구 slug 동시 존재: '${requested}' 와 '${legacySlug}' — 신 slug 행 사용. SQL 적용 상태를 점검하세요.`,
+    };
+  }
+  if (exact) return { row: exact, usedLegacy: false };
+  if (legacy) return { row: legacy, usedLegacy: true };
+  return { row: null, usedLegacy: false };
+}

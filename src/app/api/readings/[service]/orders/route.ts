@@ -4,7 +4,12 @@ import { nanoid } from "nanoid";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { isReadingService } from "@/lib/readings/registry";
 import { generatePublicToken } from "@/lib/readings/status";
-import { getTarotProduct, allowedSpreads } from "@/lib/readings/services/tarot/config";
+import {
+  getTarotProduct,
+  allowedSpreads,
+  expandSlugsWithLegacy,
+  pickRowForSlug,
+} from "@/lib/readings/services/tarot/config";
 
 const bodySchema = z.object({
   productSlug: z.string().min(1),
@@ -40,21 +45,25 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   const service = createServiceClient();
 
-  // 상품 — service_type 일치 + 활성만. 가격은 DB 기준.
-  const { data: product, error: productErr } = await service
+  // 상품 — service_type 일치 + 활성만. 가격은 어떤 경우에도 조회된 DB products.price 만 신뢰.
+  // 무중단 전환: 신 slug 우선, SQL 적용 전에는 대응 구 slug 행으로 한 번만 fallback.
+  const { data: rows, error: productErr } = await service
     .from("products")
     .select("id, slug, price, is_active, service_type")
-    .eq("slug", body.productSlug)
-    .maybeSingle();
+    .in("slug", expandSlugsWithLegacy([body.productSlug]));
+  const pick = pickRowForSlug(body.productSlug, rows ?? []);
+  if (pick.warning) console.warn(`[readings/orders] ${pick.warning}`);
+  const product = pick.row;
   if (productErr || !product || !product.is_active || product.service_type !== serviceType) {
     return NextResponse.json({ error: "상품을 찾을 수 없습니다" }, { status: 404 });
   }
 
   // 스프레드는 서버가 상품 설정에서 결정(타로).
+  // 상품 설정은 클라이언트가 보낸 '신 slug' 기준 — DB fallback 행의 구 slug 와 무관.
   // 고객 선택(spreadKind)은 해당 상품의 허용 목록 안에서만 반영 — 그 외에는 기본값.
   let spread: string | null = null;
   if (serviceType === "tarot") {
-    const tp = getTarotProduct(product.slug);
+    const tp = getTarotProduct(body.productSlug);
     if (!tp) return NextResponse.json({ error: "상품 설정을 찾을 수 없습니다" }, { status: 404 });
     const allowed = allowedSpreads(tp);
     spread =

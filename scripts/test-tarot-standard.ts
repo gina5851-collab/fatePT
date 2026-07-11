@@ -4,7 +4,15 @@
 // DB 없이 순수 로직만 검증한다 (드로우/스프레드/스키마/단일 소스/가격 규칙).
 
 import { readFileSync } from "node:fs";
-import { TAROT_PRODUCTS, getTarotProduct, allowedSpreads } from "../src/lib/readings/services/tarot/config";
+import {
+  TAROT_PRODUCTS,
+  getTarotProduct,
+  allowedSpreads,
+  LEGACY_TAROT_SLUG_MAP,
+  legacyTarotSlugFor,
+  expandSlugsWithLegacy,
+  pickRowForSlug,
+} from "../src/lib/readings/services/tarot/config";
 import { SPREADS } from "../src/lib/readings/services/tarot/spreads";
 import { tarotService, tarotInputSchema } from "../src/lib/readings/services/tarot";
 import { productsSeed } from "../src/config/products.seed";
@@ -97,6 +105,71 @@ check("주문 API: originalPrice 미참조", !orderRoute.includes("originalPrice
 const confirmRoute = readFileSync("src/app/api/orders/confirm/route.ts", "utf8");
 check("confirm API: originalPrice 미참조", !confirmRoute.includes("originalPrice"));
 check("confirm API: DB 주문 금액 검증 유지", confirmRoute.includes("order.amount !== amount"));
+
+// ── 6. 무중단 전환 — DB 상태 모의 테스트 ──
+type Row = { id: string; slug: string; price: number; is_active: boolean; service_type: string };
+const NEW_SLUGS = ["tarot-one-card", "tarot-three-card", "tarot-celtic-cross"] as const;
+
+// 매핑 무결성
+check("LEGACY 매핑 3건 정확", JSON.stringify(LEGACY_TAROT_SLUG_MAP) === JSON.stringify({
+  "tarot-daily": "tarot-one-card",
+  "tarot-inner-mind": "tarot-three-card",
+  "tarot-relationship": "tarot-celtic-cross",
+}));
+check("구 slug 는 UI 상품 정의(TAROT_PRODUCTS)에 미포함",
+  TAROT_PRODUCTS.every((p) => !(p.slug in LEGACY_TAROT_SLUG_MAP)));
+
+// [상태 A] SQL 실행 전 — DB 에 구 slug 행만 존재 (운영 현재 가격 그대로)
+const DB_A: Row[] = [
+  { id: "old-1", slug: "tarot-daily", price: 990, is_active: true, service_type: "tarot" },
+  { id: "old-3", slug: "tarot-inner-mind", price: 2970, is_active: true, service_type: "tarot" },
+  { id: "old-10", slug: "tarot-relationship", price: 4950, is_active: true, service_type: "tarot" },
+];
+for (const s of NEW_SLUGS) {
+  const pick = pickRowForSlug(s, DB_A);
+  check(`[A·SQL 전] 신 slug '${s}' → 구 DB 행 fallback 조회 성공`, !!pick.row && pick.usedLegacy);
+  check(`[A·SQL 전] '${s}' 주문은 구 product_id·DB price 사용`,
+    pick.row?.id === DB_A.find((r) => r.slug === legacyTarotSlugFor(s))?.id &&
+    pick.row?.price === DB_A.find((r) => r.slug === legacyTarotSlugFor(s))?.price);
+}
+
+// [상태 B] SQL 실행 후 — DB 에 신 slug 행만 존재 (기준 v1 가격)
+const DB_B: Row[] = [
+  { id: "old-1", slug: "tarot-one-card", price: 1000, is_active: true, service_type: "tarot" },
+  { id: "old-3", slug: "tarot-three-card", price: 3800, is_active: true, service_type: "tarot" },
+  { id: "old-10", slug: "tarot-celtic-cross", price: 5800, is_active: true, service_type: "tarot" },
+];
+for (const s of NEW_SLUGS) {
+  const pick = pickRowForSlug(s, DB_B);
+  check(`[B·SQL 후] 신 slug '${s}' → 신 DB 행 직접 조회 (fallback 미사용)`, !!pick.row && !pick.usedLegacy && !pick.warning);
+}
+check("[B·SQL 후] 주문 금액 = 신 DB price (1000/3800/5800)",
+  NEW_SLUGS.every((s, i) => pickRowForSlug(s, DB_B).row?.price === [1000, 3800, 5800][i]));
+
+// [비정상] 신·구 동시 존재 → 신 slug 우선 + 경고
+const DB_BOTH: Row[] = [...DB_A, ...DB_B.map((r) => ({ ...r, id: `dup-${r.id}` }))];
+{
+  const pick = pickRowForSlug("tarot-one-card", DB_BOTH);
+  check("[동시 존재] 신 slug 행 우선 사용", pick.row?.slug === "tarot-one-card" && !pick.usedLegacy);
+  check("[동시 존재] 경고 기록", !!pick.warning);
+}
+
+// [없음] 둘 다 없으면 명확한 상품 없음
+check("[없음] 신·구 모두 없으면 row=null", pickRowForSlug("tarot-one-card", []).row === null);
+
+// 사주 상품 영향 0 — legacy 매핑 비대상, 확장·선택 로직이 기존과 동일
+check("사주: expandSlugsWithLegacy 는 사주 slug 를 확장하지 않음",
+  JSON.stringify(expandSlugsWithLegacy(["inbody", "premium-saju", "crush-kit"])) ===
+  JSON.stringify(["inbody", "premium-saju", "crush-kit"]));
+const SAJU_ROW: Row = { id: "s1", slug: "inbody", price: 4900, is_active: true, service_type: "saju" };
+check("사주: 정상 조회 동작 동일", pickRowForSlug("inbody", [SAJU_ROW]).row?.id === "s1");
+check("사주: 없으면 null (fallback 없음)", pickRowForSlug("inbody", []).row === null);
+
+// 호환 조회가 실제 적용됐는지 — 소스 검사
+check("주문 API: fallback 조회 적용", orderRoute.includes("expandSlugsWithLegacy") && orderRoute.includes("pickRowForSlug"));
+check("주문 API: 상품 설정은 신 slug 기준", orderRoute.includes("getTarotProduct(body.productSlug)"));
+const catalogDb = readFileSync("src/lib/catalog-db.ts", "utf8");
+check("catalog-db: fallback 조회 적용", catalogDb.includes("expandSlugsWithLegacy") && catalogDb.includes("pickRowForSlug"));
 
 // ── 결과 ──
 if (failed > 0) {

@@ -7,6 +7,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
+import { expandSlugsWithLegacy, pickRowForSlug } from "@/lib/readings/services/tarot/config";
 
 export type DbProductRow = {
   id: string;
@@ -16,14 +17,24 @@ export type DbProductRow = {
   is_active: boolean;
 };
 
+// 반환 Map 의 key 는 '요청한(신) slug'다.
+// 무중단 전환: SQL 적용 전(구 slug 행만 존재)에는 대응 구 slug 행으로 fallback 해 담는다.
+// 사주 slug 는 legacy 매핑이 없어 기존과 완전히 동일하게 동작한다.
 export async function fetchDbProducts(slugs: string[]): Promise<Map<string, DbProductRow>> {
   if (!isSupabaseConfigured() || slugs.length === 0) return new Map();
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
     .select("id, slug, name, price, is_active")
-    .in("slug", slugs);
-  return new Map((data ?? []).map((r) => [r.slug, r as DbProductRow]));
+    .in("slug", expandSlugsWithLegacy(slugs));
+  const rows = (data ?? []) as DbProductRow[];
+  const map = new Map<string, DbProductRow>();
+  for (const requested of slugs) {
+    const pick = pickRowForSlug(requested, rows);
+    if (pick.warning) console.warn(`[catalog-db] ${pick.warning}`);
+    if (pick.row) map.set(requested, pick.row);
+  }
+  return map;
 }
 
 /** 표시 가격: DB 우선, 없으면 카탈로그 참고가 */
