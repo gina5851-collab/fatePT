@@ -215,6 +215,19 @@ check("마이페이지: 생성 중 표시 분기", mypageOrders.includes("결과
 check("마이페이지: published 만 결과 보기 링크", mypageOrders.includes('=== "published"'));
 const resultPage = readFileSync("src/app/tarot/result/[publicToken]/page.tsx", "utf8");
 check("결과 대기 페이지: 복구 동작 포함", resultPage.includes("TarotRecoverButton"));
+
+// ── 9. 결과 URL 접속 자동 복구 — paid+drawn 주문을 열기만 하면 이어서 생성·발행 ──
+check("결과 페이지: URL 접속 자동 복구 (runPaidReading)", resultPage.includes("runPaidReading"));
+check("결과 페이지: paid 에서만 복구 — 미결제는 비노출 유지",
+  resultPage.indexOf('order.status !== "paid"') < resultPage.indexOf("await runPaidReading"));
+check("결과 페이지: drawn/failed/없음 만 재생성 대상",
+  resultPage.includes('reading.status === "drawn"') && resultPage.includes('reading.status === "failed"'));
+check("결과 페이지: draft 는 발행만 (LLM 재호출 없음)", resultPage.includes("publishReading"));
+check("결과 페이지: generating 은 중복 실행 안 함 (재생성 조건에 미포함)",
+  !resultPage.includes('reading.status === "generating"'));
+check("결과 페이지: LLM 시간 대비 maxDuration 60", resultPage.includes("maxDuration = 60"));
+check("결과 페이지: Toss·주문·결제 로직 미호출",
+  !resultPage.includes("confirmTossPayment") && !resultPage.includes('from("orders").insert') && !resultPage.includes(".update("));
 const recoverButton = readFileSync("src/components/tarot/TarotRecoverButton.tsx", "utf8");
 check("복구 버튼: 실패 시 재시도만 (재결제 유도 없음)",
   recoverButton.includes("다시 시도") &&
