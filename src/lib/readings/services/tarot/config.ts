@@ -78,7 +78,10 @@ export const TAROT_PRODUCTS: TarotProduct[] = [
 ];
 
 export function getTarotProduct(slug: string): TarotProduct | undefined {
-  return TAROT_PRODUCTS.find((p) => p.slug === slug);
+  // DB fallback 으로 구 slug 행이 조회된 주문(예: SQL 적용 전 생성분)도
+  // 같은 상품 설정으로 해석돼야 한다 — 구 slug 는 여기서 신 slug 로 정규화.
+  const normalized = LEGACY_TAROT_SLUG_MAP[slug] ?? slug;
+  return TAROT_PRODUCTS.find((p) => p.slug === normalized);
 }
 
 export function isTarotSlug(slug: string): boolean {

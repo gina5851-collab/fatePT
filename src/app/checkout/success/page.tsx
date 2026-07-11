@@ -49,7 +49,10 @@ function CheckoutSuccessInner() {
         clearTimeout(timeoutId);
         const json = await res.json();
         if (!res.ok) throw new Error(json.error ?? "결제 승인 실패");
-        if (json.publicToken) {
+        if (json.resultUrl) {
+          // 서버가 명시한 최종 결과 URL — 클라이언트가 URL 을 조립하지 않는다
+          router.replace(json.resultUrl);
+        } else if (json.publicToken) {
           // 타로 등 리딩 서비스 — 안전 토큰으로 결과 페이지 이동
           // (review 상품이면 결과 페이지가 '검수 중' 상태를 안내)
           router.replace(`/tarot/result/${json.publicToken}`);
